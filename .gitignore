@@ -5,6 +5,9 @@
 *.sublime-project
 *.sublime-workspace
 
+# Astah
+*.asta.lock
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
