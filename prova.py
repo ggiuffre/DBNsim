@@ -1,7 +1,13 @@
-from RBM import RBM
+from __future__ import print_function
+from nets.DBN import DBN
+from nets.RBM import RBM
+
+
 
 def main():
-    net = RBM(2, 5)
+    L1 = RBM(2, 5)
+    net = DBN([L1])
+
     examples = [ # XOR trainset
         [1.0,  0.1 ],
         [0.9,  0.0 ],
@@ -26,6 +32,7 @@ def main():
         [1.0, 0.0],
         [0.3, 0.8]
     ]
+
     net.learn(examples)
     print('net:\n', net)
     for test in validation:
