@@ -5,6 +5,10 @@
 *.sublime-project
 *.sublime-workspace
 
+# Large files
+*.pkl
+*.csv
+
 # Astah
 *.asta.lock
 
