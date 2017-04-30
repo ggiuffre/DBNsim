@@ -5,13 +5,13 @@ import os.path
 
 
 
-class TrainSet:
-    """Training set."""
+class DataSet:
+    """Dataset for training a neural network."""
 
-    def __init__(self, path):
+    def __init__(self, csv_file):
         self.data = []
-        csv_file = open(path)
-        csv_data = csv.reader(csv_file, delimiter = ',')
+        with open(csv_file) as f:
+            csv_data = csv.reader(f, delimiter = ',')
         for row in csv_data:
             example = {'label': None, 'image': []}
             example['label'] = int(row[0])
@@ -20,14 +20,14 @@ class TrainSet:
 
 
 
-class MNIST(TrainSet):
-    """MNIST training set."""
+class MNIST(DataSet):
+    """MNIST dataset."""
 
     def __init__(self):
-        pkl_data = 'data/MNIST_labeled.pkl'
-        csv_data = 'data/MNIST_labeled.csv'
-        if (os.path.isfile(pkl_data)):
-            self.data = pickle.load(open(pkl_data, 'rb'))
+        pkl_file = 'data/MNIST_labeled.pkl'
+        csv_file = 'data/MNIST_labeled.csv'
+        if (os.path.isfile(pkl_file)):
+            self.data = pickle.load(open(pkl_file, 'rb'))
         else:
-            super().__init__(csv_data)
-            pickle.dump(self.data, open(pkl_data, 'wb'))
+            super().__init__(csv_file)
+            pickle.dump(self.data, open(pkl_file, 'wb'))

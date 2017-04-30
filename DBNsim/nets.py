@@ -15,42 +15,45 @@ def activation(a):
     return [x > random.uniform(0, 1) for x in sigmoid(a)]
 
 def correlation(a, b):
-    """Return the binary correlation between 2 vectors."""
+    """Return the correlation between two binary vectors."""
     return [[i * j for j in b] for i in a]
 
 
 
-class DBN:
+class DBN(list):
     """Deep Belief Network."""
 
     def __init__(self, layers):
-        self.layers = layers
+        super().__init__(layers)
 
-    def set(self, data):
+    def observe(self, data):
         """Set the DBN state according to a particular input."""
         layer_data = data
-        for rbm in self.layers:
-            rbm.set(layer_data)
+        for rbm in self:
+            rbm.observe(layer_data)
             layer_data = rbm.h # <<< ma è meglio usare le probs anziché le attivazioni
 
-    def get(self):
+    def generate(self):
         """Generate a sample from the current weights."""
-        layer_data = self.layers[-1].get()
-        for rbm in self.layers[-2::-1]:
+        layer_data = self[-1].generate()
+        for rbm in self[-2::-1]:
             rbm.h = layer_data
-            layer_data = rbm.get()
+            layer_data = rbm.generate()
         return layer_data
 
     def evaluate(self, data):
         """Set the DBN state according to a particular input
         and reconstruct the input."""
-        self.set(data)
-        return self.get()
+        self.observe(data)
+        return self.generate()
 
     def learn(self, trainset, threshold = 0.05, max_epochs = 10):
-        for rbm in self.layers:
-            trainer = CDTrainer(rbm)
-            trainer.run(trainset) # NO! solo uno stub...
+        train_layer = trainset
+        for rbm in self:
+            # trainer = CDTrainer(rbm)
+            # trainer.run(train_layer)
+            rbm.learn(train_layer)
+            train_layer = rbm.h
 
 
 
@@ -67,20 +70,12 @@ class RBM:
         self.eta = 0.5 # learning rate
         self.max_epochs = 100 # max n. of epochs for training
 
-    def __str__(self):
-        """Return the weights representing the RBM."""
-        return str(self.W) + '\n' + str(self.a) + '\n' + str(self.b)
-
-    def __repr__(self):
-        """Return the dimensions of the RBM."""
-        return 'RBM(' + str(len(self.v)) + ', ' + str(len(self.h)) + ')'
-
-    def set(self, data):
+    def observe(self, data):
         """Set the RBM state according to a particular input."""
         self.v = data
         self.h = activation(np.dot(self.v, self.W) + self.b) # (vW + b)
 
-    def get(self):
+    def generate(self):
         """Generate a sample from the current weights."""
         self.v = activation(np.dot(self.W, self.h) + self.a) # (Wh + a)
         return self.v
@@ -88,8 +83,8 @@ class RBM:
     def evaluate(self, data):
         """Set the RBM state according to a particular input
         and reconstruct the input."""
-        self.set(data)
-        return self.get()
+        self.observe(data)
+        return self.generate()
 
     def learn(self, trainset, threshold = 0.06):
         """Learn from a particular training set."""
@@ -101,18 +96,18 @@ class RBM:
             epoch += 1
             for example in trainset:
                 # positive phase:
-                self.set(example)
+                self.observe(example)
                 pos_prods   = np.array(correlation(self.v, self.h))
                 pos_vis_act = np.array(self.v)
                 pos_hid_act = np.array(self.h)
 
                 # negative phase:
-                self.get()
+                self.generate()
                 neg_prods   = np.array(correlation(self.v, self.h))
                 neg_vis_act = np.array(self.v)
                 neg_hid_act = activation(np.dot(self.v, self.W) + self.b)
 
-                # update:
+                # updates:
                 self.W += self.eta * (pos_prods - neg_prods)
                 self.a += self.eta * (pos_vis_act - neg_vis_act)
                 self.b += self.eta * (pos_hid_act - neg_hid_act)

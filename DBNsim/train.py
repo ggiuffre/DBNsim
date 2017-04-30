@@ -13,7 +13,7 @@ def activation(a):
     return [x > random.uniform(0, 1) for x in sigmoid(a)]
 
 def correlation(a, b):
-    """Return the binary correlation between 2 vectors."""
+    """Return the correlation between two binary vectors."""
     return [[i * j for j in b] for i in a]
 
 
@@ -28,14 +28,6 @@ class CDTrainer:
         self.max_epochs = 100 # max n. of epochs for training
         self.eta = 0.5 # learning rate
 
-    def __str__(self):
-        """Return the weights representing the RBM."""
-        return 'Contrastive Divergence trainer'
-
-    def __repr__(self):
-        """Return the dimensions of the RBM."""
-        return 'CDTrainer(' + repr(self.net) + ')'
-
     def run(self, trainset):
         """Learn from a particular training set."""
         net = self.net
@@ -47,18 +39,18 @@ class CDTrainer:
             epoch += 1
             for example in trainset:
                 # positive phase:
-                net.set(example)
+                net.observe(example)
                 pos_prods   = np.array(correlation(net.v, net.h))
                 pos_vis_act = np.array(net.v)
                 pos_hid_act = np.array(net.h)
 
                 # negative phase:
-                net.get()
+                net.generate()
                 neg_prods   = np.array(correlation(net.v, net.h))
                 neg_vis_act = np.array(net.v)
                 neg_hid_act = activation(np.dot(net.v, net.W) + net.b)
 
-                # update:
+                # updates:
                 net.W += net.eta * (pos_prods - neg_prods)
                 net.a += net.eta * (pos_vis_act - neg_vis_act)
                 net.b += net.eta * (pos_hid_act - neg_hid_act)

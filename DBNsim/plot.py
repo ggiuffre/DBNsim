@@ -12,9 +12,5 @@ class WeightsPlotter:
         return self.net.W
 
     def plot(self):
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_aspect('equal')
-        plt.imshow(self.net.W)#, interpolation = 'nearest', cmap = plt.cm.ocean)
-        plt.colorbar()
+        plt.imshow(self.net.W)
         plt.show()
