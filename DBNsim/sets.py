@@ -8,15 +8,12 @@ import os.path
 class DataSet:
     """Dataset for training a neural network."""
 
-    def __init__(self, csv_file):
-        self.data = []
+    def __init__(self, csv_file, shape = None):
         with open(csv_file) as f:
             csv_data = csv.reader(f, delimiter = ',')
-        for row in csv_data:
-            example = {'label': None, 'image': []}
-            example['label'] = int(row[0])
-            example['image'] = [int(x) for x in row[1:]]
-            self.data.append(example)
+            self.data = np.array([[int(x) for x in row[1:]] for row in csv_data])
+        if shape != None:
+            self.data.reshape(shape)
 
 
 
@@ -29,5 +26,21 @@ class MNIST(DataSet):
         if (os.path.isfile(pkl_file)):
             self.data = pickle.load(open(pkl_file, 'rb'))
         else:
-            super().__init__(csv_file)
+            super().__init__(csv_file, shape = (60000, 784))
+            pickle.dump(self.data, open(pkl_file, 'wb'))
+
+
+
+class SmallerMNIST(MNIST):
+    """A 7x7 downsampling of the MNIST dataset."""
+
+    def __init__(self):
+        pkl_file = 'data/MNIST_small_labeled.pkl'
+        if (os.path.isfile(pkl_file)):
+            self.data = pickle.load(open(pkl_file, 'rb'))
+        else:
+            super().__init__()
+            self.data = self.data.reshape(60000, 7, 7, 4, 4)
+            self.data = np.array([[[group.mean() for group in piece] for piece in example] for example in self.data])
+            self.data = self.data.reshape(60000, 49)
             pickle.dump(self.data, open(pkl_file, 'wb'))

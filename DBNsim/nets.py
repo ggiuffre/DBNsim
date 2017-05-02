@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import random
+import pickle
 
 from train import CDTrainer
 
@@ -23,8 +24,9 @@ def correlation(a, b):
 class DBN(list):
     """Deep Belief Network."""
 
-    def __init__(self, layers):
+    def __init__(self, layers, name = 'untitled'):
         super().__init__(layers)
+        self.name = name
 
     def observe(self, data):
         """Set the DBN state according to a particular input."""
@@ -50,10 +52,19 @@ class DBN(list):
     def learn(self, trainset, threshold = 0.05, max_epochs = 10):
         train_layer = trainset
         for rbm in self:
-            # trainer = CDTrainer(rbm)
-            # trainer.run(train_layer)
-            rbm.learn(train_layer)
-            train_layer = rbm.h
+            trainer = CDTrainer(rbm, max_epochs = max_epochs)
+            trainer.run(train_layer)
+            # rbm.learn(train_layer)
+            # train_layer = rbm.h
+    
+    def save(self):
+        net_file = 'nets/' + self.name + '.pkl'
+        pickle.dump(self[:], open(net_file, 'wb'))
+
+    @staticmethod
+    def load(name):
+        net_file = 'nets/' + name + '.pkl'
+        return DBN(pickle.load(open(net_file, 'rb')), name = name)
 
 
 
@@ -86,34 +97,34 @@ class RBM:
         self.observe(data)
         return self.generate()
 
-    def learn(self, trainset, threshold = 0.06):
-        """Learn from a particular training set."""
-        print('-----------')
-        print('training...')
-        done  = False
-        epoch = 0
-        while (not done) and (epoch < self.max_epochs):
-            epoch += 1
-            for example in trainset:
-                # positive phase:
-                self.observe(example)
-                pos_prods   = np.array(correlation(self.v, self.h))
-                pos_vis_act = np.array(self.v)
-                pos_hid_act = np.array(self.h)
+    # def learn(self, trainset, threshold = 0.06):
+    #     """Learn from a particular training set."""
+    #     print('-----------')
+    #     print('training...')
+    #     done  = False
+    #     epoch = 0
+    #     while (not done) and (epoch < self.max_epochs):
+    #         epoch += 1
+    #         for example in trainset:
+    #             # positive phase:
+    #             self.observe(example)
+    #             pos_prods   = np.array(correlation(self.v, self.h))
+    #             pos_vis_act = np.array(self.v)
+    #             pos_hid_act = np.array(self.h)
 
-                # negative phase:
-                self.generate()
-                neg_prods   = np.array(correlation(self.v, self.h))
-                neg_vis_act = np.array(self.v)
-                neg_hid_act = activation(np.dot(self.v, self.W) + self.b)
+    #             # negative phase:
+    #             self.generate()
+    #             neg_prods   = np.array(correlation(self.v, self.h))
+    #             neg_vis_act = np.array(self.v)
+    #             neg_hid_act = activation(np.dot(self.v, self.W) + self.b)
 
-                # updates:
-                self.W += self.eta * (pos_prods - neg_prods)
-                self.a += self.eta * (pos_vis_act - neg_vis_act)
-                self.b += self.eta * (pos_hid_act - neg_hid_act)
+    #             # updates:
+    #             self.W += self.eta * (pos_prods - neg_prods)
+    #             self.a += self.eta * (pos_vis_act - neg_vis_act)
+    #             self.b += self.eta * (pos_hid_act - neg_hid_act)
 
-            # error calculation:
-            done = all([all([abs(x) < threshold for x in row]) for row in pos_prods - neg_prods])
+    #         # error calculation:
+    #         done = all([all([abs(x) < threshold for x in row]) for row in pos_prods - neg_prods])
 
-        print('done after', epoch, 'epochs.')
-        print('-----------')
+    #     print('done after', epoch, 'epochs.')
+    #     print('-----------')

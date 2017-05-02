@@ -16,6 +16,9 @@ def correlation(a, b):
     """Return the correlation between two binary vectors."""
     return [[i * j for j in b] for i in a]
 
+def squared_error(a, b):
+    return ((a - b) ** 2).mean()
+
 
 
 class CDTrainer:
@@ -23,20 +26,22 @@ class CDTrainer:
 
     def __init__(self, net, threshold = 0.05, max_epochs = 100):
         """Constructor for a RBM."""
-        self.net = net
-        self.threshold = threshold # target error
-        self.max_epochs = 100 # max n. of epochs for training
-        self.eta = 0.5 # learning rate
+        self.net = net               # the learner
+        self.mean_squared_err = None # current error
+        self.threshold = threshold   # target error
+        self.epoch = 0               # current number of epochs
+        self.max_epochs = max_epochs # max n. of epochs for training
+        self.learn_rate = 0.5        # learning rate
 
     def run(self, trainset):
         """Learn from a particular training set."""
         net = self.net
         print('-----------')
         print('training...')
-        done  = False
-        epoch = 0
-        while (not done) and (epoch < self.max_epochs):
-            epoch += 1
+        self.mean_squared_err = self.threshold + 1
+        while (self.mean_squared_err > self.threshold) and (self.epoch < self.max_epochs):
+            self.epoch += 1
+            errors = np.array([])
             for example in trainset:
                 # positive phase:
                 net.observe(example)
@@ -54,9 +59,11 @@ class CDTrainer:
                 net.W += net.eta * (pos_prods - neg_prods)
                 net.a += net.eta * (pos_vis_act - neg_vis_act)
                 net.b += net.eta * (pos_hid_act - neg_hid_act)
+                errors = np.append(errors, squared_error(example, net.v))
 
-            # error calculation:
-            done = all([all([abs(x) < self.threshold for x in row]) for row in pos_prods - neg_prods])
+            # error update:
+            self.mean_squared_err = errors.mean()
+            print('error [' + str(self.epoch) + ']:', self.mean_squared_err)
 
-        print('done after', epoch, 'epochs.')
+        print('done after', self.epoch, 'epochs.')
         print('-----------')
