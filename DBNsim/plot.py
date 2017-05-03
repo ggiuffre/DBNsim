@@ -9,17 +9,18 @@ class WeightsPlotter:
 
     def __init__(self, net, shape = None):
         self.net = net
+        self.shape = shape
         if shape != None:
             self.width, self.heigth = shape
-        if (self.width * self.heigth) != len(self.net.v):
-            raise Exception("Problems with the image shape.")
+            if (self.width * self.heigth) != len(self.net.v):
+                raise Exception('Problems with the image shape.')
 
     def weights(self):
         return self.net.W
 
     def plot(self, index):
         fields = self.net.W
-        if self.width != None:
+        if self.shape != None:
             fields = self.net.W.reshape(len(self.net.h), self.width, self.heigth)
         plt.imshow(fields[index])
         plt.show()
@@ -32,7 +33,7 @@ class ErrorPlotter:
     def __init__(self, trainer, dataset):
         self.trainer = trainer
         self.dataset = dataset
-        self.curr = 0
+        self.gen = None
 
     def plot(self):
         # fig, ax = plt.subplots()
@@ -61,13 +62,13 @@ class ErrorPlotter:
 
         def start():
             ax.set_xlim(0, self.trainer.max_epochs)
-            ax.set_ylim(0, 1)
+            ax.set_ylim(0, 3000)
+            self.gen = self.trainer.run(self.dataset)
             return ln,
 
         def update(frame):
             xdata.append(frame)
-            ydata.append(self.trainer.run(self.dataset)[self.curr])
-            self.curr += 1
+            ydata.append(next(self.gen))
             ln.set_data(xdata, ydata)
             return ln,
 
