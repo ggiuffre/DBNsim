@@ -1,20 +1,8 @@
 import numpy as np
-import math
-import random
 import pickle
 
 from train import CDTrainer
-
-
-
-def sigmoid(a):
-    """Return the sigmoid of a vector."""
-    ones = np.ones(a.shape)
-    return ones / (ones + np.exp(-a))
-
-def activation(a):
-    """Return a binary activation vector."""
-    return sigmoid(a) > np.random.uniform(size = a.shape)
+from util import sigmoid, activation
 
 
 
@@ -52,6 +40,7 @@ class DBN(list):
         for rbm in self:
             trainer = CDTrainer(rbm, max_epochs = max_epochs)
             trainer.run(train_layer)
+            train_layer = [rbm.h] # <<< STUB
     
     def save(self):
         net_file = 'nets/' + self.name + '.pkl'
@@ -69,22 +58,20 @@ class RBM:
 
     def __init__(self, vis_size, hid_size):
         """Constructor for a RBM."""
-        self.v   = np.zeros((vis_size, 1)) # visible units
-        self.a   = np.zeros((vis_size, 1)) # visible biases
-        self.h   = np.zeros((hid_size, 1)) # hidden units
-        self.b   = np.zeros((hid_size, 1)) # hidden biases
-        self.W   = np.random.randn(hid_size, vis_size) * 0.01 # weights
-        self.eta = 0.5 # learning rate
-        self.max_epochs = 100 # max n. of epochs for training
+        self.v = np.zeros((vis_size, 1)) # visible units
+        self.a = np.zeros((vis_size, 1)) # visible biases
+        self.h = np.zeros((hid_size, 1)) # hidden units
+        self.b = np.zeros((hid_size, 1)) # hidden biases
+        self.W = np.random.randn(hid_size, vis_size) * 0.01 # weights
 
     def observe(self, data):
         """Set the RBM state according to a particular input."""
-        self.v = np.array(data).reshape(-1, 1)
-        self.h = activation(np.dot(self.W, self.v) + self.b) # (W * v + b)
+        self.v = np.array(data).reshape(-1, 1) # vertical array
+        self.h = activation(sigmoid(np.dot(self.W, self.v) + self.b)) # (W * v + b)
 
     def generate(self):
         """Generate a sample from the current weights."""
-        self.v = np.dot(self.h.T, self.W).T + self.a # (h * W + a)
+        self.v = sigmoid(np.dot(self.W.T, self.h) + self.a) # (W' * h + a)
         return self.v
 
     def evaluate(self, data):

@@ -18,11 +18,14 @@ class WeightsPlotter:
     def weights(self):
         return self.net.W
 
-    def plot(self, index):
+    def plot(self, index = None):
         fields = self.net.W
         if self.shape != None:
             fields = self.net.W.reshape(len(self.net.h), self.width, self.heigth)
-        plt.imshow(fields[index])
+        if index != None:
+            plt.imshow(fields[index])
+        else:
+            plt.imshow(fields)
         plt.show()
 
 
