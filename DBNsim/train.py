@@ -16,18 +16,18 @@ class CDTrainer:
         self.epoch = 0               # current training epoch
         self.max_epochs = max_epochs # max n. of training epochs
         self.learn_rate = 0.6        # learning rate
-        self.momentum = 0.8          # learning momentum
-        self.batch_size = 1          # size of a (mini) batch
+        self.momentum = 0.5          # learning momentum
+        self.batch_size = 1          # size of a mini-batch
 
     def run(self, trainset):
         """Learn from a particular training set."""
         net      = self.net        # for readability
         batch_sz = self.batch_size # for readability
-        print('-----------')
-        print('training...')
         W_update = np.zeros(net.W.shape)
         a_update = np.zeros(net.a.shape)
         b_update = np.zeros(net.b.shape)
+        print('-----------')
+        print('training...')
         self.mean_squared_err = self.threshold + 1 # for entering the while loop
         while (self.mean_squared_err > self.threshold) and (self.epoch < self.max_epochs):
             self.epoch += 1
@@ -39,17 +39,17 @@ class CDTrainer:
                 # positive phase:
                 hid_probs   = sigmoid(np.dot(net.W, data) + net.b.repeat(batch_sz, axis = 1))
                 hid_states  = activation(hid_probs)
-                pos_corr    = np.dot(hid_probs, data.T) # vis-hid correlation (+)
-                pos_vis_act = data
-                pos_hid_act = hid_probs
+                pos_corr    = np.dot(hid_probs, data.T) / batch_sz # vis-hid correlations (+)
+                pos_vis_act = data.sum(axis = 1, keepdims = True)  / batch_sz
+                pos_hid_act = hid_probs.sum(axis = 1, keepdims = True)  / batch_sz
 
                 # negative phase:
-                vis_probs   = sigmoid(np.dot(net.W.T, hid_states) + net.a)
+                vis_probs   = sigmoid(np.dot(net.W.T, hid_states) + net.a.repeat(batch_sz, axis = 1))
                 data        = activation(vis_probs)
-                hid_probs   = sigmoid(np.dot(net.W, data) + net.b)
-                neg_corr    = np.dot(hid_probs, data.T) # vis-hid correlation (-)
-                neg_vis_act = data
-                neg_hid_act = hid_probs
+                hid_probs   = sigmoid(np.dot(net.W, data) + net.b.repeat(batch_sz, axis = 1))
+                neg_corr    = np.dot(hid_probs, data.T) / batch_sz # vis-hid correlations (-)
+                neg_vis_act = data.sum(axis = 1, keepdims = True)  / batch_sz
+                neg_hid_act = hid_probs.sum(axis = 1, keepdims = True)  / batch_sz
 
                 # updates:
                 W_update = self.momentum * W_update + self.learn_rate * (pos_corr - neg_corr)

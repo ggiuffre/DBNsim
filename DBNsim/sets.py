@@ -11,12 +11,12 @@ class DataSet:
         self.data = data
 
     @staticmethod
-    def fromCSV(path, shape = None):
+    def fromCSV(path, shape = None, delimiter = ','):
         print('loading data from CSV...')
-        data = np.genfromtxt(path, delimiter = ',') / 255.0
+        data = np.genfromtxt(path, delimiter = delimiter)
         if shape != None:
             data.reshape(shape)
-        return data
+        return data # return DataSet(data) ...?
 
     @staticmethod
     def fromPickle(path, shape = None):
@@ -24,7 +24,7 @@ class DataSet:
         data = np.array(pickle.load(open(path, 'rb')))
         if shape != None:
             data.reshape(shape)
-        return data
+        return data # return DataSet(data) ...?
 
 
 
@@ -37,8 +37,7 @@ class MNIST(DataSet):
         if (os.path.isfile(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
-            self.data = DataSet.fromCSV(csv_file)
-            self.data = np.array([row[1:] for row in self.data])
+            self.data = DataSet.fromCSV(csv_file)[:, 1:] / 255.0
             pickle.dump(self.data, open(pkl_file, 'wb'))
 
 

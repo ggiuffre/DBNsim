@@ -18,7 +18,7 @@ net.save()
 # t = ErrorPlotter(CDTrainer(net[0]), trainset[:6])
 # t.plot()
 
-for x in range(10):
+for x in range(4):
     print(net.evaluate(np.random.rand(8)).T > 0.5)
 
 # plt.imshow(net.evaluate(np.random.rand(49)).reshape(7, 7))
