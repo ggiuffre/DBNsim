@@ -1,8 +1,8 @@
 import numpy as np
 import pickle
 
-from train import CDTrainer
-from util import sigmoid, activation
+from DBNlogic.train import CDTrainer
+from DBNlogic.util import sigmoid, activation
 
 
 

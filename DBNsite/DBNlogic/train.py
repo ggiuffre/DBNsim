@@ -1,7 +1,7 @@
 import numpy as np
 
-from plot import WeightsPlotter
-from util import sigmoid, activation, squared_error
+from DBNlogic.plot import WeightsPlotter
+from DBNlogic.util import sigmoid, activation, squared_error
 
 
 
