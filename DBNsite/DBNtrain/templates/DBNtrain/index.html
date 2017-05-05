@@ -1,0 +1,12 @@
+<h1>Train a DBN</h1>
+
+<form action="#" method="post">
+	{% csrf_token %}
+	<input type="text" name="epochs" id="epochs" value="10" />
+	<label for="epochs">max n. epochs</label><br />
+	<input type="text" name="learn_rate" id="learn_rate" value="0.1" />
+	<label for="learn_rate">learning rate</label><br />
+	<input type="text" name="momentum" id="momentum" value="0.5" />
+	<label for="momentum">momentum</label><br />
+	<input type="submit" value="Train" />
+</form>

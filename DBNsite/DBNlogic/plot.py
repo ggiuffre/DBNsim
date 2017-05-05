@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from util import plotImage
 
 
 
@@ -65,7 +66,7 @@ class ErrorPlotter:
 
         def start():
             ax.set_xlim(0, self.trainer.max_epochs)
-            ax.set_ylim(0, 3000)
+            ax.set_ylim(0, 1)
             self.gen = self.trainer.run(self.dataset)
             return ln,
 

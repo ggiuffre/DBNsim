@@ -8,16 +8,17 @@ from util import sigmoid, activation, squared_error
 class CDTrainer:
     """Contrastive Divergence trainer for RBMs."""
 
-    def __init__(self, net, threshold = 0.05, max_epochs = 100):
+    def __init__(self, net, threshold = 0.01, max_epochs = 100, batch_sz = 1):
         """Constructor for a RBM."""
         self.net = net               # the learner
         self.mean_squared_err = None # current training error
         self.threshold = threshold   # target error
         self.epoch = 0               # current training epoch
         self.max_epochs = max_epochs # max n. of training epochs
-        self.learn_rate = 0.6        # learning rate
+        self.learn_rate = 0.1        # learning rate
         self.momentum = 0.5          # learning momentum
-        self.batch_size = 1          # size of a mini-batch
+        self.decay = 0.0002          # weight decay factor
+        self.batch_size = batch_sz   # size of a mini-batch
 
     def run(self, trainset):
         """Learn from a particular training set."""
@@ -43,6 +44,8 @@ class CDTrainer:
                 pos_vis_act = data.sum(axis = 1, keepdims = True)  / batch_sz
                 pos_hid_act = hid_probs.sum(axis = 1, keepdims = True)  / batch_sz
 
+                ### pos_hid_probs = hid_probs
+
                 # negative phase:
                 vis_probs   = sigmoid(np.dot(net.W.T, hid_states) + net.a.repeat(batch_sz, axis = 1))
                 data        = activation(vis_probs)
@@ -52,7 +55,7 @@ class CDTrainer:
                 neg_hid_act = hid_probs.sum(axis = 1, keepdims = True)  / batch_sz
 
                 # updates:
-                W_update = self.momentum * W_update + self.learn_rate * (pos_corr - neg_corr)
+                W_update = self.momentum * W_update + self.learn_rate * ((pos_corr - neg_corr) - self.decay * net.W)
                 a_update = self.momentum * a_update + self.learn_rate * (pos_vis_act - neg_vis_act)
                 b_update = self.momentum * b_update + self.learn_rate * (pos_hid_act - neg_hid_act)
                 net.W += W_update
@@ -67,3 +70,4 @@ class CDTrainer:
 
         print('done after', self.epoch, 'epochs.')
         print('-----------')
+        ### return pos_hid_probs

@@ -35,12 +35,12 @@ class DBN(list):
         self.observe(data)
         return self.generate()
 
-    def learn(self, trainset, threshold = 0.05, max_epochs = 10):
+    def learn(self, trainset, threshold = 0.05, max_epochs = 10, batch_sz = 1):
         train_layer = trainset
         for rbm in self:
-            trainer = CDTrainer(rbm, max_epochs = max_epochs)
+            trainer = CDTrainer(rbm, max_epochs = max_epochs, batch_sz = batch_sz)
             trainer.run(train_layer)
-            train_layer = [rbm.h] # <<< STUB
+            train_layer = rbm.h.reshape(-1, 1) # TODO (stub)
     
     def save(self):
         net_file = 'nets/' + self.name + '.pkl'
@@ -62,7 +62,7 @@ class RBM:
         self.a = np.zeros((vis_size, 1)) # visible biases
         self.h = np.zeros((hid_size, 1)) # hidden units
         self.b = np.zeros((hid_size, 1)) # hidden biases
-        self.W = np.random.randn(hid_size, vis_size) * 0.01 # weights
+        self.W = np.random.randn(hid_size, vis_size) * 0.1 # weights
 
     def observe(self, data):
         """Set the RBM state according to a particular input."""

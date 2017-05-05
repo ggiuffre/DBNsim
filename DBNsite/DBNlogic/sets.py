@@ -46,7 +46,7 @@ class SmallerMNIST(MNIST):
     """A 7x7 downsampling of the MNIST dataset."""
 
     def __init__(self):
-        pkl_file = 'data/MNIST_small_labeled.pkl'
+        pkl_file = 'data/MNIST_small.pkl'
         if (os.path.isfile(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
