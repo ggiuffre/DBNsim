@@ -2,11 +2,17 @@
 
 <form action="{% url 'train' %}" method="post">
 	{% csrf_token %}
-	<input type="text" name="epochs" id="epochs" value="10" />
-	<label for="epochs">max n. epochs</label><br />
-	<input type="text" name="learn_rate" id="learn_rate" value="0.1" />
+	<input type="text" name="epochs" id="epochs" value="{{config.max_epochs}}" />
+	<label for="epochs">max n. of epochs</label><br />
+
+    <input type="text" name="batch_size" id="batch_size" value="{{config.batch_size}}" />
+    <label for="batch_size">size of a mini-batch</label><br />
+
+	<input type="text" name="learn_rate" id="learn_rate" value="{{config.learn_rate}}" />
 	<label for="learn_rate">learning rate</label><br />
-	<input type="text" name="momentum" id="momentum" value="0.5" />
+
+	<input type="text" name="momentum" id="momentum" value="{{config.momentum}}" />
 	<label for="momentum">momentum</label><br />
+
 	<input type="submit" value="Train" />
 </form>

@@ -2,7 +2,8 @@ import numpy as np
 import pickle
 
 from DBNlogic.train import CDTrainer
-from DBNlogic.util import sigmoid, activation
+from DBNlogic.util import sigmoid, activation, Configuration
+
 
 
 
@@ -35,10 +36,10 @@ class DBN(list):
         self.observe(data)
         return self.generate()
 
-    def learn(self, trainset, threshold = 0.05, max_epochs = 10, batch_sz = 1):
+    def learn(self, trainset, configuration = Configuration()):
         train_layer = trainset
         for rbm in self:
-            trainer = CDTrainer(rbm, max_epochs = max_epochs, batch_sz = batch_sz)
+            trainer = CDTrainer(rbm, configuration)
             trainer.run(train_layer)
             train_layer = rbm.h.reshape(-1, 1) # TODO (stub)
     

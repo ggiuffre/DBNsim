@@ -1,6 +1,7 @@
 import numpy as np
 
 from DBNlogic.plot import WeightsPlotter
+from DBNlogic.util import Configuration
 from DBNlogic.util import sigmoid, activation, squared_error
 
 
@@ -8,29 +9,31 @@ from DBNlogic.util import sigmoid, activation, squared_error
 class CDTrainer:
     """Contrastive Divergence trainer for RBMs."""
 
-    def __init__(self, net, threshold = 0.01, max_epochs = 100, batch_sz = 1):
+    def __init__(self, net, config = Configuration()):
         """Constructor for a RBM."""
         self.net = net               # the learner
         self.mean_squared_err = None # current training error
-        self.threshold = threshold   # target error
         self.epoch = 0               # current training epoch
-        self.max_epochs = max_epochs # max n. of training epochs
-        self.learn_rate = 0.1        # learning rate
-        self.momentum = 0.5          # learning momentum
-        self.decay = 0.0002          # weight decay factor
-        self.batch_size = batch_sz   # size of a mini-batch
+        self.config = config         # hyper-parameters for training
 
     def run(self, trainset):
         """Learn from a particular training set."""
-        net      = self.net        # for readability
-        batch_sz = self.batch_size # for readability
+        net        = self.net
+        max_epochs = self.config.max_epochs
+        threshold  = self.config.threshold
+        batch_sz   = self.config.batch_size
+        learn_rate = self.config.learn_rate
+        momentum   = self.config.momentum
+        w_decay    = self.config.w_decay
+
         W_update = np.zeros(net.W.shape)
         a_update = np.zeros(net.a.shape)
         b_update = np.zeros(net.b.shape)
+
         print('-----------')
         print('training...')
-        self.mean_squared_err = self.threshold + 1 # for entering the while loop
-        while (self.mean_squared_err > self.threshold) and (self.epoch < self.max_epochs):
+        self.mean_squared_err = threshold + 1 # for entering the while loop
+        while (self.mean_squared_err > threshold) and (self.epoch < max_epochs):
             self.epoch += 1
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
@@ -55,9 +58,9 @@ class CDTrainer:
                 neg_hid_act = hid_probs.sum(axis = 1, keepdims = True)  / batch_sz
 
                 # updates:
-                W_update = self.momentum * W_update + self.learn_rate * ((pos_corr - neg_corr) - self.decay * net.W)
-                a_update = self.momentum * a_update + self.learn_rate * (pos_vis_act - neg_vis_act)
-                b_update = self.momentum * b_update + self.learn_rate * (pos_hid_act - neg_hid_act)
+                W_update = momentum * W_update + learn_rate * ((pos_corr - neg_corr) - w_decay * net.W)
+                a_update = momentum * a_update + learn_rate * (pos_vis_act - neg_vis_act)
+                b_update = momentum * b_update + learn_rate * (pos_hid_act - neg_hid_act)
                 net.W += W_update
                 net.a += a_update
                 net.b += b_update
