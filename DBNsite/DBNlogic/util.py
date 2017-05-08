@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 class Configuration:
     """Hyper-parameters configuration for training a network."""
     def __init__(self,
-            max_epochs = 100,   # -------
+            max_epochs = 10,    # -------
             threshold  = 0.05,  # 
             batch_size = 1,     # default
             learn_rate = 0.1,   # values

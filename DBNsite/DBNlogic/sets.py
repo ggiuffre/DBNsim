@@ -4,6 +4,16 @@ import os.path
 
 
 
+def exists(path):
+    """Return whether a resource exists."""
+    return os.path.isfile(path)
+
+def base(name = ''):
+    """Given the name of a dataset, return the default path to it."""
+    return os.path.join('DBNlogic', 'data', name)
+
+
+
 class DataSet:
     """Dataset for training a neural network."""
 
@@ -11,20 +21,27 @@ class DataSet:
         self.data = data
 
     @staticmethod
-    def fromCSV(path, shape = None, delimiter = ','):
+    def fromCSV(path, delimiter = ','):
         print('loading data from CSV...')
-        data = np.genfromtxt(path, delimiter = delimiter)
-        if shape != None:
-            data.reshape(shape)
-        return data # return DataSet(data) ...?
+        return np.genfromtxt(path, delimiter = delimiter)
 
     @staticmethod
-    def fromPickle(path, shape = None):
+    def fromPickle(path):
         print('loading data from pickle...')
-        data = np.array(pickle.load(open(path, 'rb')))
-        if shape != None:
-            data.reshape(shape)
-        return data # return DataSet(data) ...?
+        return np.array(pickle.load(open(path, 'rb')))
+
+    @classmethod
+    def fromWhatever(cls, name):
+        full_path = base(name)
+        if exists(full_path + '.pkl'):
+            return cls.fromPickle(full_path + '.pkl')
+        if exists(full_path + '.csv'):
+            return cls.fromCSV(full_path + '.csv')
+        return np.array([])
+
+    @staticmethod
+    def allSets(base_dir = base()):
+        return set([os.path.splitext(f)[0] for f in os.listdir(base_dir) if (f.endswith('.pkl') or f.endswith('.csv'))])
 
 
 
@@ -32,9 +49,9 @@ class MNIST(DataSet):
     """MNIST dataset."""
 
     def __init__(self):
-        pkl_file = 'data/MNIST_labeled.pkl'
-        csv_file = 'data/MNIST_labeled.csv'
-        if (os.path.isfile(pkl_file)):
+        pkl_file = base('MNIST_labeled.pkl')
+        csv_file = base('MNIST_labeled.csv')
+        if (exists(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
             self.data = DataSet.fromCSV(csv_file)[:, 1:] / 255.0
@@ -46,8 +63,8 @@ class SmallerMNIST(MNIST):
     """A 7x7 downsampling of the MNIST dataset."""
 
     def __init__(self):
-        pkl_file = 'data/MNIST_small.pkl'
-        if (os.path.isfile(pkl_file)):
+        pkl_file = base('MNIST_small.pkl')
+        if (exists(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
             super().__init__()

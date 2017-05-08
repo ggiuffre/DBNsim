@@ -36,10 +36,11 @@ class DBN(list):
         self.observe(data)
         return self.generate()
 
-    def learn(self, trainset, configuration = Configuration()):
+    def learn(self, trainset, config = Configuration()):
+        """Learn from a particular dataset."""
         train_layer = trainset
         for rbm in self:
-            trainer = CDTrainer(rbm, configuration)
+            trainer = CDTrainer(rbm, config)
             trainer.run(train_layer)
             train_layer = rbm.h.reshape(-1, 1) # TODO (stub)
     

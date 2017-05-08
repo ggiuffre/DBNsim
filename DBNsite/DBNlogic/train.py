@@ -17,7 +17,7 @@ class CDTrainer:
         self.config = config         # hyper-parameters for training
 
     def run(self, trainset):
-        """Learn from a particular training set."""
+        """Learn from a particular dataset."""
         net        = self.net
         max_epochs = self.config.max_epochs
         threshold  = self.config.threshold
