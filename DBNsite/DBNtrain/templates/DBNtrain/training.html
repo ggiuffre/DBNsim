@@ -1,0 +1,73 @@
+<h1>Training session</h1>
+
+{% load static %}
+<script type="text/javascript" src="{% static 'highcharts.js' %}"></script>
+
+<div id="training_plot" style="width:100%; height:400px;"></div>
+
+<button onclick="updateError()">'vanti</button>
+<div type="button" id="prova"></div>
+
+<script type="text/javascript">
+	var chart = Highcharts.chart({
+		chart: {
+			renderTo: 'training_plot',
+			defaultSeriesType: 'areaspline',
+			animation: {
+				duration: 200
+			}
+		},
+		title: {
+			text: 'Training error over time'
+		},
+		xAxis: {
+			min: 0,
+			title: {
+				text: 'Epoch number'
+			},
+			tickPixelInterval: 100,
+			maxZoom: 20
+		},
+		yAxis: {
+			min: 0,
+			minPadding: 0.2,
+			maxPadding: 0.2,
+			title: {
+				text: 'Error',
+				margin: 80
+			}
+		},
+		series: [{
+			name: 'Training error',
+			data: []
+		}]
+	});
+
+	var index = 0;
+
+	function updateError() {
+		var xhttp = new XMLHttpRequest();
+
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				document.getElementById("prova").innerHTML = this.responseText;
+				response = JSON.parse(this.responseText)
+				if (!response.stop) {
+					var point = response.error;
+
+					var shift = chart.series[0].data.length > 20; // shift if the series is longer than 20
+					chart.series[0].addPoint([index, point], true);
+					index++;
+
+					// automatically:
+					// setTimeout(updateError, 1000); // call it again
+				}
+			}
+		};
+
+		xhttp.open('POST', '../getError/', true);
+		xhttp.setRequestHeader('Content-type', 'application/json');
+		var parameters = { 'job_id': '{{job_id}}' }
+		xhttp.send(JSON.stringify(parameters));
+	}
+</script>

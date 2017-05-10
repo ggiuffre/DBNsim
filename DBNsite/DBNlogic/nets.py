@@ -41,8 +41,9 @@ class DBN(list):
         train_layer = trainset
         for rbm in self:
             trainer = CDTrainer(rbm, config)
-            trainer.run(train_layer)
-            train_layer = rbm.h.reshape(-1, 1) # TODO (stub)
+            for error in trainer.run(train_layer):
+                yield error
+            train_layer = rbm.h.reshape(-1, 1) # TODO: batch size??
     
     def save(self):
         net_file = 'nets/' + self.name + '.pkl'

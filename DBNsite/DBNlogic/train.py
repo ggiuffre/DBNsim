@@ -30,22 +30,21 @@ class CDTrainer:
         a_update = np.zeros(net.a.shape)
         b_update = np.zeros(net.b.shape)
 
-        print('-----------')
-        print('training...')
-        self.mean_squared_err = threshold + 1 # for entering the while loop
+        self.mean_squared_err = threshold + 1 # (for entering the while loop)
         while (self.mean_squared_err > threshold) and (self.epoch < max_epochs):
             self.epoch += 1
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
-                examples = np.array(trainset[batch_n : batch_n + batch_sz]).T
+                start = batch_sz * batch_n
+                examples = np.array(trainset[start : start + batch_sz]).T
                 data = examples
 
                 # positive phase:
                 hid_probs   = sigmoid(np.dot(net.W, data) + net.b.repeat(batch_sz, axis = 1))
                 hid_states  = activation(hid_probs)
                 pos_corr    = np.dot(hid_probs, data.T) / batch_sz # vis-hid correlations (+)
-                pos_vis_act = data.sum(axis = 1, keepdims = True)  / batch_sz
-                pos_hid_act = hid_probs.sum(axis = 1, keepdims = True)  / batch_sz
+                pos_vis_act = data.sum(axis = 1, keepdims = True) / batch_sz
+                pos_hid_act = hid_probs.sum(axis = 1, keepdims = True) / batch_sz
 
                 ### pos_hid_probs = hid_probs
 
@@ -68,9 +67,5 @@ class CDTrainer:
 
             # error update:
             self.mean_squared_err = errors.mean()
-            print('error [epoch ' + str(self.epoch) + ']:', self.mean_squared_err)
-            ### yield self.mean_squared_err
 
-        print('done after', self.epoch, 'epochs.')
-        print('-----------')
-        ### return pos_hid_probs
+            yield self.mean_squared_err

@@ -3,33 +3,42 @@
 <form action="{% url 'train' %}" method="post">
 	{% csrf_token %}
 
-    <select name="dataset">
-        {% for s in datasets %}
-            <option value="{{s}}">{{s}}</option>
-        {% endfor %}
-    </select>
-    <label for="dataset">training dataset</label><br />
+	<fieldset>
+		<legend>Dataset info</legend>
+		<select name="dataset">
+			{% for s in datasets %}
+				<option value="{{s}}">{{s}}</option>
+			{% endfor %}
+		</select>
+		<label for="dataset">training dataset</label>
+	</fieldset>
 
-    <input type="text" name="hid_sz" id="hid_sz" />
-    <label for="hid_sz">number of hidden units</label><br />
+	<fieldset>
+		<legend>Network info</legend>
+		<input type="text" name="hid_sz" id="hid_sz" />
+		<label for="hid_sz">number of hidden units</label>
+	</fieldset>
 
-	<input type="text" name="epochs" id="epochs" value="{{config.max_epochs}}" />
-	<label for="epochs">max n. of epochs</label><br />
+	<fieldset>
+		<legend>Training parameters</legend>
+		<input type="text" name="epochs" id="epochs" value="{{config.max_epochs}}" />
+		<label for="epochs">max n. of epochs</label><br />
 
-    <input type="text" name="batch_size" id="batch_size" value="{{config.batch_size}}" />
-    <label for="batch_size">size of a mini-batch</label><br />
+		<input type="text" name="batch_size" id="batch_size" value="{{config.batch_size}}" />
+		<label for="batch_size">size of a mini-batch</label><br />
 
-	<input type="text" name="learn_rate" id="learn_rate" value="{{config.learn_rate}}" />
-	<label for="learn_rate">learning rate</label><br />
+		<input type="text" name="learn_rate" id="learn_rate" value="{{config.learn_rate}}" />
+		<label for="learn_rate">learning rate</label><br />
 
-	<input type="text" name="momentum" id="momentum" value="{{config.momentum}}" />
-	<label for="momentum">momentum</label><br />
+		<input type="text" name="momentum" id="momentum" value="{{config.momentum}}" />
+		<label for="momentum">momentum</label><br />
 
-    <input type="text" name="w_decay" id="w_decay" value="{{config.w_decay}}" />
-    <label for="w_decay">weight decay factor</label><br />
+		<input type="text" name="w_decay" id="w_decay" value="{{config.w_decay}}" />
+		<label for="w_decay">weight decay factor</label><br />
 
-    <input type="text" name="threshold" id="threshold" value="{{config.threshold}}" />
-    <label for="threshold">target error threshold</label><br />
+		<input type="text" name="threshold" id="threshold" value="{{config.threshold}}" />
+		<label for="threshold">target error threshold</label>
+	</fieldset>
 
 	<input type="submit" value="Train" />
 </form>
