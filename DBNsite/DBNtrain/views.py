@@ -52,15 +52,8 @@ def train(request):
         'dataset': trainset,
         'errors': []
     }
-    print('sent:', random_id)
 
-    context = {
-        'job_id': random_id
-    }
-    return render(request, 'DBNtrain/training.html', context)
-
-    # prova = json.dumps([e for e in errs])
-    # print(prova)
+    return HttpResponse(random_id)
 
 @csrf_exempt
 def getError(request):
