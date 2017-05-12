@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="{% static 'jquery.js' %}"></script>
 		<script type="text/javascript" src="{% static 'training.js' %}"></script>
 	</head>
-	<body>
+	<body onload="setupChart()">
 
 		<h1>Train a DBN</h1>
 
@@ -59,8 +59,10 @@
 			<p><input type="submit" value="Train" onclick="newTraining()" /></p>
 		</form>
 
-		<div id="container"></div>
-		<p><button onclick="updateError()">Step &gt;</button></p>
+		<div id="train_plot">
+			<div id="train_plot_container"></div>
+			<p><button onclick="updateError()">Step &gt;</button></p>
+		</div>
 
 	</body>
 </html>

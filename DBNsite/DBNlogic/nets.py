@@ -40,10 +40,12 @@ class DBN(list):
         """Learn from a particular dataset."""
         train_layer = trainset
         for rbm in self:
+            probs_dataset = []
             trainer = CDTrainer(rbm, config)
-            for error in trainer.run(train_layer):
-                yield error
-            train_layer = rbm.h.reshape(-1, 1) # TODO: batch size??
+            for hid_probs in trainer.run(train_layer):
+                probs_dataset.append(hid_probs)
+                yield trainer.mean_squared_err
+            train_layer = probs_dataset
     
     def save(self):
         net_file = 'nets/' + self.name + '.pkl'

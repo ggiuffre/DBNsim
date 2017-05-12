@@ -46,7 +46,7 @@ class CDTrainer:
                 pos_vis_act = data.sum(axis = 1, keepdims = True) / batch_sz
                 pos_hid_act = hid_probs.sum(axis = 1, keepdims = True) / batch_sz
 
-                ### pos_hid_probs = hid_probs
+                pos_hid_probs = hid_probs
 
                 # negative phase:
                 vis_probs   = sigmoid(np.dot(net.W.T, hid_states) + net.a.repeat(batch_sz, axis = 1))
@@ -68,4 +68,4 @@ class CDTrainer:
             # error update:
             self.mean_squared_err = errors.mean()
 
-            yield self.mean_squared_err
+            yield pos_hid_probs
