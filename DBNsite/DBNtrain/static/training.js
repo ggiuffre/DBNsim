@@ -19,7 +19,7 @@ function setupChart() {
 			text: 'Reconstruction error over time'
 		},
 		xAxis: {
-			min: 0,
+			min: 1,
 			title: {
 				text: 'Epoch number'
 			},
@@ -76,8 +76,8 @@ function updateError(autoContinue = false) {
 				var point = response.error;
 
 				var shift = chart.series[0].data.length > 20; // shift if the series is longer than 20
-				chart.series[0].addPoint([epoch, point], true, shift);
 				epoch++;
+				chart.series[0].addPoint([epoch, point], true, shift);
 
 				if (autoContinue)
 					setTimeout(updateError.bind(this, autoContinue), 500); // call it again

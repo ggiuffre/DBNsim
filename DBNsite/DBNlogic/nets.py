@@ -19,8 +19,8 @@ class DBN(list):
         layer_data = data
         for rbm in self:
             rbm.observe(layer_data)
-            # TODO: <<<<<<<<<<<<<<<<
-            layer_data = rbm.h # <<< ma è meglio usare le probs anziché le attivazioni
+            # TODO: <<<<<<<<<<<<<<<< ma è meglio usare le
+            layer_data = rbm.h # <<< probs anziché le attivazioni
 
     def generate(self):
         """Generate a sample from the current weights."""
@@ -41,11 +41,11 @@ class DBN(list):
         train_layer = trainset
         for rbm in self:
             probs_dataset = []
-            trainer = CDTrainer(rbm, config)
+            trainer = CDTrainer(rbm, config = config)
             for hid_probs in trainer.run(train_layer):
                 probs_dataset.append(hid_probs)
                 yield trainer.mean_squared_err
-            train_layer = probs_dataset
+            train_layer = np.array(probs_dataset)
     
     def save(self):
         net_file = 'nets/' + self.name + '.pkl'

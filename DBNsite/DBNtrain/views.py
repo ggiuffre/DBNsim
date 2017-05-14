@@ -31,15 +31,18 @@ def train(request):
     trainset_name = request.POST['dataset']
     trainset = DataSet.fromWhatever(trainset_name)
 
-    vis_size = len(trainset[0])
     try:
-        hid_size = int(request.POST['hid_sz'])
+        num_rbms = int(request.POST['num_rbms'])
     except ValueError:
-        print('Bad argument for hidden size: defaulting to 1.')
-        hid_size = 1
+        num_rbms = 1
+        # return HttpResponse({'error': 'you haven\'t specified [...]'})
 
-    L1  = RBM(vis_size, hid_size)
-    net = DBN([L1], name = trainset_name)
+    net = DBN([], name = trainset_name)
+    vis_size = len(trainset[0])
+    for rbm in range(1, num_rbms + 1):
+        hid_size = int(request.POST['hid_sz_' + str(rbm)])
+        net.append(RBM(vis_size, hid_size))
+        vis_size = hid_size # for the next RBM
 
     config = {
         'max_epochs' : int(request.POST['epochs']),
@@ -50,9 +53,7 @@ def train(request):
 
     random_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 16))
     training_jobs[random_id] = {
-        'net': net,
-        'config': config,
-        'dataset': trainset
+        'generator': net.learn(trainset, Configuration(**config))
     }
 
     return HttpResponse(random_id)
@@ -63,14 +64,11 @@ def getError(request):
     and return the reconstruction error."""
     body = json.loads(request.body.decode())
     job = body['job_id']
+    train_gen = training_jobs[job]['generator']
     stop = False
 
-    net = training_jobs[job]['net']
-    config = training_jobs[job]['config']
-    dataset = training_jobs[job]['dataset']
-
     try:
-        next_err = next(net.learn(dataset, Configuration(**config)))
+        next_err = next(train_gen)
     except StopIteration:
         stop = True
 

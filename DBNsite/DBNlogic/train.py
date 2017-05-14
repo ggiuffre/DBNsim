@@ -14,7 +14,7 @@ class CDTrainer:
         self.net = net               # the learner
         self.mean_squared_err = None # current training error
         self.epoch = 0               # current training epoch
-        self.config = config         # hyper-parameters for training
+        self.config = config         # hyper-parameters for training    
 
     def run(self, trainset):
         """Learn from a particular dataset."""
