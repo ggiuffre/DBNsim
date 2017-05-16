@@ -29,6 +29,7 @@ class CDTrainer:
         W_update = np.zeros(net.W.shape)
         a_update = np.zeros(net.a.shape)
         b_update = np.zeros(net.b.shape)
+        pos_hid_probs = None
 
         self.mean_squared_err = threshold + 1 # (for entering the while loop)
         while (self.mean_squared_err > threshold) and (self.epoch < max_epochs):

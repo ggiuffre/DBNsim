@@ -41,6 +41,7 @@ def train(request):
     vis_size = len(trainset[0])
     for rbm in range(1, num_rbms + 1):
         hid_size = int(request.POST['hid_sz_' + str(rbm)])
+        print('creating a', vis_size, 'x', hid_size, 'RBM...')
         net.append(RBM(vis_size, hid_size))
         vis_size = hid_size # for the next RBM
 
@@ -51,7 +52,7 @@ def train(request):
         'momentum'   : float(request.POST['momentum'])
     }
 
-    random_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 16))
+    random_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10))
     training_jobs[random_id] = {
         'generator': net.learn(trainset, Configuration(**config))
     }
@@ -70,6 +71,7 @@ def getError(request):
     try:
         next_err = next(train_gen)
     except StopIteration:
+        next_err = None
         stop = True
 
     response = {
