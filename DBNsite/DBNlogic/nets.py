@@ -10,7 +10,7 @@ from DBNlogic.util import sigmoid, activation, Configuration
 class DBN(list):
     """Deep Belief Network."""
 
-    def __init__(self, layers, name = 'untitled'):
+    def __init__(self, layers = [], name = 'untitled'):
         super().__init__(layers)
         self.name = name
 
