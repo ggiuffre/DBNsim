@@ -42,10 +42,11 @@ function setupChart() {
 }
 
 /**
- * Submits the training hyper-parameters to the
- * server for starting a new training session.
+ * Binds the submission of the training form to
+ * an AJAX request that submits the training
+ * hyper-parameters to the server.
  */
-function newTraining() {
+function setupTrainForm() {
 	$("#train_form").submit(function(e) {
 		var net_form_data = $('#net_form').serialize();
 		var train_form_data = $('#train_form').serialize();

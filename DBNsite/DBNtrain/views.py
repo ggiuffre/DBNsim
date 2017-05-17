@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import string
 import random
+from time import time
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
 from DBNlogic.util import Configuration
@@ -37,7 +38,7 @@ def train(request):
         num_rbms = 1
         # return HttpResponse({'error': 'you haven\'t specified [...]'})
 
-    net = DBN([], name = trainset_name)
+    net = DBN(name = trainset_name)
     vis_size = len(trainset[0])
     for rbm in range(1, num_rbms + 1):
         hid_size = int(request.POST['hid_sz_' + str(rbm)])
@@ -53,9 +54,15 @@ def train(request):
     }
 
     random_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10))
+    print(random_id)
     training_jobs[random_id] = {
+        'birthday': time(),
         'generator': net.learn(trainset, Configuration(**config))
     }
+
+    random_old_job = random.choice(list(training_jobs.keys()))
+    if time() - training_jobs[random_old_job]['birthday'] > 60 * 60:
+        del training_jobs[random_old_job]
 
     return HttpResponse(random_id)
 
