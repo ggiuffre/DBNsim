@@ -22,7 +22,7 @@ h1 {
 	text-align: center;
 }
 
-#train_form {
+#net_form, #train_form {
 	width: 210px;
 	float: left;
 	padding: 1em;

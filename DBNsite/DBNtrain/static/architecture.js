@@ -3,51 +3,7 @@
  * Feel free to change this number.
  * @type {Number}
  */
-var max_rbms = 8;
-
-/**
- * The stylesheet for the DBN graph
- * (with Cytoscape).
- * @type {Array}
- */
-var networkStyle = [
-	{
-		selector: 'node',
-		style: {
-			'background-color': '#46A',
-			'label': 'data(id)'
-		}
-	},
-	{
-		selector: 'edge',
-		style: {
-			'width': 1,
-			'line-color': '#AAC'
-		}
-	}
-];
-
-/**
- * The Cytoscape layout for
- * the DBN architecture
- * @type {Object}
- */
-var networkLayout = {
-	name: 'cose'
-}
-
-/**
- * Sets up the graph for the
- * DBN architecture.
- */
-function setupGraph() {
-	var networkGraph = cytoscape({
-		container: document.getElementById('DBNgraph'),
-		elements: [],
-		style: networkStyle,
-		layout: networkLayout
-	});
-}
+var max_rbms = 6;
 
 /**
  * Updates the form for defining the DBN layers,
@@ -66,7 +22,7 @@ function updateArchitecture() {
 		$('#arch_form').append('<br />');
 		$('#arch_form').append('<label for="' + rbm_id + '">n. of hidden units (RBM ' + i + '):</label>');
 		$('#arch_form').append('<br />');
-		$('#arch_form').append('<input type="text" name="' + rbm_id + '" id="' + rbm_id + '" class="hid_sz" onchange="updateLayers();" />');
+		$('#arch_form').append('<input type="text" name="' + rbm_id + '" id="' + rbm_id + '" class="hid_sz" onchange="updateGraph();" />');
 	}
 
 	// remove exceeding layers:
@@ -104,56 +60,62 @@ function edgeId(node1, node2) {
  * Repaints the Cytoscape graph, checking
  * for changes in the HTML form.
  */
-function updateLayers() {
+function updateGraph() {
 	var num_rbms = $('.hid_sz').length;
 	var prec_layer_nodes = 0;
 
+	var networkGraph = cytoscape({
+		container: document.getElementById('DBNgraph'),
+		elements: [],
+		style: [
+			{
+				selector: 'node',
+				style: {
+					'background-color': '#46A'/*,
+					'label': 'data(id)'*/
+				}
+			},
+			{
+				selector: 'edge',
+				style: {
+					'width': 1,
+					'line-color': '#AAC'
+				}
+			}
+		],
+		layout: {
+			name: 'preset'
+		}
+	});
+
 	// gather new nodes and set up the edges:
-	var graphElements = []
 	for (var rbm = 1; rbm <= num_rbms; rbm++) {
 		var num_nodes = $('#hid_sz_' + rbm).val();
 		if (num_nodes != '') {
 			for (var node = 1; node <= num_nodes; node++) {
-				graphElements.push({
+				networkGraph.add({
 					group: 'nodes',
-					data: { id: nodeId(rbm, node) }/*,
+					data: { id: nodeId(rbm, node) },
+					classes: 'rbm' + rbm,
 					position: {
-						x: node,
-						y: (num_rbms - rbm) * 10
-					}*/
+						x: ((node - 0.5) / num_nodes) * 600 + 50,
+						y: (num_rbms - (rbm - 0.5)) * (300 / num_rbms) + 50
+					}
 				});
 				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
-					graphElements.push({
+					var source_id = nodeId(rbm, node);
+					var target_id = nodeId(rbm-1, prec_node);
+					networkGraph.add({
 						group: 'edges',
 						data: {
-							id: edgeId(node, prec_node),
-							source: nodeId(rbm, node),
-							target: nodeId(rbm-1, prec_node)
+							id: edgeId(source_id, target_id),
+							source: source_id,
+							target: target_id
 						}
 					});
 				}
 			}
 			prec_layer_nodes = num_nodes;
-		}
-	}
-
-	// repaint the graph:
-	networkGraph = cytoscape({
-		container: document.getElementById('DBNgraph'),
-		elements: graphElements,
-		style: networkStyle,
-		layout: networkLayout
-	});
-
-	for (var rbm = 1; rbm <= num_rbms; rbm++) {
-		var num_nodes = $('#hid_sz_' + rbm).val();
-		if (num_nodes != '') {
-			for (var node = 1; node <= num_nodes; node++) {
-				networkGraph.$('#' + nodeId(rbm, node)).renderedPosition({
-					x: node,
-					y: (num_rbms - rbm) * 10
-				});
-			}
 		}
 	}
 }
@@ -165,7 +127,18 @@ function updateLayers() {
 $(function() {
 	$("#train_form").keydown(function (e) {
 		updateArchitecture();
-		// updateLayers();
 		if (e.which == 13) e.preventDefault();
+	});
+});
+
+/**
+ * Updates the architecture form after
+ * after the `tab` key is pressed but
+ * _before_ its default behaviour is applied.
+ */
+$(function() {
+	$("#net_form").keydown(function (e) {
+		updateArchitecture();
+		if (e.which == 8) updateArchitecture();
 	});
 });

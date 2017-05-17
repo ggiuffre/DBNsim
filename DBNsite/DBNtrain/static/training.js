@@ -28,7 +28,7 @@ function setupChart() {
 		},
 		yAxis: {
 			min: 0,
-			max: 1, // TODO corretto?
+			max: 1,
 			title: {
 				text: 'Mean unit error',
 				margin: 80
@@ -47,12 +47,17 @@ function setupChart() {
  */
 function newTraining() {
 	$("#train_form").submit(function(e) {
+		var net_form_data = $('#net_form').serialize();
+		var train_form_data = $('#train_form').serialize();
+		var forms_data = net_form_data + '&' + train_form_data;
+
 		$.ajax({
 			type: 'POST',
 			url: 'train/',
-			data: $('#train_form').serialize(),
+			data: forms_data,
 			success: function(response) { job_id = response; }
 		});
+
 		e.preventDefault(); // do not submit the form
 	});
 }
@@ -60,7 +65,7 @@ function newTraining() {
 /**
  * Asks the server to train the network for
  * one epoch, then updates the reconstruction
- * error.
+ * error on the chart.
  * @param  {Boolean} autoContinue  whether to automate the update
  */
 function updateError(autoContinue = false) {

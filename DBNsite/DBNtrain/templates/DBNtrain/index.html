@@ -16,10 +16,10 @@
 		<script type="text/javascript" src="{% static 'architecture.js' %}"></script>
 		<script type="text/javascript" src="{% static 'training.js' %}"></script>
 	</head>
-	<body onload="setupGraph(); setupChart();">
+	<body onload="setupChart();">
 		<h1>Train a DBN</h1>
 
-		<form action="{% url 'train' %}" method="post" id="train_form">
+		<form action="#" id="net_form">
 			<fieldset>
 				<legend>Dataset info</legend>
 
@@ -32,12 +32,18 @@
 			</fieldset>
 
 			<fieldset id="arch_form">
-				<legend>Network info</legend>
+				<legend>Network architecture</legend>
 
 				<label for="num_rbms">number of RBMs:</label><br />
 				<input type="text" name="num_rbms" id="num_rbms" onchange="updateArchitecture();" />
 			</fieldset>
+		</form>
 
+		<div id="DBNgraph"></div>
+
+
+
+		<form action="#" id="train_form">
 			<fieldset>
 				<legend>Training parameters</legend>
 
@@ -62,8 +68,6 @@
 
 			<p><input type="submit" value="Train" onclick="newTraining();" /></p>
 		</form>
-
-		<div id="DBNgraph"></div>
 
 		<div id="train_plot">
 			<div id="train_plot_container"></div>
