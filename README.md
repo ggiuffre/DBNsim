@@ -1,4 +1,4 @@
-# DBNsim
+# DBNsim [![Build Status](https://travis-ci.org/ggiuffre/DBNsim.svg?branch=master)](https://travis-ci.org/ggiuffre/DBNsim)
 ## A web app for analysing Deep Belief Networks
 
 DBNsim is a web application for training and analysing __Deep Belief Networks__, a particular kind of artifical neural networks. DBNsim has a Python back end (with Django) and a JavaScript front end (which uses mainly Cytoscape.js and Highcharts).
