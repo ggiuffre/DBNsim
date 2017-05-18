@@ -41,8 +41,8 @@ function updateArchitecture() {
  * @param  {Number} node the node position in the RBM
  * @return {String}      a string identifier
  */
-function nodeId(rbm, node) {
-	return 'rbm' + rbm + 'n' + node;
+function nodeId(layer, node) {
+	return 'l' + layer + 'n' + node;
 }
 
 /**
@@ -61,25 +61,29 @@ function edgeId(node1, node2) {
  * for changes in the HTML form.
  */
 function updateGraph() {
-	var num_rbms = $('.hid_sz').length;
+	var num_rbms = $('#num_rbms').val();
 	var prec_layer_nodes = 0;
 
 	// gather new nodes and edges:
-	var graphElements = []
+	var graphElements = [];
 	for (var rbm = 1; rbm <= num_rbms; rbm++) {
 		var num_nodes = $('#hid_sz_' + rbm).val();
-		if (num_nodes != '') {
+		if (num_nodes != '' && num_nodes > 0) {
 			graphElements.push({
 				group: 'nodes',
 				data: { id: 'Layer ' + rbm }
 			});
+			var nodesClass = '';
+			if (num_nodes > 100)
+				nodesClass = 'large';
 			for (var node = 1; node <= num_nodes; node++) {
 				graphElements.push({
 					group: 'nodes',
 					data: { id: nodeId(rbm, node), parent: 'Layer ' + rbm },
+					classes: nodesClass,
 					position: {
 						x: ((node - 0.5) / num_nodes) * 600 + 50,
-						y: (num_rbms - (rbm - 0.5)) * (300 / num_rbms) + 50
+						y: (num_rbms - rbm + 0.5) * (300 / num_rbms)
 					}
 				});
 				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
@@ -112,18 +116,23 @@ function updateGraph() {
 				}
 			},
 			{
+				selector: '.large',
+				style: {
+					'width': 6,
+					'height': 6,
+				}
+			},
+			{
 				selector: ':parent',
 				style: {
-					'background-opacity': '0.2',
-					'label': 'data(id)'
+					'background-opacity': '0.2'
 				}
 			},
 			{
 				selector: 'edge',
 				style: {
 					'width': 1,
-					'line-color': '#AAC',
-					'opacity': '0.6'
+					'line-color': '#BCE'
 				}
 			}
 		],

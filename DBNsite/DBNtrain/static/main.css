@@ -1,5 +1,4 @@
-/* open-sans-regular - latin */
-@font-face {
+@font-face { /* open-sans-regular - latin */
 	font-family: 'Open Sans';
 	font-style: normal;
 	font-weight: 400;
@@ -15,29 +14,25 @@
 body {
 	margin: auto;
 	font-family: 'Open Sans', sans-serif;
-	font-size: 0.9em;
 }
 
 h1 {
 	text-align: center;
 }
 
+#net_form, #DBNgraph {
+	height: 400px;
+}
+
 #net_form, #train_form {
+	font-size: 0.9em;
 	width: 210px;
 	float: left;
 	padding: 1em;
 }
 
-#train_plot {
+#DBNgraph, #train_plot {
 	width: calc(90% - 210px);
 	float: right;
-	padding: 1em;
-}
-
-#DBNgraph {
-	width: calc(90% - 210px);
-	height: 400px;
-	float: right;
-	display: block;
 	padding: 1em;
 }
