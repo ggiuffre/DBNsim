@@ -1,1 +1,1 @@
-web: cd DBNsite && python3 manage.py runserver
+web: cd DBNsite && python manage.py runserver
