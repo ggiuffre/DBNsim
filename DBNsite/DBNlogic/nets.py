@@ -38,7 +38,6 @@ class DBN(list):
         """Learn from a particular dataset."""
         train_layer = trainset
         for rbm in self:
-            print('train_layer shape:', train_layer.shape)
             probs_dataset = []
             trainer = CDTrainer(rbm, config = config)
             for hid_probs in trainer.run(train_layer):

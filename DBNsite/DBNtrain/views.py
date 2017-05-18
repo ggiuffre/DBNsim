@@ -60,6 +60,7 @@ def train(request):
         'generator': net.learn(trainset, Configuration(**config))
     }
 
+    # delete a random old job:
     random_old_job = random.choice(list(training_jobs.keys()))
     if time() - training_jobs[random_old_job]['birthday'] > 60 * 60:
         del training_jobs[random_old_job]
