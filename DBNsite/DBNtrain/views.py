@@ -39,9 +39,9 @@ def train(request):
         # return HttpResponse({'error': 'you haven\'t specified [...]'})
 
     net = DBN(name = trainset_name)
-    vis_size = len(trainset[0])
-    for rbm in range(1, num_layers + 1):
-        hid_size = int(request.POST['hid_sz_' + str(rbm)])
+    vis_size = int(request.POST['vis_sz'])
+    for layer in range(1, num_layers):
+        hid_size = int(request.POST['hid_sz_' + str(layer)])
         print('creating a', vis_size, 'x', hid_size, 'RBM...')
         net.append(RBM(vis_size, hid_size))
         vis_size = hid_size # for the next RBM
