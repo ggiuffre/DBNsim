@@ -33,14 +33,14 @@ def train(request):
     trainset = DataSet.fromWhatever(trainset_name)
 
     try:
-        num_rbms = int(request.POST['num_rbms'])
+        num_layers = int(request.POST['num_layers'])
     except ValueError:
-        num_rbms = 1
+        num_layers = 1
         # return HttpResponse({'error': 'you haven\'t specified [...]'})
 
     net = DBN(name = trainset_name)
     vis_size = len(trainset[0])
-    for rbm in range(1, num_rbms + 1):
+    for rbm in range(1, num_layers + 1):
         hid_size = int(request.POST['hid_sz_' + str(rbm)])
         print('creating a', vis_size, 'x', hid_size, 'RBM...')
         net.append(RBM(vis_size, hid_size))
@@ -60,9 +60,10 @@ def train(request):
         'generator': net.learn(trainset, Configuration(**config))
     }
 
-    # delete a random old job:
+    # delete a random job older than one hour:
     random_old_job = random.choice(list(training_jobs.keys()))
     if time() - training_jobs[random_old_job]['birthday'] > 60 * 60:
+        print('deleting old job n.', random_old_job)
         del training_jobs[random_old_job]
 
     return HttpResponse(random_id)

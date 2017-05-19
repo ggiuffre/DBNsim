@@ -1,45 +1,41 @@
 /**
- * The maximum number of RBMs allowed in a DBN.
- * Feel free to change this number.
- * @type {Number}
- */
-var max_rbms = 6;
-
-/**
  * Updates the form for defining the DBN layers,
  * based on the number of layers that the user
  * wants to create.
  */
 function updateArchitecture() {
-	var num_rbms = $('#num_rbms').val();
-	num_rbms = Math.min(num_rbms, max_rbms);
-
-	var curr_rbms = $('.hid_sz').length;
-
-	// add missing layers:
-	for (var i = curr_rbms + 1; i <= num_rbms; i++) {
-		var rbm_id = 'hid_sz_' + i;
-		$('#arch_form').append('<br />');
-		$('#arch_form').append('<label for="' + rbm_id + '">n. of hidden units (RBM ' + i + '):</label>');
-		$('#arch_form').append('<br />');
-		$('#arch_form').append('<input type="text" name="' + rbm_id + '" id="' + rbm_id + '" class="hid_sz" onchange="updateGraph();" />');
+	var num_layers = $('#num_layers').val();
+	if (num_layers == '')
+		return;
+	if (num_layers < 1) {
+		alert('You must have at least one layer (the visible layer): defaulting to 1.');
+		$('#num_layers').val(1);
+		num_layers = 1;
+	}
+	if (num_layers > 6) {
+		alert('Too many layers (' + num_layers + '): defaulting to 6.');
+		$('#num_layers').val(6);
+		num_layers = 6;
 	}
 
-	// remove exceeding layers:
-	for (var i = num_rbms + 1; i <= curr_rbms; i++) {
-		$('#hid_sz_' + i).remove();
-		$('#arch_form br').last().remove();
-		$('#arch_form label').last().remove();
-		$('#arch_form br').last().remove();
-	}
+	// how many HTML inputs do we already have?
+	var curr_layers = $('.lay_sz').length;
+
+	// add missing hidden layers:
+	for (var i = curr_layers; i < num_layers; i++)
+		$('#layers_sz').append('<li class="lay_sz"><input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();"></li>');
+
+	// remove exceeding hidden layers:
+	for (var i = curr_layers; i > num_layers; i--)
+		$('.lay_sz').last().remove();
 }
 
 /**
  * Returns a standard string identifier
- * for the given node in the given RBM.
- * @param  {Number} rbm  the RBM position in the DBN
- * @param  {Number} node the node position in the RBM
- * @return {String}      a string identifier
+ * for the given node in the given layer.
+ * @param  {Number} layer the layer position in the DBN
+ * @param  {Number} node  the node position in the layer
+ * @return {String}       a string identifier
  */
 function nodeId(layer, node) {
 	return 'l' + layer + 'n' + node;
@@ -61,36 +57,46 @@ function edgeId(node1, node2) {
  * for changes in the HTML form.
  */
 function updateGraph() {
-	var num_rbms = $('#num_rbms').val();
+	var num_layers = $('#num_layers').val();
 	var prec_layer_nodes = 0;
 
 	// gather new nodes and edges:
 	var graphElements = [];
-	for (var rbm = 1; rbm <= num_rbms; rbm++) {
-		var num_nodes = $('#hid_sz_' + rbm).val();
+	for (var layer = 0; layer < num_layers; layer++) {
+		var num_nodes = 0;
+		if (layer == 0)
+			num_nodes = $('#vis_sz').val();
+		else
+			num_nodes = $('#hid_sz_' + layer).val();
+
 		if (num_nodes != '' && num_nodes > 0) {
-			graphElements.push({
-				group: 'nodes',
-				data: { id: 'Layer ' + rbm }
-			});
 			var nodesClass = '';
-			if (num_nodes > 100)
-				nodesClass = 'large';
+			var edgesClass = '';
+			if (num_nodes > 2999)
+				return alert('Too many nodes at layer ' + layer + ' (' + num_nodes + '): aborting.');
+			if (num_nodes > 99) {
+				nodesClass = 'large_1';
+				if (num_nodes > 499)
+					nodesClass = 'large_2';
+			}
+			if (prec_layer_nodes + num_nodes > 149)
+				edgesClass = 'dense';
 			for (var node = 1; node <= num_nodes; node++) {
 				graphElements.push({
 					group: 'nodes',
-					data: { id: nodeId(rbm, node), parent: 'Layer ' + rbm },
 					classes: nodesClass,
+					data: { id: nodeId(layer, node) },
 					position: {
 						x: ((node - 0.5) / num_nodes) * 600 + 50,
-						y: (num_rbms - rbm + 0.5) * (300 / num_rbms)
+						y: (num_layers - layer + 0.5) * (300 / num_layers)
 					}
 				});
 				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
-					var source_id = nodeId(rbm, node);
-					var target_id = nodeId(rbm-1, prec_node);
+					var source_id = nodeId(layer, node);
+					var target_id = nodeId(layer - 1, prec_node);
 					graphElements.push({
 						group: 'edges',
+						classes: edgesClass,
 						data: {
 							id: edgeId(source_id, target_id),
 							source: source_id,
@@ -110,29 +116,36 @@ function updateGraph() {
 			{
 				selector: 'node',
 				style: {
-					'width': 15,
-					'height': 15,
+					'width': 10,
+					'height': 10,
 					'background-color': '#46A'
 				}
 			},
 			{
-				selector: '.large',
+				selector: '.large_1',
 				style: {
-					'width': 6,
-					'height': 6,
+					'width': 7,
+					'height': 7,
 				}
 			},
 			{
-				selector: ':parent',
+				selector: '.large_2',
 				style: {
-					'background-opacity': '0.2'
+					'width': 4,
+					'height': 4,
 				}
 			},
 			{
 				selector: 'edge',
 				style: {
-					'width': 1,
+					'width': 0.8,
 					'line-color': '#BCE'
+				}
+			},
+			{
+				selector: '.dense',
+				style: {
+					'width': 0.32
 				}
 			}
 		],
@@ -148,7 +161,6 @@ function updateGraph() {
  */
 $(function() {
 	$("#train_form").keydown(function (e) {
-		updateArchitecture();
 		if (e.which == 13) e.preventDefault();
 	});
 });

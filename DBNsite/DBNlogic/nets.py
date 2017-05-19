@@ -1,8 +1,15 @@
 import numpy as np
 import pickle
+import os
 
 from DBNlogic.train import CDTrainer
 from DBNlogic.util import sigmoid, activation, Configuration
+
+
+
+def base(name = ''):
+    """Given the name of a network, return the default path to it."""
+    return os.path.join(os.path.dirname(__file__), 'nets', name)
 
 
 
@@ -47,13 +54,13 @@ class DBN(list):
     
     def save(self):
         """Save the network weights to a Pickle file."""
-        net_file = 'nets/' + self.name + '.pkl'
+        net_file = base(self.name + '.pkl')
         pickle.dump(self[:], open(net_file, 'wb'))
 
     @staticmethod
     def load(name):
         """Load a network from a Pickle file."""
-        net_file = 'nets/' + name + '.pkl'
+        net_file = base(self.name + '.pkl')
         return DBN(pickle.load(open(net_file, 'rb')), name = name)
 
 

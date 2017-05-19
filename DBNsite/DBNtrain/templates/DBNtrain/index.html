@@ -34,8 +34,13 @@
 			<fieldset id="arch_form">
 				<legend>Network architecture</legend>
 
-				<label for="num_rbms">number of RBMs:</label><br />
-				<input type="text" name="num_rbms" id="num_rbms" onchange="updateArchitecture();" />
+				<label for="num_layers">number of layers:</label><br />
+				<input type="text" value="1" name="num_layers" id="num_layers" onchange="updateArchitecture();" /><br />
+
+				<label for="layers_sz">n. of units:</label>
+				<ol name="layers_sz" id="layers_sz" start="0">
+					<li class="lay_sz"><input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();"></li>
+				</ol>
 			</fieldset>
 		</form>
 

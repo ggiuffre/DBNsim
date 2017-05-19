@@ -1,6 +1,6 @@
 import numpy as np
 import pickle
-import os.path
+import os
 
 
 
@@ -10,7 +10,7 @@ def exists(path):
 
 def base(name = ''):
     """Given the name of a dataset, return the default path to it."""
-    return os.path.join('DBNlogic', 'data', name)
+    return os.path.join(os.path.dirname(__file__), 'data', name)
 
 
 
