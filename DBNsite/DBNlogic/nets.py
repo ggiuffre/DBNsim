@@ -3,7 +3,7 @@ import pickle
 import os
 
 from DBNlogic.train import CDTrainer
-from DBNlogic.util import sigmoid, activation, Configuration
+from DBNlogic.util import Configuration, sigmoid, activation
 
 
 
@@ -49,7 +49,7 @@ class DBN(list):
             trainer = CDTrainer(rbm, config = config)
             for hid_probs in trainer.run(train_layer):
                 probs_dataset.extend(hid_probs.T)
-                yield trainer.mean_squared_err
+                yield {'rbm': self.index(rbm), 'err': trainer.mean_squared_err}
             train_layer = np.array(probs_dataset)
     
     def save(self):

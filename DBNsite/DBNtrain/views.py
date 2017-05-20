@@ -60,7 +60,7 @@ def train(request):
         'generator': net.learn(trainset, Configuration(**config))
     }
 
-    # delete a random job older than one hour:
+    # delete a random pending job older than one hour:
     random_old_job = random.choice(list(training_jobs.keys()))
     if time() - training_jobs[random_old_job]['birthday'] > 60 * 60:
         print('deleting old job n.', random_old_job)
@@ -75,15 +75,23 @@ def getError(request):
     body = json.loads(request.body.decode())
     job = body['job_id']
     train_gen = training_jobs[job]['generator']
-    stop = False
+
+    curr_rbm = None
+    next_err = None
+    stop     = False
 
     try:
-        next_err = next(train_gen)
+        train_info = next(train_gen)
+        curr_rbm = train_info['rbm']
+        print('curr_rbm:', curr_rbm)
+        next_err = train_info['err']
     except StopIteration:
+        del training_jobs[job]
         next_err = None
         stop = True
 
     response = {
+        'curr_rbm': curr_rbm,
         'error': next_err,
         'stop': stop
     }

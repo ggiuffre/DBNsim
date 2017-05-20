@@ -1,7 +1,6 @@
 import numpy as np
 
-from DBNlogic.util import Configuration
-from DBNlogic.util import sigmoid, activation, squared_error
+from DBNlogic.util import Configuration, sigmoid, activation, squared_error
 
 
 
