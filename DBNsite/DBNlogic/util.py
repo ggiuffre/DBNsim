@@ -35,15 +35,4 @@ def activation(v):
 
 def squared_error(v, w):
     """Return the mean squared error between two vectors or matrices."""
-    return ((v - w) ** 2).mean() # TODO: add sqrt!
-
-
-
-def plotImage(img, shape = None):
-    """Plot a 2D image with matplotlib."""
-    if shape != None:
-        plt.imshow(img.reshape(shape))
-    else:
-        plt.imshow(img)
-    plt.colorbar()
-    plt.show()
+    return ((v - w) ** 2).mean() # TODO: add sqrt?
