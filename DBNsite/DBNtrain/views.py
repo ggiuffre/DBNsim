@@ -53,7 +53,7 @@ def train(request):
         'momentum'   : float(request.POST['momentum'])
     }
 
-    random_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k = 10))
+    random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
     print(random_id)
     training_jobs[random_id] = {
         'birthday': time(),
