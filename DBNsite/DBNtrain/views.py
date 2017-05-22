@@ -12,6 +12,7 @@ from DBNlogic.util import Configuration
 
 
 
+# pending training jobs on the server
 training_jobs = {}
 
 
@@ -27,8 +28,8 @@ def index(request):
 
 @csrf_exempt
 def train(request):
-    """Set up a network to be trained according to the
-    parameters in the request."""
+    """Set up a network to be trained according to
+    the parameters in the HTTP request."""
     trainset_name = request.POST['dataset']
     trainset = DataSet.fromWhatever(trainset_name)
 
@@ -44,7 +45,7 @@ def train(request):
         hid_size = int(request.POST['hid_sz_' + str(layer)])
         print('creating a', vis_size, 'x', hid_size, 'RBM...')
         net.append(RBM(vis_size, hid_size))
-        vis_size = hid_size # for the next RBM
+        vis_size = hid_size # for constructing the next RBM
 
     config = {
         'max_epochs' : int(request.POST['epochs']),
@@ -54,7 +55,6 @@ def train(request):
     }
 
     random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
-    print(random_id)
     training_jobs[random_id] = {
         'birthday': time(),
         'generator': net.learn(trainset, Configuration(**config))
@@ -62,7 +62,7 @@ def train(request):
 
     # delete a random pending job older than one hour:
     random_old_job = random.choice(list(training_jobs.keys()))
-    if time() - training_jobs[random_old_job]['birthday'] > 60 * 60:
+    if time() - training_jobs[random_old_job]['birthday'] > 3600:
         print('deleting old job n.', random_old_job)
         del training_jobs[random_old_job]
 
@@ -70,8 +70,8 @@ def train(request):
 
 @csrf_exempt
 def getError(request):
-    """Run one training iteration for a particular network
-    and return the reconstruction error."""
+    """Run one training iteration for a particular
+    network and return the reconstruction error."""
     body = json.loads(request.body.decode())
     job = body['job_id']
     train_gen = training_jobs[job]['generator']
@@ -83,11 +83,9 @@ def getError(request):
     try:
         train_info = next(train_gen)
         curr_rbm = train_info['rbm']
-        print('curr_rbm:', curr_rbm)
         next_err = train_info['err']
     except StopIteration:
         del training_jobs[job]
-        next_err = None
         stop = True
 
     response = {

@@ -270,16 +270,17 @@ function setupTrainForm() {
 function updateSeries() {
 	var num_layers = $('#num_layers').val();
 	var curr_num_series = chart.series.length;
+	var num_rbms = num_layers - 1
 
 	// add missing series:
-	for (var i = curr_num_series; i < num_layers; i++)
+	for (var i = curr_num_series; i < num_rbms; i++)
 		chart.addSeries({
 			name: 'Training error for RBM ' + (i + 1),
 			data: []
 		});
 
 	// remove exceeding series:
-	for (var i = curr_num_series; i > num_layers; i--)
+	for (var i = curr_num_series; i > num_rbms; i--)
 		chart.series[i - 1].remove();
 }
 
@@ -309,8 +310,8 @@ function updateError(autoContinue = false) {
 				curr_epoch++;
 				chart.series[curr_rbm].addPoint([curr_epoch, point], true, shift);
 
-				if (autoContinue)
-					setTimeout(updateError.bind(this, autoContinue), 500); // call it again
+				if (autoContinue) // call it again
+					setTimeout(updateError.bind(this, autoContinue), 500);
 			}
 		}
 	});

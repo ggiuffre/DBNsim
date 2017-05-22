@@ -15,9 +15,10 @@ def base(name = ''):
 
 
 class DBN(list):
-    """Deep Belief Network."""
+    """Deep Belief Network (DBN)."""
 
     def __init__(self, layers = [], name = 'untitled'):
+        """Constructor for a DBN."""
         super().__init__(layers)
         self.name = name
 
@@ -45,6 +46,7 @@ class DBN(list):
         """Learn from a particular dataset."""
         train_layer = trainset
         for rbm in self:
+            print('train_layer shape:', train_layer.shape)
             probs_dataset = []
             trainer = CDTrainer(rbm, config = config)
             for hid_probs in trainer.run(train_layer):
@@ -66,7 +68,7 @@ class DBN(list):
 
 
 class RBM:
-    """Restricted Boltzmann Machine."""
+    """Restricted Boltzmann Machine (RBM)."""
 
     def __init__(self, vis_size, hid_size):
         """Constructor for a RBM."""
