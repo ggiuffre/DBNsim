@@ -222,11 +222,11 @@ function setupChart() {
 		},
 		xAxis: {
 			min: 1,
+			max: $('#epochs').val(),
 			title: {
 				text: 'Epoch number'
 			},
-			tickInterval: 1,
-			maxZoom: 20
+			tickInterval: 1
 		},
 		yAxis: {
 			min: 0,
@@ -247,6 +247,8 @@ function setupChart() {
  */
 function setupTrainForm() {
 	$("#train_form").submit(function(e) {
+		chart.xAxis[0].setExtremes(1, $('#epochs').val());
+
 		var net_form_data = $('#net_form').serialize();
 		var train_form_data = $('#train_form').serialize();
 		var forms_data = net_form_data + '&' + train_form_data;

@@ -20,19 +20,37 @@ h1 {
 	text-align: center;
 }
 
-#net_form, #DBNgraph {
-	height: 400px;
-}
+
 
 #net_form, #train_form {
 	font-size: 0.9em;
 	width: 210px;
-	float: left;
 	padding: 1em;
 }
 
-#DBNgraph, #train_plot {
-	width: calc(90% - 210px);
+#net_form {
+	float: left;
+}
+
+#train_form {
 	float: right;
+}
+
+
+
+#train_plot, #DBNgraph {
 	padding: 1em;
+}
+
+#train_plot {
+	width: 45%;
+	height: 400px;
+	float: left;
+	clear: left;
+}
+
+#DBNgraph {
+	width: 45%;
+	height: 400px;
+	float: right;
 }
