@@ -25,16 +25,6 @@ var job_id = undefined;
 var chart = undefined;
 
 /**
- * Prevents the submission of the form
- * when the `enter` key is pressed.
- */
-$(function() {
-	$("#train_form").keydown(function (e) {
-		if (e.which == 13) e.preventDefault();
-	});
-});
-
-/**
  * Updates the architecture form after
  * after the `tab` key is pressed but
  * _before_ its default behaviour is applied.
@@ -43,6 +33,16 @@ $(function() {
 	$("#net_form").keydown(function (e) {
 		updateArchitecture();
 		if (e.which == 8) updateArchitecture();
+	});
+});
+
+/**
+ * Prevents the submission of the form
+ * when the `enter` key is pressed.
+ */
+$(function() {
+	$("#train_form").keydown(function (e) {
+		if (e.which == 13) e.preventDefault();
 	});
 });
 
