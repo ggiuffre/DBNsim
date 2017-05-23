@@ -70,7 +70,7 @@ function updateArchitecture() {
 
 	// add missing hidden layers:
 	for (var i = curr_layers; i < num_layers; i++)
-		$('#layers_sz').append('<li class="lay_sz"><input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();"></li>');
+		$('#layers_sz').append('<li class="lay_sz"><input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();" /></li>');
 
 	// remove exceeding hidden layers:
 	for (var i = curr_layers; i > num_layers; i--)
@@ -135,7 +135,7 @@ function updateGraph() {
 					data: { id: nodeId(layer, node) },
 					position: {
 						x: ((node - 0.5) / num_nodes) * 600 + 50,
-						y: (num_layers - layer + 0.5) * (300 / num_layers)
+						y: (layer - (num_layers / 2)) * 100
 					}
 				});
 				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
@@ -235,7 +235,10 @@ function setupChart() {
 				margin: 80
 			}
 		},
-		series: []
+		series: [{
+			name: 'Training error for RBM 1',
+			data: []
+		}]
 	});
 }
 
