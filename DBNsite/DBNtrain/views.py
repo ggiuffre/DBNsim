@@ -86,6 +86,7 @@ def getError(request):
         next_err = train_info['err']
     except StopIteration:
         del training_jobs[job]
+        net.save()
         stop = True
 
     response = {

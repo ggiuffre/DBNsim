@@ -44,15 +44,12 @@ class DBN(list):
 
     def learn(self, trainset, config = Configuration()):
         """Learn from a particular dataset."""
-        train_layer = trainset
         for rbm in self:
-            print('train_layer shape:', train_layer.shape)
-            probs_dataset = []
+            print('trainset shape:', trainset.shape)
             trainer = CDTrainer(rbm, config = config)
-            for hid_probs in trainer.run(train_layer):
-                probs_dataset.extend(hid_probs.T)
-                yield {'rbm': self.index(rbm), 'err': trainer.mean_squared_err}
-            train_layer = np.array(probs_dataset)
+            for curr_error in trainer.run(trainset):
+                yield {'rbm': self.index(rbm), 'err': curr_error}
+            trainset = np.array(trainer.next_rbm_data)
     
     def save(self):
         """Save the network weights to a Pickle file."""

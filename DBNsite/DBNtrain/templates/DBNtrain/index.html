@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="{% static 'highcharts.js' %}"></script>
 		<script type="text/javascript" src="{% static 'dbntrain.js' %}"></script>
 	</head>
-	<body onload="setupChart(); setupTrainForm();">
+	<body onload="setupTrainForm(); setupChart();">
 		<h1>Train a DBN</h1>
 
 		<form action="#" id="net_form">
@@ -71,7 +71,7 @@
 
 		<div id="train_plot">
 			<div id="train_plot_container"></div>
-			<p><button onclick="updateError();">Step &gt;</button></p>
+			<p><button onclick="updateError(true);">Step &gt;</button></p>
 		</div>
 
 		<div id="DBNgraph"></div>

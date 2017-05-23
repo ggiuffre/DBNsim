@@ -11,15 +11,15 @@ var curr_epoch = 0;
 var curr_rbm = -1;
 
 /**
- * The training job unique identifier
- * on the remote server.
+ * A unique identifier for the training
+ * job running on the server.
  * @type {String}
  */
 var job_id = undefined;
 
 /**
- * The chart for plotting the training
- * error over time.
+ * The chart for plotting the reconstruction
+ * error over time, while training the net.
  * @type {Highcharts.Chart}
  */
 var chart = undefined;
@@ -30,8 +30,7 @@ var chart = undefined;
  * _before_ its default behaviour is applied.
  */
 $(function() {
-	$("#net_form").keydown(function (e) {
-		updateArchitecture();
+	$('#net_form').keydown(function (e) {
 		if (e.which == 8) updateArchitecture();
 	});
 });
@@ -41,7 +40,7 @@ $(function() {
  * when the `enter` key is pressed.
  */
 $(function() {
-	$("#train_form").keydown(function (e) {
+	$('#train_form').keydown(function (e) {
 		if (e.which == 13) e.preventDefault();
 	});
 });
@@ -246,7 +245,7 @@ function setupChart() {
  * hyper-parameters to the server.
  */
 function setupTrainForm() {
-	$("#train_form").submit(function(e) {
+	$('#train_form').submit(function(e) {
 		chart.xAxis[0].setExtremes(1, $('#epochs').val());
 
 		var net_form_data = $('#net_form').serialize();
@@ -292,7 +291,7 @@ function updateSeries() {
  * error on the chart.
  * @param  {Boolean} autoContinue  whether to automate the update
  */
-function updateError(autoContinue = false) {
+function updateError(autoContinue) {
 	var parameters = { 'job_id': job_id };
 	$.ajax({
 		type: 'POST',
@@ -313,7 +312,7 @@ function updateError(autoContinue = false) {
 				chart.series[curr_rbm].addPoint([curr_epoch, point], true, shift);
 
 				if (autoContinue) // call it again
-					setTimeout(updateError.bind(this, autoContinue), 500);
+					updateError(true);
 			}
 		}
 	});
