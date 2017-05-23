@@ -57,6 +57,7 @@ def train(request):
     random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
     training_jobs[random_id] = {
         'birthday': time(),
+        'network': net,
         'generator': net.learn(trainset, Configuration(**config))
     }
 
@@ -85,8 +86,8 @@ def getError(request):
         curr_rbm = train_info['rbm']
         next_err = train_info['err']
     except StopIteration:
+        training_jobs[job]['network'].save()
         del training_jobs[job]
-        net.save()
         stop = True
 
     response = {

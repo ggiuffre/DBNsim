@@ -246,6 +246,7 @@ function setupChart() {
  */
 function setupTrainForm() {
 	$('#train_form').submit(function(e) {
+		updateSeries();
 		chart.xAxis[0].setExtremes(1, $('#epochs').val());
 
 		var net_form_data = $('#net_form').serialize();
@@ -270,19 +271,18 @@ function setupTrainForm() {
  */
 function updateSeries() {
 	var num_layers = $('#num_layers').val();
-	var curr_num_series = chart.series.length;
 	var num_rbms = num_layers - 1
 
-	// add missing series:
-	for (var i = curr_num_series; i < num_rbms; i++)
+	// remove all the series:
+	for (var i = chart.series.length - 1; i >= 0; i--)
+		chart.series[i].remove();
+
+	// add the necessary series:
+	for (var i = 0; i < num_rbms; i++)
 		chart.addSeries({
 			name: 'Training error for RBM ' + (i + 1),
 			data: []
 		});
-
-	// remove exceeding series:
-	for (var i = curr_num_series; i > num_rbms; i--)
-		chart.series[i - 1].remove();
 }
 
 /**
