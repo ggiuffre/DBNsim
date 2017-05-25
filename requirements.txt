@@ -1,2 +1,4 @@
 numpy
 django
+pytest
+coverage>=4.0,<4.4
