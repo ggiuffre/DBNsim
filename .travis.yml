@@ -2,8 +2,8 @@ language: python
 python: "3.6"
 script:
   - pytest
-after_sucess:
   - coverage run DBNsite/testing_DBNlogic/nets_test.py
+after_sucess:
   - CODECLIMATE_REPO_TOKEN=368b98cb3ee40b7b3c9ad38aab86d6ea29b0ad368ca90e7a8c3a66802dcc078b codeclimate-test-reporter
 notifications:
   email: false
