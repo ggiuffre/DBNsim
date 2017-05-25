@@ -129,8 +129,6 @@ function updateGraph() {
 				return alert('Too many nodes at layer ' + layer + ' (' + num_nodes + '): aborting.');
 			if (num_nodes > 99) {
 				nodesClass = 'large_1';
-				if (num_nodes > 499)
-					nodesClass = 'large_2';
 			}
 			if (prec_layer_nodes + num_nodes > 149)
 				edgesClass = 'dense';
