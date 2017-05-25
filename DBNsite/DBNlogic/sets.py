@@ -8,7 +8,7 @@ def exists(path):
     """Return whether a resource exists."""
     return os.path.isfile(path)
 
-def base(name = ''):
+def full(name = ''):
     """Given the name of a dataset, return the default path to it."""
     return os.path.join(os.path.dirname(__file__), 'data', name)
 
@@ -32,7 +32,7 @@ class DataSet:
 
     @classmethod
     def fromWhatever(cls, name):
-        full_path = base(name)
+        full_path = full(name)
         if exists(full_path + '.pkl'):
             return cls.fromPickle(full_path + '.pkl')
         if exists(full_path + '.csv'):
@@ -40,8 +40,8 @@ class DataSet:
         return np.array([])
 
     @staticmethod
-    def allSets(base_dir = base()):
-        return set([os.path.splitext(f)[0] for f in os.listdir(base_dir) if (f.endswith('.pkl') or f.endswith('.csv'))])
+    def allSets(path = full()):
+        return set([os.path.splitext(f)[0] for f in os.listdir(path) if (f.endswith('.pkl') or f.endswith('.csv'))])
 
 
 
@@ -49,8 +49,8 @@ class MNIST(DataSet):
     """MNIST dataset."""
 
     def __init__(self):
-        pkl_file = base('MNIST_labeled.pkl')
-        csv_file = base('MNIST_labeled.csv')
+        pkl_file = full('MNIST_labeled.pkl')
+        csv_file = full('MNIST_labeled.csv')
         if (exists(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
@@ -63,7 +63,7 @@ class SmallerMNIST(MNIST):
     """A 7x7 downsampling of the MNIST dataset."""
 
     def __init__(self):
-        pkl_file = base('MNIST_small.pkl')
+        pkl_file = full('MNIST_small.pkl')
         if (exists(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:

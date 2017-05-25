@@ -7,7 +7,7 @@ from DBNlogic.util import Configuration, sigmoid, activation
 
 
 
-def base(name = ''):
+def full(name = ''):
     """Given the name of a network, return the default path to it."""
     return os.path.join(os.path.dirname(__file__), 'nets', name)
 
@@ -53,13 +53,13 @@ class DBN(list):
     
     def save(self):
         """Save the network weights to a Pickle file."""
-        net_file = base(self.name + '.pkl')
+        net_file = full(self.name + '.pkl')
         pickle.dump(self[:], open(net_file, 'wb'))
 
     @staticmethod
     def load(name):
         """Load a network from a Pickle file."""
-        net_file = base(self.name + '.pkl')
+        net_file = full(self.name + '.pkl')
         return DBN(pickle.load(open(net_file, 'rb')), name = name)
 
 
