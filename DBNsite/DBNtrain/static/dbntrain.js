@@ -106,12 +106,25 @@ function edgeId(node1, node2) {
 }
 
 /**
+ * Returns the logarithm of `x` base `base`.
+ * @param  {Number} x    the argument of the logarithm
+ * @param  {Number} base the base
+ * @return {Number}      log_base(x)
+ */
+function baseLog(x, base) {
+	return Math.log(x) / Math.log(base);
+}
+
+/**
  * Repaints the Cytoscape graph, checking
  * for changes in the HTML form.
  */
 function updateGraph() {
 	var num_layers = $('#num_layers').val();
 	var prec_layer_nodes = 0;
+	var networkGraph = cytoscape({
+		container: document.getElementById('DBNgraph')
+	});
 
 	// gather new nodes and edges:
 	var graphElements = [];
@@ -123,44 +136,85 @@ function updateGraph() {
 			num_nodes = $('#hid_sz_' + layer).val();
 
 		if (num_nodes != '' && num_nodes > 0) {
-			var nodesClass = '';
 			var edgesClass = '';
-			if (num_nodes > 2999)
-				return alert('Too many nodes at layer ' + layer + ' (' + num_nodes + '): aborting.');
-			if (num_nodes > 99) {
-				nodesClass = 'large_1';
-			}
 			if (prec_layer_nodes + num_nodes > 149)
 				edgesClass = 'dense';
-			for (var node = 1; node <= num_nodes; node++) {
+
+			var max_real_nodes = 10000;
+			var max_visible_nodes = 40;
+			var max_rendered_nodes = 80;
+
+			if (num_nodes > max_real_nodes) {
+				alert('Too many nodes at layer ' + layer + ' (' + num_nodes + '): aborting; defaulting to ' + max_real_nodes + '.');
+				if (layer == 0)
+					$('#vis_sz').val(max_real_nodes);
+				else
+					$('#hid_sz_' + layer).val(max_real_nodes);
+				return
+			} else if (num_nodes > max_visible_nodes) {
+				var scale_base = Math.pow(max_real_nodes, 1 / max_rendered_nodes);
+				var virtual_num_nodes = baseLog(num_nodes, scale_base);
 				graphElements.push({
 					group: 'nodes',
-					classes: nodesClass,
-					data: { id: nodeId(layer, node) },
-					position: {
-						x: ((node - 0.5) / num_nodes) * 600 + 50,
-						y: (layer - (num_layers / 2)) * 100
-					}
+					data: { id: 'Layer ' + layer }
 				});
-				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
-					var source_id = nodeId(layer, node);
-					var target_id = nodeId(layer - 1, prec_node);
+				for (var node = 1; node <= virtual_num_nodes; node++) {
 					graphElements.push({
-						group: 'edges',
-						classes: edgesClass,
+						group: 'nodes',
 						data: {
-							id: edgeId(source_id, target_id),
-							source: source_id,
-							target: target_id
+							id: nodeId(layer, node),
+							parent: 'Layer ' + layer
+						},
+						position: {
+							x: ((node - 0.5) / virtual_num_nodes) * networkGraph.width(),
+							y: (layer - (num_layers / 2)) * networkGraph.height() / num_layers
 						}
 					});
+					for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
+						var source_id = nodeId(layer, node);
+						var target_id = nodeId(layer - 1, prec_node);
+						graphElements.push({
+							group: 'edges',
+							classes: edgesClass,
+							data: {
+								id: edgeId(source_id, target_id),
+								source: source_id,
+								target: target_id
+							}
+						});
+					}
 				}
+				prec_layer_nodes = virtual_num_nodes;
+			} else {
+				for (var node = 1; node <= num_nodes; node++) {
+					graphElements.push({
+						group: 'nodes',
+						data: { id: nodeId(layer, node) },
+						position: {
+							x: ((node - 0.5) / num_nodes) * networkGraph.width(),
+							y: (layer - (num_layers / 2)) * networkGraph.height() / num_layers
+						}
+					});
+					for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
+						var source_id = nodeId(layer, node);
+						var target_id = nodeId(layer - 1, prec_node);
+						graphElements.push({
+							group: 'edges',
+							classes: edgesClass,
+							data: {
+								id: edgeId(source_id, target_id),
+								source: source_id,
+								target: target_id
+							}
+						});
+					}
+				}
+				prec_layer_nodes = num_nodes;
 			}
-			prec_layer_nodes = num_nodes;
 		}
 	}
 
-	var networkGraph = cytoscape({
+	networkGraph = cytoscape({
 		container: document.getElementById('DBNgraph'),
 		elements: graphElements,
 		userZoomingEnabled: false,
@@ -168,36 +222,36 @@ function updateGraph() {
 			{
 				selector: 'node',
 				style: {
+					'z-index-compare': 'manual',
 					'width': 10,
 					'height': 10,
-					'background-color': '#46A'
+					'background-color': '#46A',
+					'z-index': 3
 				}
 			},
 			{
-				selector: '.large_1',
+				selector: ':parent',
 				style: {
-					'width': 7,
-					'height': 7,
-				}
-			},
-			{
-				selector: '.large_2',
-				style: {
-					'width': 4,
-					'height': 4,
+					'z-index-compare': 'manual',
+					'background-color': '#CDF',
+					'z-index': 999
 				}
 			},
 			{
 				selector: 'edge',
 				style: {
+					'z-index-compare': 'manual',
 					'width': 1,
-					'line-color': '#BCE'
+					'line-color': '#BCE',
+					'z-index': 1
 				}
 			},
 			{
 				selector: '.dense',
 				style: {
-					'width': 0.5
+					'z-index-compare': 'manual',
+					'width': 0.5,
+					'z-index': 1
 				}
 			}
 		],
