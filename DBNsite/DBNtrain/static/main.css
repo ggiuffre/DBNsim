@@ -25,6 +25,7 @@ h1 {
 #net_form, #train_form {
 	font-size: 0.9em;
 	width: 210px;
+	height: 400px;
 	padding: 1em;
 }
 
@@ -40,6 +41,7 @@ h1 {
 
 #train_plot, #DBNgraph {
 	padding: 1em;
+	margin-bottom: 4em;
 }
 
 #train_plot {

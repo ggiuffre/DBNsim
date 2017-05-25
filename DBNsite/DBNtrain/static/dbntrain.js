@@ -1,4 +1,10 @@
 /**
+ * Don't ask for confirmation before reloading
+ * or leaving the page.
+ */
+window.onbeforeunload = function() { return true; }
+
+/**
  * The current training epoch number.
  * @type {Number}
  */
