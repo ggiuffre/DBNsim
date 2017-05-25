@@ -2,6 +2,7 @@ language: python
 python: "3.6"
 script:
   - pytest
+  - pip3 install coverage
   - coverage run DBNsite/testing_DBNlogic/nets_test.py
 after_sucess:
   - pip3 install codeclimate-test-reporter
