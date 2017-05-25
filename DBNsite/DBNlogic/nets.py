@@ -54,13 +54,17 @@ class DBN(list):
     def save(self):
         """Save the network weights to a Pickle file."""
         net_file = full(self.name + '.pkl')
-        pickle.dump(self[:], open(net_file, 'wb'))
+        with open(net_file, 'wb') as f:
+            pickle.dump(self[:], f)
 
     @staticmethod
     def load(name):
         """Load a network from a Pickle file."""
-        net_file = full(self.name + '.pkl')
-        return DBN(pickle.load(open(net_file, 'rb')), name = name)
+        net_file = full(name + '.pkl')
+        net = None
+        with open(net_file, 'rb') as f:
+            net = DBN(pickle.load(f), name = name)
+        return net
 
 
 

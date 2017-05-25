@@ -27,8 +27,11 @@ class DataSet:
 
     @staticmethod
     def fromPickle(path):
+        data = None
         print('loading data from pickle...')
-        return np.array(pickle.load(open(path, 'rb')))
+        with open(path, 'rb') as f:
+            data = np.array(pickle.load(f))
+        return data
 
     @classmethod
     def fromWhatever(cls, name):
@@ -55,7 +58,8 @@ class MNIST(DataSet):
             self.data = DataSet.fromPickle(pkl_file)
         else:
             self.data = DataSet.fromCSV(csv_file)[:, 1:] / 255.0
-            pickle.dump(self.data, open(pkl_file, 'wb'))
+            with open(pkl_file, 'wb') as f:
+                pickle.dump(self.data, f)
 
 
 
@@ -72,4 +76,5 @@ class SmallerMNIST(MNIST):
             print('downsampling data...')
             self.data = np.array([image[::4, ::4] for image in self.data])
             self.data = self.data.reshape(60000, 49)
-            pickle.dump(self.data, open(pkl_file, 'wb'))
+            with open(pkl_file, 'wb') as f:
+               pickle.dump(self.data, open(pkl_file, 'wb'))
