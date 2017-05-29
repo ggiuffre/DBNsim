@@ -86,7 +86,7 @@ def getError(request):
         curr_rbm = train_info['rbm']
         next_err = train_info['err']
     except StopIteration:
-        training_jobs[job]['network'].save()
+        # training_jobs[job]['network'].save()
         del training_jobs[job]
         stop = True
 

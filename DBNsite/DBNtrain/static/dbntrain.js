@@ -129,7 +129,6 @@ function updateGraph() {
 	// gather new nodes and edges:
 	var graphElements = [];
 	for (var layer = 0; layer < num_layers; layer++) {
-
 		var num_nodes = 0;
 		var label;
 		var selector;
@@ -137,11 +136,11 @@ function updateGraph() {
 
 		if (layer == 0) {
 			num_nodes = $('#vis_sz').val();
-			label = 'Visible layer';
+			label = 'visible layer';
 			selector = $('#vis_sz');
 		} else {
 			num_nodes = $('#hid_sz_' + layer).val();
-			label = 'Hidden Layer ' + layer;
+			label = 'hidden layer ' + layer;
 			selector = $('#hid_sz_' + layer);
 		}
 
@@ -151,44 +150,47 @@ function updateGraph() {
 			var max_rendered_nodes = 80;
 
 			if (num_nodes > max_real_nodes) {
-				alert('Too many nodes at layer ' + layer + ' (' + num_nodes + '): aborting; defaulting to ' + max_real_nodes + '.');
+				alert('Too many nodes at ' + label + ' (' + num_nodes + ' nodes!): aborting; defaulting to ' + max_real_nodes + '.');
 				selector.val(max_real_nodes);
-				return
-			} else {
-				if (num_nodes > max_visible_nodes) {
-					parent = label;
-					graphElements.push({
-						group: 'nodes',
-						data: { id: label }
-					});
-					var scale_base = Math.pow(max_real_nodes, 1 / max_rendered_nodes);
-					num_nodes = baseLog(num_nodes, scale_base);
-				}
+				return;
+			}
 
-				for (var node = 1; node <= num_nodes; node++) {
+			if (num_nodes > max_visible_nodes) {
+				parent = label;
+				graphElements.push({
+					group: 'nodes',
+					data: {
+						id: label,
+						placeholder: '(' + num_nodes + ' nodes)'
+					}
+				});
+				var scale_base = Math.pow(max_real_nodes, 1 / max_rendered_nodes);
+				num_nodes = baseLog(num_nodes, scale_base);
+			}
+
+			for (var node = 1; node <= num_nodes; node++) {
+				graphElements.push({
+					group: 'nodes',
+					data: {
+						id: nodeId(layer, node),
+						parent: parent
+					},
+					position: {
+						x: ((node - 0.5) / num_nodes) * networkGraph.width(),
+						y: ((num_layers / 2) - layer) * networkGraph.height() / num_layers
+					}
+				});
+				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
+					var source_id = nodeId(layer, node);
+					var target_id = nodeId(layer - 1, prec_node);
 					graphElements.push({
-						group: 'nodes',
+						group: 'edges',
 						data: {
-							id: nodeId(layer, node),
-							parent: parent
-						},
-						position: {
-							x: ((node - 0.5) / num_nodes) * networkGraph.width(),
-							y: ((num_layers / 2) - layer) * networkGraph.height() / num_layers
+							id: edgeId(source_id, target_id),
+							source: source_id,
+							target: target_id
 						}
 					});
-					for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
-						var source_id = nodeId(layer, node);
-						var target_id = nodeId(layer - 1, prec_node);
-						graphElements.push({
-							group: 'edges',
-							data: {
-								id: edgeId(source_id, target_id),
-								source: source_id,
-								target: target_id
-							}
-						});
-					}
 				}
 			}
 			prec_layer_nodes = num_nodes;
@@ -213,14 +215,14 @@ function updateGraph() {
 				style: {
 					'z-compound-depth': 'top',
 					'background-color': '#FFF',
-					'label': 'data(id)',
+					'label': 'data(placeholder)',
 					'text-valign': 'center'
 				}
 			},
 			{
 				selector: 'edge',
 				style: {
-					'width': 1,
+					'width': 1.4,
 					'line-color': '#BCE'
 				}
 			}
