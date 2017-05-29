@@ -8,27 +8,33 @@ window.onbeforeunload = function() { return true; }
  * The current training epoch number.
  * @type {Number}
  */
-var curr_epoch = 0;
+var curr_epoch;
 
 /**
  * The currently training RBM number index.
  * @type {Number}
  */
-var curr_rbm = -1;
+var curr_rbm;
 
 /**
  * A unique identifier for the training
  * job running on the server.
  * @type {String}
  */
-var job_id = undefined;
+var job_id;
+
+/**
+ * The DBN graph.
+ * @type {Cytoscape}
+ */
+var networkGraph;
 
 /**
  * The chart for plotting the reconstruction
  * error over time, while training the net.
  * @type {Highcharts.Chart}
  */
-var chart = undefined;
+var chart;
 
 /**
  * Updates the architecture form after
@@ -122,7 +128,7 @@ function baseLog(x, base) {
 function updateGraph() {
 	var num_layers = $('#num_layers').val();
 	var prec_layer_nodes = 0;
-	var networkGraph = cytoscape({
+	networkGraph = cytoscape({
 		container: document.getElementById('DBNgraph')
 	});
 
@@ -130,10 +136,10 @@ function updateGraph() {
 	var graphElements = [];
 	for (var layer = 0; layer < num_layers; layer++) {
 		if (layer == 0) {
-			var label = 'visible layer';
+			var label = 'Visible layer';
 			var selector = $('#vis_sz');
 		} else {
-			var label = 'hidden layer ' + layer;
+			var label = 'Hidden layer ' + layer;
 			var selector = $('#hid_sz_' + layer);
 		}
 		var num_nodes = selector.val()
@@ -141,12 +147,12 @@ function updateGraph() {
 		if (num_nodes != '' && num_nodes > 0) {
 			var max_real_nodes = 10000;
 			var max_visible_nodes = 40;
-			var max_rendered_nodes = 80;
+			var max_rendered_nodes = 60;
 
 			if (num_nodes > max_real_nodes) {
-				alert('Too many nodes at ' + label + ' (' + num_nodes + ' nodes!): aborting; defaulting to ' + max_real_nodes + '.');
+				alert(label + ' has too many nodes (' + num_nodes + '): aborting; defaulting to ' + max_real_nodes + '.');
 				selector.val(max_real_nodes);
-				return;
+				num_nodes = max_real_nodes;
 			}
 
 			var parent = undefined;
@@ -170,7 +176,7 @@ function updateGraph() {
 						id: nodeId(layer, node),
 						parent: parent
 					},
-					position: {
+					position: { // X is horizontal, Y is vertical.
 						x: ((node - 0.5) / num_nodes) * networkGraph.width(),
 						y: ((num_layers / 2) - layer) * networkGraph.height() / num_layers
 					}
@@ -180,6 +186,7 @@ function updateGraph() {
 					var target_id = nodeId(layer - 1, prec_node);
 					graphElements.push({
 						group: 'edges',
+						classes: 'rbm' + layer,
 						data: {
 							id: edgeId(source_id, target_id),
 							source: source_id,
@@ -188,6 +195,7 @@ function updateGraph() {
 					});
 				}
 			}
+
 			prec_layer_nodes = num_nodes;
 		}
 	}
@@ -211,7 +219,8 @@ function updateGraph() {
 					'z-compound-depth': 'top',
 					'background-color': '#FFF',
 					'label': 'data(placeholder)',
-					'text-valign': 'center'
+					'text-valign': 'center',
+					'text-opacity': 0.6
 				}
 			},
 			{
@@ -226,6 +235,10 @@ function updateGraph() {
 			name: 'preset'
 		}
 	});
+}
+
+function announceTraining(rbm) {
+	networkGraph.$('.rbm' + rbm).style('line-color', '#89D');
 }
 
 /**
@@ -274,6 +287,9 @@ function setupChart() {
  */
 function setupTrainForm() {
 	$('#train_form').submit(function(e) {
+		curr_epoch = 0;
+		curr_rbm = -1;
+
 		updateSeries();
 		chart.xAxis[0].setExtremes(1, $('#epochs').val());
 
@@ -321,6 +337,7 @@ function updateSeries() {
  */
 function updateError(autoContinue) {
 	var parameters = { 'job_id': job_id };
+
 	$.ajax({
 		type: 'POST',
 		url: 'getError/',
@@ -328,16 +345,23 @@ function updateError(autoContinue) {
 		contentType: 'application/json; charset=utf-8',
 		dataType: 'json',
 		success: function(response) {
-			if (!response.stop) {
+			if (response.stop) {
+				// announce training has ended:
+				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#BCE');
+			} else {
 				var point = response.error;
 				if (response.curr_rbm != curr_rbm) {
-					curr_rbm = response.curr_rbm;
 					curr_epoch = 0;
+					curr_rbm = response.curr_rbm;
+
+					// announce training has ended:
+					networkGraph.$('.rbm' + curr_rbm).style('line-color', '#BCE');
+					// announce training has started:
+					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#D89');
 				}
 
-				var shift = chart.series[curr_rbm].data.length > 20; // shift if the series is longer than 20
 				curr_epoch++;
-				chart.series[curr_rbm].addPoint([curr_epoch, point], true, shift);
+				chart.series[curr_rbm].addPoint([curr_epoch, point], true);
 
 				if (autoContinue) // call it again
 					updateError(true);
