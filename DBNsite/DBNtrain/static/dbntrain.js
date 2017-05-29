@@ -48,16 +48,6 @@ $(function() {
 });
 
 /**
- * Prevents the submission of the form
- * when the `enter` key is pressed.
- */
-$(function() {
-	$('#train_form').keydown(function (e) {
-		if (e.which == 13) e.preventDefault();
-	});
-});
-
-/**
  * Updates the form for defining the DBN layers,
  * based on the number of layers that the user
  * wants to create.
@@ -235,10 +225,6 @@ function updateGraph() {
 			name: 'preset'
 		}
 	});
-}
-
-function announceTraining(rbm) {
-	networkGraph.$('.rbm' + rbm).style('line-color', '#89D');
 }
 
 /**
