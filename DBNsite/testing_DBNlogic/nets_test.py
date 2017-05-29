@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.join(myPath, '..'))
 
 import DBNlogic.nets as nets
 from DBNlogic.nets import DBN, RBM
+from DBNlogic.sets import DataSet
+from DBNlogic.util import Configuration, squared_error
 
 
 
@@ -55,3 +57,17 @@ def test_saveAndLoad():
     net_2 = DBN.load('Test')
     assert [np.equal(net_1[i].W, net_2[i].W) for i in range(2)]
     os.remove(nets.full('Test.pkl'))
+
+def test_learn():
+    """A DBN can learn to generate samples from a dataset."""
+    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
+    trainset = DataSet.fromWhatever('left_8')
+    net.learn(trainset)
+
+def test_error():
+    """The reconstruction error of a DBN is less than 1."""
+    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
+    trainset = DataSet.fromWhatever('left_8')
+    net.learn(trainset)
+    mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
+    assert mean_err <= 1
