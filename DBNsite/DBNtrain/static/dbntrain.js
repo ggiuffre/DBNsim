@@ -129,20 +129,14 @@ function updateGraph() {
 	// gather new nodes and edges:
 	var graphElements = [];
 	for (var layer = 0; layer < num_layers; layer++) {
-		var num_nodes = 0;
-		var label;
-		var selector;
-		var parent = undefined;
-
 		if (layer == 0) {
-			num_nodes = $('#vis_sz').val();
-			label = 'visible layer';
-			selector = $('#vis_sz');
+			var label = 'visible layer';
+			var selector = $('#vis_sz');
 		} else {
-			num_nodes = $('#hid_sz_' + layer).val();
-			label = 'hidden layer ' + layer;
-			selector = $('#hid_sz_' + layer);
+			var label = 'hidden layer ' + layer;
+			var selector = $('#hid_sz_' + layer);
 		}
+		var num_nodes = selector.val()
 
 		if (num_nodes != '' && num_nodes > 0) {
 			var max_real_nodes = 10000;
@@ -155,6 +149,7 @@ function updateGraph() {
 				return;
 			}
 
+			var parent = undefined;
 			if (num_nodes > max_visible_nodes) {
 				parent = label;
 				graphElements.push({
