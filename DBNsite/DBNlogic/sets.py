@@ -101,4 +101,4 @@ class SmallerMNIST(MNIST):
             self.data = np.array([image[::4, ::4] for image in self.data])
             self.data = self.data.reshape(60000, 49)
             with open(pkl_file, 'wb') as f:
-               pickle.dump(self.data, open(pkl_file, 'wb'))
+                pickle.dump(self.data, open(pkl_file, 'wb'))
