@@ -75,8 +75,8 @@ class MNIST(DataSet):
 
     def __init__(self):
         """Construct the MNIST dataset."""
-        pkl_file = full('MNIST_labeled.pkl')
-        csv_file = full('MNIST_labeled.csv')
+        pkl_file = full('MNIST.pkl')
+        csv_file = full('MNIST.csv')
         if (exists(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
@@ -91,7 +91,7 @@ class SmallerMNIST(MNIST):
 
     def __init__(self):
         """Construct a 7x7 downsampling of the MNIST dataset."""
-        pkl_file = full('MNIST_small.pkl')
+        pkl_file = full('small_MNIST.pkl')
         if (exists(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
