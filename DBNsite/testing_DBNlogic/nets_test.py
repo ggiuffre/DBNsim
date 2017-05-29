@@ -55,3 +55,10 @@ def test_saveAndLoad():
     net_2 = DBN.load('Test')
     assert [np.equal(net_1[i].W, net_2[i].W) for i in range(2)]
     os.remove(nets.full('Test.pkl'))
+
+test_append()
+test_init()
+test_generationLength()
+test_save()
+test_load()
+test_saveAndLoad()
