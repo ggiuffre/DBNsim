@@ -56,9 +56,14 @@ def test_saveAndLoad():
     assert [np.equal(net_1[i].W, net_2[i].W) for i in range(2)]
     os.remove(nets.full('Test.pkl'))
 
-test_append()
-test_init()
-test_generationLength()
-test_save()
-test_load()
-test_saveAndLoad()
+def test_learn():
+    pass
+
+if __name__ == '__main__':
+    test_append()
+    test_init()
+    test_generationLength()
+    test_save()
+    test_load()
+    test_saveAndLoad()
+    test_learn()
