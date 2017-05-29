@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.join(myPath, '..'))
 import DBNlogic.nets as nets
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
-from DBNlogic.util import Configuration, squared_error
+from DBNlogic.util import squared_error
 
 
 
