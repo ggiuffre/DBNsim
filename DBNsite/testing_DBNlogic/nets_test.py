@@ -10,6 +10,7 @@ import DBNlogic.nets as nets
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
 from DBNlogic.util import squared_error
+from DBNlogic.train import CDTrainer
 
 
 
@@ -58,18 +59,36 @@ def test_saveAndLoad():
     assert [np.equal(net_1[i].W, net_2[i].W) for i in range(2)]
     os.remove(nets.full('Test.pkl'))
 
-def test_learn():
+def test_DBN_learn():
     """A DBN can learn to generate samples from a dataset."""
     net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
     trainset = DataSet.fromWhatever('left_8')
     for train_info in net.learn(trainset):
         pass
 
-def test_error():
+def test_DBN_error():
     """The reconstruction error of a DBN is less than 1."""
     net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
     trainset = DataSet.fromWhatever('left_8')
     for train_info in net.learn(trainset):
+        pass
+    mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
+    assert mean_err <= 1
+
+def test_RBM_learn():
+    """A RBM can learn to generate samples from a dataset."""
+    net = RBM(8, 15)
+    trainset = DataSet.fromWhatever('left_8')
+    trainer = CDTrainer(net)
+    for err in trainer.run(trainset):
+        pass
+
+def test_RBM_error():
+    """The reconstruction error of a RBM is less than 1."""
+    net = RBM(8, 15)
+    trainset = DataSet.fromWhatever('left_8')
+    trainer = CDTrainer(net)
+    for err in trainer.run(trainset):
         pass
     mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
     assert mean_err <= 1
