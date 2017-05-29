@@ -62,12 +62,14 @@ def test_learn():
     """A DBN can learn to generate samples from a dataset."""
     net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
     trainset = DataSet.fromWhatever('left_8')
-    net.learn(trainset)
+    for train_info in net.learn(trainset):
+        pass
 
 def test_error():
     """The reconstruction error of a DBN is less than 1."""
     net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
     trainset = DataSet.fromWhatever('left_8')
-    net.learn(trainset)
+    for train_info in net.learn(trainset):
+        pass
     mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
     assert mean_err <= 1
