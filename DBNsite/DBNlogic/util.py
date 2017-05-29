@@ -24,8 +24,6 @@ class Configuration:
 def sigmoid(v):
     """Return the element-wise sigmoid of a vector or matrix."""
     ones = np.ones(v.shape) # matrix of ones
-    if v.any() > 1:
-        print('high value!')
     return ones / (ones + np.exp(-v))
 
 def activation(v):
