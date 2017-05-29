@@ -13,12 +13,11 @@ def full(name = ''):
 
 
 
-
 class DBN(list):
     """Deep Belief Network (DBN)."""
 
     def __init__(self, layers = [], name = 'untitled'):
-        """Constructor for a DBN."""
+        """Construct a DBN from a list of RBMs."""
         super().__init__(layers)
         self.name = name
 
@@ -72,7 +71,7 @@ class RBM:
     """Restricted Boltzmann Machine (RBM)."""
 
     def __init__(self, vis_size, hid_size):
-        """Constructor for a RBM."""
+        """Construct a RBM from the two given dimensions."""
         self.v = np.zeros((vis_size, 1)) # visible units
         self.a = np.zeros((vis_size, 1)) # visible biases
         self.h = np.zeros((hid_size, 1)) # hidden units

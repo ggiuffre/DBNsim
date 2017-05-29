@@ -3,15 +3,18 @@ import numpy as np
 
 
 class Configuration:
-    """Hyper-parameters configuration for training a network."""
+    """Hyper-parameters configuration for training a neural network."""
+
     def __init__(self,
-            max_epochs = 10,    # -------
+            max_epochs = 10,    # - - - -
             threshold  = 0.05,  # 
             batch_size = 1,     # default
             learn_rate = 0.1,   # values
             momentum   = 0.5,   # 
-            w_decay    = 0.0002 # -------
+            w_decay    = 0.0002 # - - - -
     ):
+        """Construct a Configuration object from the
+        given training hyper-parameters."""
         self.max_epochs = max_epochs # max n. of training epochs
         self.threshold  = threshold  # target error threshold
         self.batch_size = batch_size # size of a mini-batch
@@ -23,7 +26,7 @@ class Configuration:
 
 def sigmoid(v):
     """Return the element-wise sigmoid of a vector or matrix."""
-    ones = np.ones(v.shape) # matrix of ones
+    ones = np.ones(v.shape) # (matrix of ones)
     return ones / (ones + np.exp(-v))
 
 def activation(v):

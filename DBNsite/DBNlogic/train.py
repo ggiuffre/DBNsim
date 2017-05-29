@@ -8,7 +8,8 @@ class CDTrainer:
     """Contrastive Divergence trainer for RBMs."""
 
     def __init__(self, net, config = Configuration()):
-        """Constructor for a Contrastive Divergence trainer."""
+        """Construct a strategy object for training a RBM
+        with the Contrastive Divergence learning algorithm."""
         self.net = net          # the learner
         self.config = config    # hyper-parameters for training
         self.next_rbm_data = [] # the training set built from the positive probs
