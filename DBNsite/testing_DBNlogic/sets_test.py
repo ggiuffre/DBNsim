@@ -54,6 +54,12 @@ def test_MNIST():
     mnist = MNIST()
     assert mnist.data.shape == (60000, 784)
 
+def test_MNISTCSV():
+    """A MNIST dataset object can be constructed from a CSV file."""
+    os.remove(full('MNIST.pkl'))
+    mnist = MNIST()
+    assert mnist.data.shape == (60000, 784)
+
 def test_SmallerMNIST():
     """A downsampling of the MNIST dataset
     can be constructed from a file."""
