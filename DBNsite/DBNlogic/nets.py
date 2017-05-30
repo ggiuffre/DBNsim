@@ -49,7 +49,7 @@ class DBN(list):
             for curr_error in trainer.run(trainset):
                 yield {'rbm': self.index(rbm), 'err': curr_error}
             trainset = np.array(trainer.next_rbm_data)
-    
+
     def save(self):
         """Save the network weights to a Pickle file."""
         net_file = full(self.name + '.pkl')

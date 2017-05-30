@@ -132,12 +132,13 @@ function updateGraph() {
 			var label = 'Hidden layer ' + layer;
 			var selector = $('#hid_sz_' + layer);
 		}
-		var num_nodes = selector.val()
+		var num_nodes = (+selector.val())
 
-		if (num_nodes != '' && num_nodes > 0) {
+		if (num_nodes > 0) {
 			var max_real_nodes = 10000;
-			var max_visible_nodes = 40;
-			var max_rendered_nodes = 60;
+			var max_visible_nodes = 20;
+			var max_rendered_nodes = 30;
+			var edgeThickness = max_rendered_nodes / (prec_layer_nodes + num_nodes);
 
 			if (num_nodes > max_real_nodes) {
 				alert(label + ' has too many nodes (' + num_nodes + '): aborting; defaulting to ' + max_real_nodes + '.');
@@ -167,10 +168,11 @@ function updateGraph() {
 						parent: parent
 					},
 					position: { // X is horizontal, Y is vertical.
-						x: ((node - 0.5) / num_nodes) * networkGraph.width(),
-						y: ((num_layers / 2) - layer) * networkGraph.height() / num_layers
+						x: ((num_nodes / 2) - node + 0.5) * networkGraph.width() / num_nodes,
+						y: ((num_layers / 2) - layer + 0.5) * networkGraph.height() / num_layers
 					}
 				});
+
 				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
 					var source_id = nodeId(layer, node);
 					var target_id = nodeId(layer - 1, prec_node);
@@ -179,6 +181,7 @@ function updateGraph() {
 						classes: 'rbm' + layer,
 						data: {
 							id: edgeId(source_id, target_id),
+							thickness: edgeThickness,
 							source: source_id,
 							target: target_id
 						}
@@ -216,8 +219,8 @@ function updateGraph() {
 			{
 				selector: 'edge',
 				style: {
-					'width': 1.4,
-					'line-color': '#BCE'
+					'width': 'data(thickness)',
+					'line-color': '#ACD'
 				}
 			}
 		],
@@ -278,6 +281,8 @@ function setupTrainForm() {
 
 		updateSeries();
 		chart.xAxis[0].setExtremes(1, $('#epochs').val());
+		for (var i = 1; i < $('#num_layers').val(); i++)
+			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
 
 		var net_form_data = $('#net_form').serialize();
 		var train_form_data = $('#train_form').serialize();
@@ -333,7 +338,7 @@ function updateError(autoContinue) {
 		success: function(response) {
 			if (response.stop) {
 				// announce training has ended:
-				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#BCE');
+				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#ACD');
 			} else {
 				var point = response.error;
 				if (response.curr_rbm != curr_rbm) {
@@ -341,7 +346,7 @@ function updateError(autoContinue) {
 					curr_rbm = response.curr_rbm;
 
 					// announce training has ended:
-					networkGraph.$('.rbm' + curr_rbm).style('line-color', '#BCE');
+					networkGraph.$('.rbm' + curr_rbm).style('line-color', '#ACD');
 					// announce training has started:
 					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#D89');
 				}

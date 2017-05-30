@@ -64,6 +64,9 @@ class CDTrainer:
                 net.b += b_update
                 errors = np.append(errors, squared_error(data, reconstr))
 
+            if epoch == max_epochs - 1:
+                assert len(self.next_rbm_data) == len(trainset) # for debugging purposes
+
             # --- error update:
             mean_squared_err = errors.mean()
 
