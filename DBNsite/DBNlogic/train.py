@@ -28,9 +28,9 @@ class CDTrainer:
         a_update = np.zeros(net.a.shape)
         b_update = np.zeros(net.b.shape)
 
-        epoch = 0
+        epoch = 1
         mean_squared_err = threshold + 1 # (for entering the while loop)
-        while (mean_squared_err > threshold) and (epoch < max_epochs):
+        while (mean_squared_err > threshold) and (epoch <= max_epochs):
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
                 start = batch_sz * batch_n
@@ -44,7 +44,7 @@ class CDTrainer:
                 pos_hid_act = pos_hid_probs.sum(axis = 1, keepdims = True) / batch_sz
 
                 # --- build the training set for the next RBM:
-                if epoch == max_epochs - 1:
+                if epoch == max_epochs:
                     self.next_rbm_data.extend(pos_hid_probs.T)
 
                 # --- negative phase:
@@ -63,9 +63,8 @@ class CDTrainer:
                 net.a += a_update
                 net.b += b_update
                 errors = np.append(errors, squared_error(data, reconstr))
-
-            if epoch == max_epochs - 1:
-                assert len(self.next_rbm_data) == len(trainset) # for debugging purposes
+                if errors.shape != (batch_n + 1,): # DEBUGGING
+                    print('batch n.', batch_n + 1, ':', errors.shape) # DEBUGGING
 
             # --- error update:
             mean_squared_err = errors.mean()
