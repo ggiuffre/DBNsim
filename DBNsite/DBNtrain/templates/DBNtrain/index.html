@@ -69,7 +69,10 @@
 
 		<div id="train_plot">
 			<div id="train_plot_container"></div>
-			<p><button onclick="updateError(true);">Step &gt;</button></p>
+			<p>
+				<button onclick="retrieveError();">Step &gt;</button>
+				<img id="train_plot_loading" src="{% static 'loading.gif' %}" />
+			</p>
 		</div>
 
 		<div id="DBNgraph"></div>

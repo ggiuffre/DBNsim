@@ -45,10 +45,15 @@ h1 {
 }
 
 #train_plot {
+	position: relative;
 	width: 45%;
 	height: 400px;
 	float: left;
 	clear: left;
+}
+
+#train_plot_loading {
+	opacity: 0;
 }
 
 #DBNgraph {

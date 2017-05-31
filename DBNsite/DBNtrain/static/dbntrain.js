@@ -1,10 +1,4 @@
 /**
- * Don't ask for confirmation before reloading
- * or leaving the page.
- */
-window.onbeforeunload = function() { return true; }
-
-/**
  * The current training epoch number.
  * @type {Number}
  */
@@ -36,6 +30,10 @@ var networkGraph;
  */
 var chart;
 
+
+
+
+
 /**
  * Updates the architecture form after
  * after the `tab` key is pressed but
@@ -46,6 +44,86 @@ $(function() {
 		if (e.which == 8) updateArchitecture();
 	});
 });
+
+/**
+ * Sets up the chart settings.
+ * To be called _after_ the page has loaded!
+ */
+function setupChart() {
+	chart = Highcharts.chart({
+		chart: {
+			renderTo: 'train_plot_container',
+			defaultSeriesType: 'spline',
+			animation: {
+				duration: 200
+			}
+		},
+		title: {
+			text: 'Reconstruction error over time'
+		},
+		xAxis: {
+			min: 1,
+			max: $('#epochs').val(),
+			title: {
+				text: 'Epoch number'
+			},
+			tickInterval: 1
+		},
+		yAxis: {
+			min: 0,
+			max: 1,
+			title: {
+				text: 'Mean unit error',
+				margin: 80
+			}
+		},
+		series: [{
+			name: 'Training error for RBM 1',
+			data: []
+		}]
+	});
+}
+
+/**
+ * Binds the submission of the training form to
+ * an AJAX request that submits the training
+ * hyper-parameters to the server.
+ */
+function setupTrainForm() {
+	$('#train_form').submit(function(e) {
+
+		// reset counters and chart series:
+		curr_epoch = 0;
+		curr_rbm = -1;
+		updateSeries();
+
+		var epochs = $('#epochs').val();
+		var num_layers = $('#num_layers').val();
+		chart.xAxis[0].setExtremes(1, epochs);
+		for (var i = 1; i < num_layers; i++)
+			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
+
+		var net_form_data = $('#net_form').serialize();
+		var train_form_data = $('#train_form').serialize();
+		var forms_data = net_form_data + '&' + train_form_data;
+
+		$.ajax({
+			type: 'POST',
+			url: 'train/',
+			data: forms_data,
+			success: function(response) {
+				job_id = response;
+				retrieveError(true);
+			}
+		});
+
+		e.preventDefault(); // do not submit the form
+	});
+}
+
+
+
+
 
 /**
  * Updates the form for defining the DBN layers,
@@ -80,35 +158,24 @@ function updateArchitecture() {
 }
 
 /**
- * Returns a standard string identifier
- * for the given node in the given layer.
- * @param  {Number} layer the layer position in the DBN
- * @param  {Number} node  the node position in the layer
- * @return {String}       a string identifier
+ * Updates the time series for the error plot,
+ * matching the number of RBMs defined in the
+ * architecture form.
  */
-function nodeId(layer, node) {
-	return 'l' + layer + 'n' + node;
-}
+function updateSeries() {
+	var num_layers = $('#num_layers').val();
+	var num_rbms = num_layers - 1
 
-/**
- * Returns a standard string identifier
- * for the given edge in the network graph.
- * @param  {Number} node1 the identifier for the first node
- * @param  {Number} node2 the identifier for the second node
- * @return {String}       a string identifier
- */
-function edgeId(node1, node2) {
-	return node1 + '_' + node2;
-}
+	// remove all the series:
+	for (var i = chart.series.length - 1; i >= 0; i--)
+		chart.series[i].remove();
 
-/**
- * Returns the logarithm of `x` base `base`.
- * @param  {Number} x    the argument of the logarithm
- * @param  {Number} base the base
- * @return {Number}      log_base(x)
- */
-function baseLog(x, base) {
-	return Math.log(x) / Math.log(base);
+	// add the necessary series:
+	for (var i = 0; i < num_rbms; i++)
+		chart.addSeries({
+			name: 'Training error for RBM ' + (i + 1),
+			data: []
+		});
 }
 
 /**
@@ -231,104 +298,50 @@ function updateGraph() {
 }
 
 /**
- * Sets up the chart settings.
- * To be called _after_ the page has loaded!
+ * Returns a standard string identifier
+ * for the given node in the given layer.
+ * @param  {Number} layer the layer position in the DBN
+ * @param  {Number} node  the node position in the layer
+ * @return {String}       a string identifier
  */
-function setupChart() {
-	chart = Highcharts.chart({
-		chart: {
-			renderTo: 'train_plot_container',
-			defaultSeriesType: 'spline',
-			animation: {
-				duration: 200
-			}
-		},
-		title: {
-			text: 'Reconstruction error over time'
-		},
-		xAxis: {
-			min: 1,
-			max: $('#epochs').val(),
-			title: {
-				text: 'Epoch number'
-			},
-			tickInterval: 1
-		},
-		yAxis: {
-			min: 0,
-			max: 1,
-			title: {
-				text: 'Mean unit error',
-				margin: 80
-			}
-		},
-		series: [{
-			name: 'Training error for RBM 1',
-			data: []
-		}]
-	});
+function nodeId(layer, node) {
+	return 'l' + layer + 'n' + node;
 }
 
 /**
- * Binds the submission of the training form to
- * an AJAX request that submits the training
- * hyper-parameters to the server.
+ * Returns a standard string identifier
+ * for the given edge in the network graph.
+ * @param  {Number} node1 the identifier for the first node
+ * @param  {Number} node2 the identifier for the second node
+ * @return {String}       a string identifier
  */
-function setupTrainForm() {
-	$('#train_form').submit(function(e) {
-		curr_epoch = 0;
-		curr_rbm = -1;
-
-		updateSeries();
-		chart.xAxis[0].setExtremes(1, $('#epochs').val());
-		for (var i = 1; i < $('#num_layers').val(); i++)
-			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
-
-		var net_form_data = $('#net_form').serialize();
-		var train_form_data = $('#train_form').serialize();
-		var forms_data = net_form_data + '&' + train_form_data;
-
-		$.ajax({
-			type: 'POST',
-			url: 'train/',
-			data: forms_data,
-			success: function(response) { job_id = response; }
-		});
-
-		e.preventDefault(); // do not submit the form
-	});
+function edgeId(node1, node2) {
+	return node1 + '_' + node2;
 }
 
 /**
- * Updates the time series for the error plot,
- * matching the number of RBMs defined in the
- * architecture form.
+ * Returns the logarithm of `x` base `base`.
+ * @param  {Number} x    the argument of the logarithm
+ * @param  {Number} base the base
+ * @return {Number}      log_base(x)
  */
-function updateSeries() {
-	var num_layers = $('#num_layers').val();
-	var num_rbms = num_layers - 1
-
-	// remove all the series:
-	for (var i = chart.series.length - 1; i >= 0; i--)
-		chart.series[i].remove();
-
-	// add the necessary series:
-	for (var i = 0; i < num_rbms; i++)
-		chart.addSeries({
-			name: 'Training error for RBM ' + (i + 1),
-			data: []
-		});
+function baseLog(x, base) {
+	return Math.log(x) / Math.log(base);
 }
+
+
+
+
 
 /**
  * Asks the server to train the network for
  * one epoch, then updates the reconstruction
  * error on the chart.
- * @param  {Boolean} autoContinue  whether to automate the update
  */
-function updateError(autoContinue) {
-	var parameters = { 'job_id': job_id };
+function retrieveError(autoContinue) {
+	$('#train_plot_loading').css('opacity', 1);
 
+	var parameters = { 'job_id': job_id };
 	$.ajax({
 		type: 'POST',
 		url: 'getError/',
@@ -336,8 +349,10 @@ function updateError(autoContinue) {
 		contentType: 'application/json; charset=utf-8',
 		dataType: 'json',
 		success: function(response) {
+			$('#train_plot_loading').css('opacity', 0);
+
 			if (response.stop) {
-				// announce training has ended:
+				// announce training has ended for the last RBM:
 				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#ACD');
 			} else {
 				var point = response.error;
@@ -345,17 +360,17 @@ function updateError(autoContinue) {
 					curr_epoch = 0;
 					curr_rbm = response.curr_rbm;
 
-					// announce training has ended:
+					// announce training has ended for the last RBM:
 					networkGraph.$('.rbm' + curr_rbm).style('line-color', '#ACD');
-					// announce training has started:
+					// announce training has started for the current RBM:
 					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#D89');
 				}
 
 				curr_epoch++;
 				chart.series[curr_rbm].addPoint([curr_epoch, point], true);
 
-				if (autoContinue) // call it again
-					updateError(true);
+				if (autoContinue)
+					retrieveError(true);
 			}
 		}
 	});

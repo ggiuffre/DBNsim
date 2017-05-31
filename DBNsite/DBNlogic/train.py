@@ -46,6 +46,7 @@ class CDTrainer:
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
                     self.next_rbm_data.extend(pos_hid_probs.T)
+                    print('next RBM data length:', len(self.next_rbm_data))
 
                 # --- negative phase:
                 vis_probs = sigmoid(np.dot(net.W.T, hid_states) + net.a.repeat(batch_sz, axis = 1))
@@ -63,8 +64,6 @@ class CDTrainer:
                 net.a += a_update
                 net.b += b_update
                 errors = np.append(errors, squared_error(data, reconstr))
-                if errors.shape != (batch_n + 1,): # DEBUGGING
-                    print('batch n.', batch_n + 1, ':', errors.shape) # DEBUGGING
 
             # --- error update:
             mean_squared_err = errors.mean()

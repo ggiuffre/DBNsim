@@ -48,6 +48,8 @@ class DBN(list):
             trainer = CDTrainer(rbm, config = config)
             for curr_error in trainer.run(trainset):
                 yield {'rbm': self.index(rbm), 'err': curr_error}
+            if len(trainer.next_rbm_data) != len(trainset): # DEBUGGING
+                print('next RBM data:', trainer.next_rbm_data) # DEBUGGING
             trainset = np.array(trainer.next_rbm_data)
 
     def save(self):
