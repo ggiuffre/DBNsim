@@ -38,3 +38,7 @@ def test_activationShape():
     v = np.random.randn(5, 12)
     assert activation(v).shape == v.shape
 
+def test_MSQZero():
+    """The `squared_error` function applied to `x` and `x` returns 0."""
+    x = np.random.rand(13, 4, 1)
+    assert squared_error(x, x) == 0

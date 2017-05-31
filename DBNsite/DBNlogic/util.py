@@ -6,12 +6,12 @@ class Configuration:
     """Hyper-parameters configuration for training a neural network."""
 
     def __init__(self,
-            max_epochs = 10,    # - - - -
-            threshold  = 0.05,  # 
-            batch_size = 1,     # default
-            learn_rate = 0.1,   # values
-            momentum   = 0.5,   # 
-            w_decay    = 0.0002 # - - - -
+        max_epochs = 10,    # - - - -
+        threshold  = 0.05,  # 
+        batch_size = 1,     # default
+        learn_rate = 0.1,   # values
+        momentum   = 0.5,   # 
+        w_decay    = 0.0002 # - - - -
     ):
         """Construct a Configuration object from the
         given training hyper-parameters."""
