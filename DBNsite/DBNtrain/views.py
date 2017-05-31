@@ -97,3 +97,16 @@ def getError(request):
     }
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
+
+@csrf_exempt
+def getInput(request):
+    """Return a specific input image of a specific dataset."""
+    dataset = request.GET['dataset']
+    index = int(request.GET['index'])
+
+    try:
+        response = DataSet.fromWhatever(dataset)[index].tolist()
+    except IndexError:
+        response = []
+    json_response = json.dumps({'image': response})
+    return HttpResponse(json_response, content_type = 'application/json')

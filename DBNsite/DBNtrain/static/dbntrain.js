@@ -232,6 +232,7 @@ function updateGraph() {
 					group: 'nodes',
 					data: {
 						id: nodeId(layer, node),
+						layer: layer,
 						parent: parent
 					},
 					position: { // X is horizontal, Y is vertical.
@@ -260,9 +261,26 @@ function updateGraph() {
 		}
 	}
 
-	networkGraph = cytoscape({
+	// build and render the graph:
+	networkGraph = getGraphFrom(graphElements);
+
+	// bind click events to the graph:
+	networkGraph.$('node').on('tap', function(event) {
+		var layer = event.target.data('layer');
+		dissect(layer);
+	});
+}
+
+/**
+ * Returns a Cytoscape graph built from an array
+ * of Cytoscape nodes and edges.
+ * @param  {Array} elements  an array of nodes and edges
+ * @return {Cytoscape}       a Cytoscape graph
+ */
+function getGraphFrom(elements) {
+	return cytoscape({
 		container: document.getElementById('DBNgraph'),
-		elements: graphElements,
+		elements: elements,
 		userZoomingEnabled: false,
 		style: [
 			{
@@ -295,6 +313,40 @@ function updateGraph() {
 			name: 'preset'
 		}
 	});
+}
+
+/**
+ * Shows a random input image or the receptive
+ * fields of one particular layer of the DBN.
+ * @param {Number} layer  the layer position in the DBN
+ */
+function dissect(layer) {
+	if (layer == 0) {
+		var dataset = $('#dataset').val();
+		var vis_sz = $('#vis_sz').val();
+		var whichInput = Math.floor(Math.random() * vis_sz);
+		$.ajax({
+			type: 'GET',
+			url: 'getInput/',
+			data: {dataset: dataset, index: whichInput},
+			dataType: 'json',
+			success: function(response) {
+				// show sample input image...
+				alert(response.image);
+			}
+		});
+	} else {
+		var parameters = { 'job_id': job_id };
+		$.ajax({
+			type: 'GET',
+			url: 'getReceptiveField/',
+			data: JSON.stringify(parameters),
+			dataType: 'json',
+			success: function(response) {
+				// show receptive fields...
+			}
+		});
+	}
 }
 
 /**
@@ -346,7 +398,6 @@ function retrieveError(autoContinue) {
 		type: 'POST',
 		url: 'getError/',
 		data: JSON.stringify(parameters),
-		contentType: 'application/json; charset=utf-8',
 		dataType: 'json',
 		success: function(response) {
 			$('#train_plot_loading').css('opacity', 0);

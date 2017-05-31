@@ -44,9 +44,9 @@ class CDTrainer:
                 pos_hid_act = pos_hid_probs.sum(axis = 1, keepdims = True) / batch_sz
 
                 # --- build the training set for the next RBM:
+                print(epoch, '/', max_epochs)
                 if epoch == max_epochs:
                     self.next_rbm_data.extend(pos_hid_probs.T)
-                    print('next RBM data length:', len(self.next_rbm_data))
 
                 # --- negative phase:
                 vis_probs = sigmoid(np.dot(net.W.T, hid_states) + net.a.repeat(batch_sz, axis = 1))
