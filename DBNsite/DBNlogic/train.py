@@ -18,7 +18,6 @@ class CDTrainer:
         """Learn from a particular dataset."""
         net        = self.net
         max_epochs = self.config.max_epochs
-        threshold  = self.config.threshold
         batch_sz   = self.config.batch_size
         learn_rate = self.config.learn_rate
         momentum   = self.config.momentum
@@ -29,8 +28,8 @@ class CDTrainer:
         b_update = np.zeros(net.b.shape)
 
         epoch = 1
-        mean_squared_err = threshold + 1 # (for entering the while loop)
-        while (mean_squared_err > threshold) and (epoch <= max_epochs):
+        while epoch <= max_epochs:
+            print(epoch, '/', max_epochs)
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
                 start = batch_sz * batch_n
@@ -44,7 +43,6 @@ class CDTrainer:
                 pos_hid_act = pos_hid_probs.sum(axis = 1, keepdims = True) / batch_sz
 
                 # --- build the training set for the next RBM:
-                print(epoch, '/', max_epochs)
                 if epoch == max_epochs:
                     self.next_rbm_data.extend(pos_hid_probs.T)
 

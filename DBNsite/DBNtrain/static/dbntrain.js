@@ -331,8 +331,8 @@ function dissect(layer) {
 			data: {dataset: dataset, index: whichInput},
 			dataType: 'json',
 			success: function(response) {
-				// show sample input image...
 				alert(response.image);
+				// show sample input image...
 			}
 		});
 	} else {

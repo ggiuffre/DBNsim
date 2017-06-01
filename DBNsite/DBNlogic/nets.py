@@ -44,13 +44,19 @@ class DBN(list):
     def learn(self, trainset, config = Configuration()):
         """Learn from a particular dataset."""
         for rbm in self:
-            print('trainset shape:', trainset.shape)
             trainer = CDTrainer(rbm, config = config)
             for curr_error in trainer.run(trainset):
                 yield {'rbm': self.index(rbm), 'err': curr_error}
-            if len(trainer.next_rbm_data) != len(trainset): # DEBUGGING
-                print('next RBM data:', trainer.next_rbm_data) # DEBUGGING
             trainset = np.array(trainer.next_rbm_data)
+
+    def receptiveField(self, layer, neuron):
+        """Return the receptive field of a specific
+        neuron in a specific hidden layer of the DBN."""
+        field = self[layer - 1].W[neuron]
+        if layer > 1:
+            for rbm in self[layer - 2 : : -1]:
+                field = np.dot(field, rbm.W)
+        return field
 
     def save(self):
         """Save the network weights to a Pickle file."""
