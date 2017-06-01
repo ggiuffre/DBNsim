@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import string
 import random
+import math
 from time import time
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
@@ -65,7 +66,7 @@ def train(request):
     random_old_job = random.choice(list(training_jobs.keys()))
     if time() - training_jobs[random_old_job]['birthday'] > 3600:
         print('deleting old job n.', random_old_job)
-        del training_jobs[random_old_job]
+        del training_jobs[random_old_job] # risky...
 
     return HttpResponse(random_id)
 
@@ -87,7 +88,7 @@ def getError(request):
         next_err = train_info['err']
     except StopIteration:
         # training_jobs[job]['network'].save()
-        del training_jobs[job]
+        del training_jobs[job]['generator']
         stop = True
 
     response = {
@@ -98,15 +99,36 @@ def getError(request):
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
 
-@csrf_exempt
+def heatmap(array):
+    """Return a Highcharts-formatted heatmap from
+    a Python array."""
+    dim = int(math.sqrt(len(array)))
+    for row in range(dim):
+        for col in range(dim):
+            array[row * dim + col] = [col, dim - 1 - row, array[row * dim + col]] # from Python array to X,Y coordinates...
+    return array
+
 def getInput(request):
     """Return a specific input image of a specific dataset."""
     dataset = request.GET['dataset']
     index = int(request.GET['index'])
 
-    try:
-        response = DataSet.fromWhatever(dataset)[index].tolist()
-    except IndexError:
-        response = []
+    image = DataSet.fromWhatever(dataset)[index].tolist()
+    response = heatmap(image)
+
+    json_response = json.dumps({'image': response})
+    return HttpResponse(json_response, content_type = 'application/json')
+
+def getReceptiveField(request):
+    """Return the receptive field of a specific
+    neuron in a specific layer of a DBN."""
+    job = request.GET['job_id']
+    net = training_jobs[job]['network']
+    layer = int(request.GET['layer'])
+    neuron = int(request.GET['neuron'])
+
+    rec_field = net.receptiveField(layer, neuron).tolist()
+    response = heatmap(rec_field)
+
     json_response = json.dumps({'image': response})
     return HttpResponse(json_response, content_type = 'application/json')

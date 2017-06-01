@@ -61,3 +61,8 @@ h1 {
 	height: 400px;
 	float: right;
 }
+
+#input_image, #receptive_fields {
+	height: 460px;
+	max-width: 400px;
+}

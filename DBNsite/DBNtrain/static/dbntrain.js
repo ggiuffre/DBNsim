@@ -61,6 +61,9 @@ function setupChart() {
 		title: {
 			text: 'Reconstruction error over time'
 		},
+		credits: {
+			enabled: false
+		},
 		xAxis: {
 			min: 1,
 			max: $('#epochs').val(),
@@ -220,6 +223,7 @@ function updateGraph() {
 					group: 'nodes',
 					data: {
 						id: label,
+						layer: layer,
 						placeholder: '(' + num_nodes + ' nodes)'
 					}
 				});
@@ -331,22 +335,56 @@ function dissect(layer) {
 			data: {dataset: dataset, index: whichInput},
 			dataType: 'json',
 			success: function(response) {
-				alert(response.image);
-				// show sample input image...
+				var d = $('#dataset').val();
+				var title = 'Random input image from the "' + d + '" dataset';
+				var image = heatmap('input_image', response.image, title);
 			}
 		});
 	} else {
-		var parameters = { 'job_id': job_id };
+		var neuron = 0;
 		$.ajax({
 			type: 'GET',
 			url: 'getReceptiveField/',
-			data: JSON.stringify(parameters),
+			data: {
+				job_id: job_id,
+				layer: layer,
+				neuron: neuron
+			},
 			dataType: 'json',
 			success: function(response) {
-				// show receptive fields...
+				var image = heatmap('receptive_fields', response.image, null);
 			}
 		});
 	}
+}
+
+/** ... */
+function heatmap(container, data, title) {
+	return Highcharts.chart(container, {
+		chart: {
+			type: 'heatmap',
+			borderWidth: 0
+		},
+		title: {
+			text: title
+		},
+		xAxis: { title: null },
+		yAxis: { title: null },
+		legend: { enabled: false },
+		credits: { enabled: false },
+		colorAxis: {
+			min: 0,
+			max: 1,
+			minColor: '#FFF',
+			maxColor: '#000'
+		},
+		series: [{
+			name: 'Image plot',
+			data: data,
+			borderWidth: 1,
+			borderColor: '#DDD'
+		}]
+	});
 }
 
 /**

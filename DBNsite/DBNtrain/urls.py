@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^train/$', views.train, name='train'),
     url(r'^getError/$', views.getError, name='getError'),
     url(r'^getInput/$', views.getInput, name='getInput'),
+    url(r'^getReceptiveField/$', views.getReceptiveField, name='getReceptiveField'),
 ]

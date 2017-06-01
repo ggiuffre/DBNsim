@@ -17,12 +17,9 @@ def full(name = ''):
 class DataSet:
     """Dataset for training a neural network."""
 
-    def __init__(self, data, imgShape = None):
+    def __init__(self, data):
         """Construct a dataset from an array of examples."""
         self.data = data
-        if imgShape == None:
-            imgShape = (len(self.data[0]),)
-        self.imgShape = imgShape
 
     @staticmethod
     def fromCSV(path, delimiter = ','):
@@ -86,7 +83,6 @@ class MNIST(DataSet):
             self.data = DataSet.fromCSV(csv_file)[:, 1:] / 255.0
             with open(pkl_file, 'wb') as f:
                 pickle.dump(self.data, f)
-        self.imgShape = (28, 28)
 
 
 
@@ -106,4 +102,3 @@ class SmallerMNIST(MNIST):
             self.data = self.data.reshape(60000, 49)
             with open(pkl_file, 'wb') as f:
                 pickle.dump(self.data, open(pkl_file, 'wb'))
-        self.imgShape = (7, 7)
