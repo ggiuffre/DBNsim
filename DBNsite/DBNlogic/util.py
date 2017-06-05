@@ -7,10 +7,10 @@ class Configuration:
 
     def __init__(self,
         max_epochs = 10,    # - - - -
-        threshold  = 0.05,  # 
+        threshold  = 0.05,  #
         batch_size = 1,     # default
         learn_rate = 0.1,   # values
-        momentum   = 0.5,   # 
+        momentum   = 0.5,   #
         w_decay    = 0.0002 # - - - -
     ):
         """Construct a Configuration object from the
@@ -26,7 +26,7 @@ class Configuration:
 
 def sigmoid(v):
     """Return the element-wise sigmoid of a Numpy array."""
-    ones = np.ones(v.shape) # (matrix of ones)
+    ones = np.ones(v.shape) # (array of ones)
     return ones / (ones + np.exp(-v))
 
 def activation(v):
