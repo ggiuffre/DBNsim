@@ -53,6 +53,7 @@ h1 {
 }
 
 #train_plot_loading {
+	float: right;
 	opacity: 0;
 }
 

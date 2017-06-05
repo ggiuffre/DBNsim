@@ -11,8 +11,7 @@ var curr_epoch;
 var curr_rbm;
 
 /**
- * A unique identifier for the training
- * job running on the server.
+ * A unique identifier for the training job on the server.
  * @type {String}
  */
 var job_id;
@@ -35,9 +34,8 @@ var chart;
 
 
 /**
- * Updates the architecture form after
- * after the `tab` key is pressed but
- * _before_ its default behaviour is applied.
+ * Updates the architecture form after after the `tab` key
+ * is pressed but _before_ its default behaviour is applied.
  */
 $(function() {
 	$('#net_form').keydown(function (e) {
@@ -88,9 +86,8 @@ function setupChart() {
 }
 
 /**
- * Binds the submission of the training form to
- * an AJAX request that submits the training
- * hyper-parameters to the server.
+ * Binds the submission of the training form to an AJAX request
+ * that submits the training hyper-parameters to the server.
  */
 function setupTrainForm() {
 	$('#train_form').submit(function(e) {
@@ -105,12 +102,12 @@ function setupTrainForm() {
 		chart.xAxis[0].setExtremes(1, epochs);
 		for (var i = 1; i < num_layers; i++)
 			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
+		networkGraph.$('.rbm1').style('line-color', '#D89');
 
 		var net_form_data = $('#net_form').serialize();
 		var train_form_data = $('#train_form').serialize();
 		var forms_data = net_form_data + '&' + train_form_data;
 
-		networkGraph.$('.rbm0').style('line-color', '#D89');
 		$.ajax({
 			type: 'POST',
 			url: 'train/',
@@ -130,9 +127,8 @@ function setupTrainForm() {
 
 
 /**
- * Updates the form for defining the DBN layers,
- * based on the number of layers that the user
- * wants to create.
+ * Updates the form for defining the DBN layers, based on
+ * the number of layers that the user wants to create.
  */
 function updateArchitecture() {
 	var num_layers = $('#num_layers').val();
@@ -162,9 +158,8 @@ function updateArchitecture() {
 }
 
 /**
- * Updates the time series for the error plot,
- * matching the number of RBMs defined in the
- * architecture form.
+ * Updates the time series for the error plot, matching
+ * the number of RBMs defined in the architecture form.
  */
 function updateSeries() {
 	var num_layers = $('#num_layers').val();
@@ -331,7 +326,6 @@ function dissect(layer) {
 		var vis_sz = $('#vis_sz').val();
 		var whichInput = Math.floor(Math.random() * vis_sz);
 		$.ajax({
-			type: 'GET',
 			url: 'getInput/',
 			data: {dataset: dataset, index: whichInput},
 			dataType: 'json',
@@ -347,7 +341,6 @@ function dissect(layer) {
 			var rc_id = 'rec_field_' + i;
 			$('#receptive_fields').append('<div id="' + rc_id + '" class="rec_field"></div>');
 			$.ajax({
-				type: 'GET',
 				url: 'getReceptiveField/',
 				data: {
 					job_id: job_id,
@@ -449,9 +442,9 @@ function baseLog(x, base) {
 
 
 /**
- * Asks the server to train the network for
- * one epoch, then updates the reconstruction
- * error on the chart.
+ * Asks the server to train the network for one epoch,
+ * then updates the reconstruction error on the chart.
+ * @param {Boolean} autoContinue  whether to automate the training
  */
 function retrieveError(autoContinue) {
 	$('#train_plot_loading').css('opacity', 1);
