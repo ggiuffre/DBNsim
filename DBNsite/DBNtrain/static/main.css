@@ -39,7 +39,7 @@ h1 {
 
 
 
-#train_plot, #DBNgraph {
+#train_plot, #DBNgraph, #input_image, #receptive_fields {
 	padding: 1em;
 	margin-bottom: 4em;
 }
@@ -62,7 +62,20 @@ h1 {
 	float: right;
 }
 
-#input_image, #receptive_fields {
+#input_image {
 	height: 460px;
-	max-width: 400px;
+	width: 400px;
+	float: left;
+}
+
+#receptive_fields {
+	width: 540px;
+	float: right;
+}
+
+.rec_field {
+	height: 110px;
+	width: 100px;
+	float: left;
+	margin: 0 2px;
 }

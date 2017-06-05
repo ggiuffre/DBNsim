@@ -110,6 +110,7 @@ function setupTrainForm() {
 		var train_form_data = $('#train_form').serialize();
 		var forms_data = net_form_data + '&' + train_form_data;
 
+		networkGraph.$('.rbm0').style('line-color', '#D89');
 		$.ajax({
 			type: 'POST',
 			url: 'train/',
@@ -335,30 +336,43 @@ function dissect(layer) {
 			data: {dataset: dataset, index: whichInput},
 			dataType: 'json',
 			success: function(response) {
-				var d = $('#dataset').val();
-				var title = 'Random input image from the "' + d + '" dataset';
-				var image = heatmap('input_image', response.image, title);
+				var title = 'Random input image from the "' + dataset + '" dataset';
+				heatmap('input_image', response.image, title);
 			}
 		});
 	} else {
-		var neuron = 0;
-		$.ajax({
-			type: 'GET',
-			url: 'getReceptiveField/',
-			data: {
-				job_id: job_id,
-				layer: layer,
-				neuron: neuron
-			},
-			dataType: 'json',
-			success: function(response) {
-				var image = heatmap('receptive_fields', response.image, null);
-			}
-		});
+		$('#receptive_fields').empty();
+		var neurons = $('#hid_sz_' + layer).val();
+		for (var i = 0; i < 25; i++) {
+			var rc_id = 'rec_field_' + i;
+			$('#receptive_fields').append('<div id="' + rc_id + '" class="rec_field"></div>');
+			$.ajax({
+				type: 'GET',
+				url: 'getReceptiveField/',
+				data: {
+					job_id: job_id,
+					layer: layer,
+					neuron: Math.floor(i * neurons / 25)
+				},
+				async: false,
+				dataType: 'json',
+				success: function(response) {
+					heatmap(rc_id, response.image, null);
+				}
+			});
+		}
 	}
 }
 
-/** ... */
+/**
+ * Renders and returns a Highcharts heatmap located
+ * in a HTML div identified by `container`, containing
+ * the given data and having the given title.
+ * @param {String} container the id of the target HTML div
+ * @param {Array} data       the heatmap data
+ * @param {String} title     the heatmap title
+ * @return {Highcharts}      a reference to the heatmap
+ */
 function heatmap(container, data, title) {
 	return Highcharts.chart(container, {
 		chart: {
@@ -368,8 +382,19 @@ function heatmap(container, data, title) {
 		title: {
 			text: title
 		},
-		xAxis: { title: null },
-		yAxis: { title: null },
+		xAxis: {
+			title: undefined,
+			min: 0,
+			max: Math.sqrt(data.length) - 1,
+			labels: { enabled: false }
+		},
+		yAxis: {
+			title: undefined,
+			min: 0,
+			max: Math.sqrt(data.length) - 1,
+			labels: { enabled: false }
+		},
+		tooltip: { enabled: false },
 		legend: { enabled: false },
 		credits: { enabled: false },
 		colorAxis: {
@@ -382,7 +407,7 @@ function heatmap(container, data, title) {
 			name: 'Image plot',
 			data: data,
 			borderWidth: 1,
-			borderColor: '#DDD'
+			borderColor: '#EEE'
 		}]
 	});
 }
