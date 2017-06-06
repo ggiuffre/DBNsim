@@ -58,6 +58,16 @@ class DBN(list):
                 field = np.dot(field, rbm.W)
         return field
 
+    def weightsHistogram(self, rbm):
+        """Return a histogram of the distribution of the
+        weights of a specific RBM inside the DBN."""
+        hist, bin_edges = np.histogram(self[rbm].W, bins='auto')
+        hist = hist.tolist()
+        response = []
+        for i in range(len(hist)):
+            response.append([(bin_edges[i] + bin_edges[i+1]) / 2, hist[i]])
+        return response
+
     def save(self):
         """Save the network weights to a Pickle file."""
         net_file = full(self.name + '.pkl')

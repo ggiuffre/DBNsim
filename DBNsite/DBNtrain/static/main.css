@@ -39,7 +39,7 @@ h1 {
 
 
 
-#train_plot, #DBNgraph, #input_image, #receptive_fields {
+#train_plot, #DBNgraph, #input_image, #receptive_fields, #weights_histogram {
 	padding: 1em;
 	margin-bottom: 4em;
 }
@@ -79,4 +79,9 @@ h1 {
 	width: 100px;
 	float: left;
 	margin: 0 2px;
+}
+
+#weights_histogram {
+	height: 500px;
+	width: 500px;
 }

@@ -250,6 +250,7 @@ function updateGraph() {
 						data: {
 							id: edgeId(source_id, target_id),
 							thickness: edgeThickness,
+							rbm: layer - 1,
 							source: source_id,
 							target: target_id
 						}
@@ -268,6 +269,10 @@ function updateGraph() {
 	networkGraph.$('node').on('tap', function(event) {
 		var layer = event.target.data('layer');
 		dissect(layer);
+	});
+	networkGraph.$('edge').on('tap', function(event) {
+		var rbm = event.target.data('rbm');
+		plotHistogram(rbm);
 	});
 }
 
@@ -331,7 +336,7 @@ function dissect(layer) {
 			dataType: 'json',
 			success: function(response) {
 				var title = 'Random input image from the "' + dataset + '" dataset';
-				heatmap('input_image', response.image, title);
+				heatmap('input_image', response, title);
 			}
 		});
 	} else {
@@ -350,11 +355,57 @@ function dissect(layer) {
 				async: false,
 				dataType: 'json',
 				success: function(response) {
-					heatmap(rc_id, response.image, null);
+					heatmap(rc_id, response, null);
 				}
 			});
 		}
 	}
+}
+
+/**
+ * ...
+ * @param {Number} rbm  the RBM position in the DBN
+ */
+function plotHistogram(rbm) {
+	$.ajax({
+		url: 'getHistogram/',
+		data: {
+			job_id: job_id,
+			rbm: rbm
+		},
+		dataType: 'json',
+		success: function(response) {
+			Highcharts.chart('weights_histogram', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: 'Histogram of the weights in RBM ' + (rbm + 1)
+				},
+				xAxis: {
+					title: {
+						text: 'Weights value'
+					},
+					gridLineWidth: 1
+				},
+				yAxis: {
+					title: {
+						text: 'Weights count'
+					}
+				},
+				legend: { enabled: false },
+				credits: { enabled: false },
+				series: [{
+					name: 'Histogram values',
+					type: 'column',
+					data: response,
+					pointPadding: 0,
+					groupPadding: 0,
+					pointPlacement: 'on' // 'between' // ??
+				}]
+			});
+		}
+	});
 }
 
 /**

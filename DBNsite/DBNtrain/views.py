@@ -116,7 +116,7 @@ def getInput(request):
     image = DataSet.fromWhatever(dataset)[index].tolist()
     response = heatmap(image)
 
-    json_response = json.dumps({'image': response})
+    json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
 
 def getReceptiveField(request):
@@ -130,24 +130,16 @@ def getReceptiveField(request):
     rec_field = net.receptiveField(layer, neuron).tolist()
     response = heatmap(rec_field)
 
-    json_response = json.dumps({'image': response})
+    json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
 
-def getHistogram(request): ############# <<< TO BE ADDED TO URLS.PY!
+def getHistogram(request):
     """Return a histogram of the distribution of the weights
     of a specific RBM inside a specific DBN."""
     job = request.GET['job_id']
     net = training_jobs[job]['network']
     rbm = int(request.GET['rbm'])
 
-    hist, bin_edges = np.histogram(net[rbm].W, bins='auto')
-    X = np.linspace(bin_edges[0], bin_edges[-1])
-    response = []
-    j = 0
-    for x in X:
-        if x > bin_edges[j+1]:
-            j += 1
-        response.append([x, hist[j]])
-    
-    json_response = json.dumps({'histogram': response})
+    response = net.weightsHistogram(rbm)
+    json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')

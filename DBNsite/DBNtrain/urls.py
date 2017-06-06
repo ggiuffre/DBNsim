@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^getError/$', views.getError, name='getError'),
     url(r'^getInput/$', views.getInput, name='getInput'),
     url(r'^getReceptiveField/$', views.getReceptiveField, name='getReceptiveField'),
+    url(r'^getHistogram/$', views.getHistogram, name='getHistogram'),
 ]
