@@ -29,7 +29,6 @@ class CDTrainer:
 
         epoch = 1
         while epoch <= max_epochs:
-            print(epoch, '/', max_epochs)
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
                 start = batch_sz * batch_n
@@ -63,7 +62,7 @@ class CDTrainer:
                 net.b += b_update
                 errors = np.append(errors, squared_error(data, reconstr))
 
-            # --- error update:
+            # --- reconstruction error update:
             mean_squared_err = errors.mean()
 
             epoch += 1
