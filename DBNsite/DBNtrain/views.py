@@ -140,6 +140,6 @@ def getHistogram(request):
     net = training_jobs[job]['network']
     rbm = int(request.GET['rbm'])
 
-    response = net.weightsHistogram(rbm)
+    response = net[rbm].weightsHistogram()
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
