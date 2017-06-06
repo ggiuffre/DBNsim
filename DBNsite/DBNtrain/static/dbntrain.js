@@ -335,6 +335,7 @@ function dissect(layer) {
 			data: {dataset: dataset, index: whichInput},
 			dataType: 'json',
 			success: function(response) {
+				$('#input_image').show();
 				var title = 'Random input image from the "' + dataset + '" dataset';
 				heatmap('input_image', response, title);
 			}
@@ -355,6 +356,7 @@ function dissect(layer) {
 				async: false,
 				dataType: 'json',
 				success: function(response) {
+					$('#receptive_fields').show();
 					heatmap(rc_id, response, null);
 				}
 			});
@@ -376,6 +378,7 @@ function plotHistogram(rbm) {
 		},
 		dataType: 'json',
 		success: function(response) {
+			$('#weights_histogram').show();
 			Highcharts.chart('weights_histogram', {
 				chart: {
 					type: 'column'
