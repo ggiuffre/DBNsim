@@ -34,6 +34,31 @@ def test_generationLength():
     sample = net.evaluate([0, 1, 1, 0.4])
     assert len(sample) == 4
 
+def test_DBN_learn():
+    """A DBN can learn to generate samples from a dataset."""
+    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
+    trainset = DataSet.fromWhatever('left_8')
+    for train_info in net.learn(trainset):
+        pass
+
+def test_DBN_error():
+    """The reconstruction error of a DBN is less than 1."""
+    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
+    trainset = DataSet.fromWhatever('left_8')
+    for train_info in net.learn(trainset):
+        pass
+    mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
+    assert mean_err <= 1
+
+def test_receptiveField():
+    """The receptive fields of a DBN have a shape whose
+    area is equal to the number of visible units."""
+    net = DBN([RBM(49, 15), RBM(15, 26)])
+    rc = net.receptiveField(1, 10)
+    assert rc.shape == (49,)
+    rc = net.receptiveField(2, 10)
+    assert rc.shape == (49,)
+
 def test_save():
     """A DBN can be serialised and saved to a Pickle file."""
     net = DBN(name = 'Test')
@@ -59,21 +84,13 @@ def test_saveAndLoad():
     assert [np.equal(net_1[i].W, net_2[i].W) for i in range(2)]
     os.remove(nets.full('Test.pkl'))
 
-def test_DBN_learn():
-    """A DBN can learn to generate samples from a dataset."""
-    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
-    trainset = DataSet.fromWhatever('left_8')
-    for train_info in net.learn(trainset):
-        pass
-
-def test_DBN_error():
-    """The reconstruction error of a DBN is less than 1."""
-    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
-    trainset = DataSet.fromWhatever('left_8')
-    for train_info in net.learn(trainset):
-        pass
-    mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
-    assert mean_err <= 1
+def test_weightsHistogram():
+    """The histogram of the weights of a RBM is
+    an array of pairs."""
+    net = RBM(16, 23)
+    hist = net.weightsHistogram()
+    for h in hist:
+        assert len(h) == 2
 
 def test_RBM_learn():
     """A RBM can learn to generate samples from a dataset."""
