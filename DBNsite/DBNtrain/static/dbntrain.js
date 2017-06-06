@@ -363,7 +363,8 @@ function dissect(layer) {
 }
 
 /**
- * ...
+ * Shows the histogram for the distribution of the
+ * weights in a specific RBM of the DBN.
  * @param {Number} rbm  the RBM position in the DBN
  */
 function plotHistogram(rbm) {
@@ -385,8 +386,7 @@ function plotHistogram(rbm) {
 				xAxis: {
 					title: {
 						text: 'Weights value'
-					},
-					gridLineWidth: 1
+					}
 				},
 				yAxis: {
 					title: {
@@ -396,12 +396,8 @@ function plotHistogram(rbm) {
 				legend: { enabled: false },
 				credits: { enabled: false },
 				series: [{
-					name: 'Histogram values',
-					type: 'column',
+					name: 'Weights count',
 					data: response,
-					pointPadding: 0,
-					groupPadding: 0,
-					pointPlacement: 'on' // 'between' // ??
 				}]
 			});
 		}
