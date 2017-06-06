@@ -4,9 +4,9 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^train/$', views.train, name='train'),
-    url(r'^getError/$', views.getError, name='getError'),
-    url(r'^getInput/$', views.getInput, name='getInput'),
-    url(r'^getReceptiveField/$', views.getReceptiveField, name='getReceptiveField'),
-    url(r'^getHistogram/$', views.getHistogram, name='getHistogram'),
+    url(r'^train/$', views.train),
+    url(r'^getError/$', views.getError),
+    url(r'^getInput/$', views.getInput),
+    url(r'^getReceptiveField/$', views.getReceptiveField),
+    url(r'^getHistogram/$', views.getHistogram),
 ]
