@@ -1,6 +1,7 @@
 import numpy as np
 import pickle
 import os
+from random import shuffle
 
 from DBNlogic.train import CDTrainer
 from DBNlogic.util import Configuration, sigmoid, activation
@@ -43,7 +44,7 @@ class DBN(list):
 
     def learn(self, trainset, config = Configuration()):
         """Learn from a particular dataset."""
-        random.shuffle(trainset)
+        shuffle(trainset)
         for rbm in self:
             trainer = CDTrainer(rbm, config = config)
             for curr_error in trainer.run(trainset):
