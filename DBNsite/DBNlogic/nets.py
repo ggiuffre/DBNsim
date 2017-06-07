@@ -43,6 +43,7 @@ class DBN(list):
 
     def learn(self, trainset, config = Configuration()):
         """Learn from a particular dataset."""
+        random.shuffle(trainset)
         for rbm in self:
             trainer = CDTrainer(rbm, config = config)
             for curr_error in trainer.run(trainset):
