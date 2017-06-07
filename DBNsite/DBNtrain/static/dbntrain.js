@@ -150,7 +150,11 @@ function updateArchitecture() {
 
 	// add missing hidden layers:
 	for (var i = curr_layers; i < num_layers; i++)
-		$('#layers_sz').append('<li class="lay_sz"><label for="hid_sz_' + i + '">h' + i + '&nbsp;&nbsp;</label><input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();" /></li>');
+		$('#layers_sz').append(
+			'<li class="lay_sz">' +
+			'<label for="hid_sz_' + i + '">h' + i + '&nbsp;&nbsp;</label>' +
+			'<input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();" />' +
+			'</li>');
 
 	// remove exceeding hidden layers:
 	for (var i = curr_layers; i > num_layers; i--)
