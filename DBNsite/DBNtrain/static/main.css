@@ -15,6 +15,10 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
+form legend {
+	font-weight: bold;
+}
+
 
 
 #net_form, #train_form {
@@ -32,6 +36,7 @@ body {
 
 #layers_sz li {
 	color: #A22;
+	list-style-type: none;
 }
 
 #layers_sz li.vis_layer {

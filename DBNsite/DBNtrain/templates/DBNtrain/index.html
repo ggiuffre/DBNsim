@@ -38,9 +38,12 @@
 				<label for="num_layers">number of layers:</label><br />
 				<input type="text" value="1" name="num_layers" id="num_layers" onchange="updateArchitecture(); updateSeries();" /><br />
 
-				<label for="layers_sz">n. of units per layer:</label>
-				<ol name="layers_sz" id="layers_sz" start="0">
-					<li class="lay_sz vis_layer"><input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();" /></li>
+				<p>n. of units per layer:</p>
+				<ol id="layers_sz" start="0">
+					<li class="lay_sz vis_layer">
+						<label for="vis_sz">vis.</label>
+						<input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();" />
+					</li>
 				</ol>
 			</fieldset>
 		</form>
