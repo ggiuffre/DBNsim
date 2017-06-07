@@ -434,6 +434,11 @@ function heatmap(container, data, title) {
 			title: undefined,
 			min: 0,
 			max: Math.sqrt(data.length) - 1,
+			lineWidth: 0,
+			minorGridLineWidth: 0,
+			lineColor: 'transparent',
+			minorTickLength: 0,
+			tickLength: 0,
 			labels: { enabled: false }
 		},
 		yAxis: {

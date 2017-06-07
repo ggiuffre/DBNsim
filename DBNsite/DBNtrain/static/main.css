@@ -27,6 +27,7 @@ form legend {
 
 #net_form fieldset, #train_form fieldset {
 	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
 }
 
 #train_plot_loading {
