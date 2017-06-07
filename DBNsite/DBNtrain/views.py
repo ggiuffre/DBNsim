@@ -5,11 +5,10 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import string
 import random
-import math
 from time import time
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
-from DBNlogic.util import Configuration
+from DBNlogic.util import Configuration, heatmap
 
 
 
@@ -62,6 +61,11 @@ def train(request):
         'generator': net.learn(trainset, Configuration(**config))
     }
 
+    # delete the old client job that is being replaced (if any):
+    last_job = request.POST['last_job_id']
+    if last_job in training_jobs:
+        del training_jobs[last_job]
+
     # delete a random pending job older than one hour:
     random_old_job = random.choice(list(training_jobs.keys()))
     if time() - training_jobs[random_old_job]['birthday'] > 3600:
@@ -85,7 +89,7 @@ def getError(request):
     try:
         train_info = next(train_gen)
         curr_rbm = train_info['rbm']
-        next_err = train_info['err']
+        next_err = round(train_info['err'], 3)
     except StopIteration:
         # training_jobs[job]['network'].save()
         del training_jobs[job]['generator']
@@ -98,15 +102,6 @@ def getError(request):
     }
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
-
-def heatmap(array):
-    """Return a Highcharts-formatted heatmap from
-    a Python array."""
-    dim = int(math.sqrt(len(array)))
-    for row in range(dim):
-        for col in range(dim):
-            array[row * dim + col] = [col, dim - 1 - row, array[row * dim + col]] # from Python array to X,Y coordinates...
-    return array
 
 def getInput(request):
     """Return a specific input image of a specific dataset."""

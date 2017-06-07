@@ -1,4 +1,5 @@
 import numpy as np
+from math import sqrt
 
 
 
@@ -36,3 +37,13 @@ def activation(v):
 def squared_error(v, w):
     """Return the mean squared error between two Numpy arrays."""
     return ((v - w) ** 2).mean() # TODO: add sqrt?
+
+
+
+def heatmap(array):
+    """Return a Highcharts-formatted heatmap from a Python array."""
+    dim = int(sqrt(len(array)))
+    for row in range(dim):
+        for col in range(dim):
+            array[row * dim + col] = [col, dim - 1 - row, array[row * dim + col]] # from Python array to X,Y coordinates...
+    return array
