@@ -79,7 +79,7 @@ function setupChart() {
 			}
 		},
 		series: [{
-			name: 'Training error for RBM 1',
+			name: 'RBM 1',
 			data: []
 		}]
 	});
@@ -107,6 +107,7 @@ function setupTrainForm() {
 		var net_form_data = $('#net_form').serialize();
 		var train_form_data = $('#train_form').serialize();
 		var forms_data = net_form_data + '&' + train_form_data;
+		forms_data += '&last_job_id=' + job_id;
 
 		$.ajax({
 			type: 'POST',
@@ -176,7 +177,7 @@ function updateSeries() {
 	// add the necessary series:
 	for (var i = 0; i < num_rbms; i++)
 		chart.addSeries({
-			name: 'Training error for RBM ' + (i + 1),
+			name: 'RBM ' + (i + 1),
 			data: []
 		});
 }
