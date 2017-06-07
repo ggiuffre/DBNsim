@@ -1,5 +1,6 @@
 import numpy as np
 import pickle
+from scipy.io import savemat, loadmat
 import os
 
 
@@ -20,6 +21,17 @@ class DataSet:
     def __init__(self, data):
         """Construct a dataset from an array of examples."""
         self.data = data
+
+    def save(self, filename):
+        """Save the dataset to a CSV, Pickle or Matlab file,
+        based on the extension of the target filename."""
+        name, extension = os.path.splitext(filename)
+        if extension == '.csv':
+            np.savetxt(filename, self.data, delimiter = ',')
+        elif extension == '.pkl':
+            pickle.dump(self.data, filename)
+        elif extension == '.mat':
+            savemat(filename, {'data': self.data})
 
     @staticmethod
     def fromCSV(path, delimiter = ','):
@@ -49,24 +61,32 @@ class DataSet:
             data = np.array(pickle.load(f))
         return data
 
+    @staticmethod
+    def fromMatlab(path):
+        """Return a Numpy array of training examples from
+        a Matlab file containing a variable called 'data'."""
+        print('loading data from Matlab file...')
+        return loadmat(path)['data']
+
     @classmethod
     def fromWhatever(cls, name):
-        """Return a Numpy array of training examples
-        from a Pickle or CSV file with the given name
-        (`name` doesn't have the extension), depending
-        on what is available."""
+        """Return a Numpy array of training examples from a
+        Pickle, CSV, or Matlab file with the given name, depending
+        on what is available (`name` doesn't have the extension)."""
         full_path = full(name)
         if exists(full_path + '.pkl'):
             return cls.fromPickle(full_path + '.pkl')
-        if exists(full_path + '.csv'):
+        elif exists(full_path + '.csv'):
             return cls.fromCSV(full_path + '.csv')
+        elif exists(full_path + '.mat'):
+            return cls.fromMatlab(full_path + '.mat')
         return np.array([])
 
     @staticmethod
     def allSets(path = full()):
         """Return a set with the filenames of all the
         available training datasets (without the extension)."""
-        return set([os.path.splitext(f)[0] for f in os.listdir(path) if (f.endswith('.pkl') or f.endswith('.csv'))])
+        return set([os.path.splitext(f)[0] for f in os.listdir(path) if (os.path.splitext(f)[1] in ['.pkl', '.csv', '.mat'])])
 
 
 

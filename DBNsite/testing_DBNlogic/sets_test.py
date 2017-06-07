@@ -27,6 +27,13 @@ def test_DataSetConstructor():
     dataset = DataSet(data)
     assert all(dataset.data[i] == data[i] for i in range(len(data)))
 
+def test_save():
+    """A DataSet object can be saved to a CSV, Pickle, or Matlab file."""
+    a = DataSet(np.random.rand(8, 5))
+    a.save('test.mat')
+    assert exists('test.mat')
+    os.remove('test.mat')
+
 def test_fromCSV():
     """A DataSet object can be constructed from a CSV file."""
     dataset = DataSet.fromCSV(full('left_8.csv'))
@@ -36,6 +43,14 @@ def test_fromPickle():
     """A DataSet object can be constructed from a Pickle file."""
     dataset = DataSet.fromPickle(full('small_MNIST.pkl'))
     assert dataset.data.shape == (60000, 49)
+
+def test_fromMatlab():
+    """A DataSet object can be constructed from a Matlab file."""
+    a = np.random.rand(8, 5)
+    DataSet(a).save('test.mat')
+    b = DataSet.fromMatlab('test.mat')
+    assert a.shape == b.shape
+    os.remove('test.mat')
 
 def test_fromWhatever():
     """A DataSet object can be constructed from a file."""
