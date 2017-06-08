@@ -86,7 +86,7 @@ class RBM:
         self.a = np.zeros((vis_size, 1)) # visible biases
         self.h = np.zeros((hid_size, 1)) # hidden units
         self.b = np.zeros((hid_size, 1)) # hidden biases
-        self.W = np.random.randn(hid_size, vis_size) * 0.1 # weights
+        self.W = np.random.randn(hid_size, vis_size) * 0.01 # weights
 
     def observe(self, data):
         """Set the RBM state according to a particular input."""
