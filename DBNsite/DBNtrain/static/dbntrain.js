@@ -317,6 +317,13 @@ function getGraphFrom(elements) {
 					'width': 'data(thickness)',
 					'line-color': '#ACD'
 				}
+			},
+			{
+				selector: 'edge:active',
+				style: {
+					'overlay-color': '#ACD',
+					'overlay-padding': 0
+				}
 			}
 		],
 		layout: {
@@ -334,10 +341,9 @@ function dissect(layer) {
 	if (layer == 0) {
 		var dataset = $('#dataset').val();
 		var vis_sz = $('#vis_sz').val();
-		var whichInput = Math.floor(Math.random() * vis_sz);
 		$.ajax({
 			url: 'getInput/',
-			data: {dataset: dataset, index: whichInput},
+			data: {dataset: dataset, index: -1},
 			dataType: 'json',
 			success: function(response) {
 				$('#input_image').show();
