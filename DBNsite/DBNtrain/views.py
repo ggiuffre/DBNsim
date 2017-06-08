@@ -105,10 +105,13 @@ def getError(request):
 
 def getInput(request):
     """Return a specific input image of a specific dataset."""
-    dataset = request.GET['dataset']
+    dataset_name = request.GET['dataset']
+    dataset = DataSet.fromWhatever(dataset_name)
     index = int(request.GET['index'])
+    if index < 0:
+        index = random.randint(0, len(dataset) - 1)
 
-    image = DataSet.fromWhatever(dataset)[index].tolist()
+    image = dataset[index].tolist()
     response = heatmap(image)
 
     json_response = json.dumps(response)
