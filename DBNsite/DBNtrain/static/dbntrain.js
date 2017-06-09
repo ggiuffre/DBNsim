@@ -29,6 +29,12 @@ var networkGraph;
  */
 var chart;
 
+/**
+ * The shape of each dataset.
+ * @type {Object}
+ */
+var data_info;
+
 
 
 
@@ -126,6 +132,16 @@ function setupTrainForm() {
 
 
 
+
+/**
+ * Updates the field for defining the visible size,
+ * based on the size of the training examples.
+ */
+function updateVisibleSize() {
+	var curr_dataset = $('#dataset').val();
+	var input_size = data_info[curr_dataset];
+	$('#vis_sz').val(input_size);
+}
 
 /**
  * Updates the form for defining the DBN layers, based on

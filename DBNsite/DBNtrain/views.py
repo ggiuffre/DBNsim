@@ -12,17 +12,20 @@ from DBNlogic.util import Configuration, heatmap
 
 
 
-# pending training jobs on the server
+# pending training jobs on the server:
 training_jobs = {}
+
+# available datasets on the server:
+ordered_datasets = sorted(DataSet.allSets(), key = str.lower)
+datasets_info = {d: DataSet.fromWhatever(d).shape[1] for d in ordered_datasets}
 
 
 
 def index(request):
     """Return the main page."""
-    ordered_datasets = sorted(DataSet.allSets(), key = str.lower)
     context = {
-        'config': Configuration(),   # default configuration
-        'datasets': ordered_datasets # available datasets
+        'config': Configuration(), # default configuration
+        'datasets': datasets_info  # available datasets
     }
     return render(request, 'DBNtrain/index.html', context)
 

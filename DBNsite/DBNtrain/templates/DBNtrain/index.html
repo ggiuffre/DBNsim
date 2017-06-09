@@ -17,7 +17,12 @@
 		<!-- <script type="text/javascript" src="{% static 'exporting.js' %}"></script> -->
 		<script type="text/javascript" src="{% static 'dbntrain.js' %}"></script>
 	</head>
-	<body onload="setupTrainForm(); setupChart();">
+	<body onload="setupTrainForm(); setupChart(); updateVisibleSize();">
+
+		<!-- the shape of each dataset -->
+		<script type="text/javascript">
+			data_info = {{datasets|safe}};
+		</script>
 
 		<!-- the form for building the network -->
 		<form action="#" id="net_form">
@@ -25,7 +30,7 @@
 				<legend>Dataset info</legend>
 
 				<label for="dataset">training dataset:</label><br />
-				<select name="dataset" id="dataset">
+				<select name="dataset" id="dataset" onchange="updateVisibleSize();">
 					{% for s in datasets %}
 						<option value="{{s}}">{{s}}</option>
 					{% endfor %}
@@ -42,7 +47,7 @@
 				<ol id="layers_sz">
 					<li class="lay_sz vis_layer">
 						<label for="vis_sz">vis.</label>
-						<input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();" />
+						<input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();" disabled="disabled" />
 					</li>
 					<li class="lay_sz">
 						<label for="hid_sz_1">h1&nbsp;</label>
