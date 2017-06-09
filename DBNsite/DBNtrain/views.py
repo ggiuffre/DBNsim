@@ -34,7 +34,7 @@ def train(request):
     trainset = DataSet.fromWhatever(trainset_name)
 
     try:
-        num_layers = int(request.POST['num_layers'])
+        num_layers = 1 + int(request.POST['num_hid_layers'])
     except ValueError:
         num_layers = 1
         # return HttpResponse({'error': 'you haven\'t specified [...]'})
