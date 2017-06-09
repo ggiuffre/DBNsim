@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="{% static 'cytoscape.js' %}"></script>
 		<script type="text/javascript" src="{% static 'highcharts.js' %}"></script>
 		<script type="text/javascript" src="{% static 'heatmap.js' %}"></script>
-		<!-- <script type="text/javascript" src="{% static 'exporting.js' %}"></script> -->
+		<script type="text/javascript" src="{% static 'exporting.js' %}"></script>
 		<script type="text/javascript" src="{% static 'dbntrain.js' %}"></script>
 	</head>
 	<body onload="setupTrainForm(); setupChart(); updateVisibleSize();">
@@ -47,7 +47,7 @@
 				<ol id="layers_sz">
 					<li class="lay_sz vis_layer">
 						<label for="vis_sz">vis.</label>
-						<input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();" disabled="disabled" />
+						<input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();" readonly="readonly" />
 					</li>
 					<li class="lay_sz">
 						<label for="hid_sz_1">h1&nbsp;</label>

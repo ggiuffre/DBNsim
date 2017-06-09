@@ -471,6 +471,7 @@ function heatmap(container, data, title) {
 		//tooltip: { enabled: false },
 		legend: { enabled: false },
 		credits: { enabled: false },
+		exporting: { enabled: false },
 		colorAxis: {
 			minColor: '#FFF',
 			maxColor: '#000'
