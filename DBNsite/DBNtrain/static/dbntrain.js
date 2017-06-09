@@ -98,7 +98,7 @@ function setupTrainForm() {
 		updateSeries();
 
 		var epochs = $('#epochs').val();
-		var num_layers = $('#num_layers').val();
+		var num_layers = +$('#num_hid_layers').val() + 1;
 		chart.xAxis[0].setExtremes(1, epochs);
 		for (var i = 1; i < num_layers; i++)
 			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
@@ -132,25 +132,25 @@ function setupTrainForm() {
  * the number of layers that the user wants to create.
  */
 function updateArchitecture() {
-	var num_layers = $('#num_layers').val();
-	if (num_layers == '')
+	var num_hid_layers = +$('#num_hid_layers').val();
+	if (num_hid_layers === '')
 		return;
-	if (num_layers < 1) {
-		alert('You must have at least one layer (the visible layer): defaulting to 1.');
-		$('#num_layers').val(1);
-		num_layers = 1;
+	if (num_hid_layers < 1) {
+		alert('You must have at least one hidden layer: defaulting to 1.');
+		$('#num_hid_layers').val(1);
+		num_hid_layers = 1;
 	}
-	if (num_layers > 6) {
-		alert('Too many layers (' + num_layers + '): defaulting to 6.');
-		$('#num_layers').val(6);
-		num_layers = 6;
+	if (num_hid_layers > 5) {
+		alert('Too many hidden layers (' + num_hid_layers + '): defaulting to 5.');
+		$('#num_hid_layers').val(5);
+		num_hid_layers = 5;
 	}
 
 	// how many HTML inputs do we already have?
-	var curr_layers = $('.lay_sz').length;
+	var curr_layers = +$('.lay_sz').length;
 
 	// add missing hidden layers:
-	for (var i = curr_layers; i < num_layers; i++)
+	for (var i = curr_layers; i < num_hid_layers + 1; i++)
 		$('#layers_sz').append(
 			'<li class="lay_sz">' +
 			'<label for="hid_sz_' + i + '">h' + i + '&nbsp;&nbsp;</label>' +
@@ -158,7 +158,7 @@ function updateArchitecture() {
 			'</li>');
 
 	// remove exceeding hidden layers:
-	for (var i = curr_layers; i > num_layers; i--)
+	for (var i = curr_layers; i > num_hid_layers + 1; i--)
 		$('.lay_sz').last().remove();
 }
 
@@ -167,7 +167,7 @@ function updateArchitecture() {
  * the number of RBMs defined in the architecture form.
  */
 function updateSeries() {
-	var num_layers = $('#num_layers').val();
+	var num_layers = +$('#num_hid_layers').val() + 1;
 	var num_rbms = num_layers - 1
 
 	// remove all the series:
@@ -187,7 +187,7 @@ function updateSeries() {
  * for changes in the HTML form.
  */
 function updateGraph() {
-	var num_layers = $('#num_layers').val();
+	var num_layers = +$('#num_hid_layers').val() + 1;
 	var prec_layer_nodes = 0;
 	networkGraph = cytoscape({
 		container: document.getElementById('DBNgraph')
@@ -207,9 +207,8 @@ function updateGraph() {
 
 		if (num_nodes > 0) {
 			var max_real_nodes = 10000;
-			var max_visible_nodes = 20;
-			var max_rendered_nodes = 30;
-			var edgeThickness = max_rendered_nodes / (prec_layer_nodes + num_nodes);
+			var max_rendered_nodes = 15;
+			var edgeThickness = 1.3 + 2 * max_rendered_nodes / (prec_layer_nodes + num_nodes);
 
 			if (num_nodes > max_real_nodes) {
 				alert(label + ' has too many nodes (' + num_nodes + '): aborting; defaulting to ' + max_real_nodes + '.');
@@ -217,19 +216,19 @@ function updateGraph() {
 				num_nodes = max_real_nodes;
 			}
 
-			var parent = undefined;
-			if (num_nodes > max_visible_nodes) {
-				parent = label;
-				graphElements.push({
-					group: 'nodes',
-					data: {
-						id: label,
-						layer: layer,
-						placeholder: '(' + num_nodes + ' nodes)'
-					}
-				});
+			var parent = label;
+			graphElements.push({
+				group: 'nodes',
+				data: {
+					id: label,
+					layer: layer,
+					placeholder: num_nodes + ' nodes'
+				}
+			});
+
+			if (num_nodes > 10) {
 				var scale_base = Math.pow(max_real_nodes, 1 / max_rendered_nodes);
-				num_nodes = baseLog(num_nodes, scale_base);
+				num_nodes = baseLog(num_nodes, scale_base) + 1;
 			}
 
 			for (var node = 1; node <= num_nodes; node++) {
@@ -453,12 +452,10 @@ function heatmap(container, data, title) {
 			max: Math.sqrt(data.length) - 1,
 			labels: { enabled: false }
 		},
-		tooltip: { enabled: false },
+		//tooltip: { enabled: false },
 		legend: { enabled: false },
 		credits: { enabled: false },
 		colorAxis: {
-			min: 0,
-			max: 1,
 			minColor: '#FFF',
 			maxColor: '#000'
 		},
