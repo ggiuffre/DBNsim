@@ -36,7 +36,7 @@ def activation(v):
 
 def squared_error(v, w):
     """Return the mean squared error between two Numpy arrays."""
-    return ((v - w) ** 2).mean() # TODO: add sqrt?
+    return np.sqrt(((v - w) ** 2).mean())
 
 
 
