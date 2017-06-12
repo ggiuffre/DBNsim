@@ -219,7 +219,7 @@ function updateGraph() {
 			var label = 'Hidden layer ' + layer;
 			var selector = $('#hid_sz_' + layer);
 		}
-		let num_nodes = (+selector.val())
+		let num_nodes = +selector.val();
 
 		if (num_nodes > 0) {
 			const max_real_nodes = 10000;
