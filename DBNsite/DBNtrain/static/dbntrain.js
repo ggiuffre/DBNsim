@@ -452,21 +452,14 @@ function heatmap(container, data, title) {
 			text: title
 		},
 		xAxis: {
-			title: undefined,
 			min: 0,
 			max: Math.sqrt(data.length) - 1,
-			lineWidth: 0,
-			minorGridLineWidth: 0,
-			lineColor: 'transparent',
-			minorTickLength: 0,
-			tickLength: 0,
-			labels: { enabled: false }
+			visible: false
 		},
 		yAxis: {
-			title: undefined,
 			min: 0,
 			max: Math.sqrt(data.length) - 1,
-			labels: { enabled: false }
+			visible: false
 		},
 		//tooltip: { enabled: false },
 		legend: { enabled: false },
