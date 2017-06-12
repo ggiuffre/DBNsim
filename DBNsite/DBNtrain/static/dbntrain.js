@@ -2,32 +2,32 @@
  * The current training epoch number.
  * @type {Number}
  */
-var curr_epoch;
+let curr_epoch;
 
 /**
  * The currently training RBM number index.
  * @type {Number}
  */
-var curr_rbm;
+let curr_rbm;
 
 /**
  * A unique identifier for the training job on the server.
  * @type {String}
  */
-var job_id;
+let job_id;
 
 /**
  * The DBN graph.
  * @type {Cytoscape}
  */
-var networkGraph;
+let networkGraph;
 
 /**
  * The chart for plotting the reconstruction
  * error over time, while training the net.
  * @type {Highcharts.Chart}
  */
-var chart;
+let chart;
 
 /**
  * The shape of each dataset.
@@ -103,16 +103,16 @@ function setupTrainForm() {
 		curr_rbm = -1;
 		updateSeries();
 
-		var epochs = $('#epochs').val();
-		var num_layers = +$('#num_hid_layers').val() + 1;
+		const epochs = $('#epochs').val();
+		const num_layers = +$('#num_hid_layers').val() + 1;
 		chart.xAxis[0].setExtremes(1, epochs);
-		for (var i = 1; i < num_layers; i++)
+		for (let i = 1; i < num_layers; i++)
 			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
 		networkGraph.$('.rbm1').style('line-color', '#D89');
 
-		var net_form_data = $('#net_form').serialize();
-		var train_form_data = $('#train_form').serialize();
-		var forms_data = net_form_data + '&' + train_form_data;
+		const net_form_data = $('#net_form').serialize();
+		const train_form_data = $('#train_form').serialize();
+		let forms_data = net_form_data + '&' + train_form_data;
 		forms_data += '&last_job_id=' + job_id;
 
 		$.ajax({
@@ -138,8 +138,8 @@ function setupTrainForm() {
  * based on the size of the training examples.
  */
 function updateVisibleSize() {
-	var curr_dataset = $('#dataset').val();
-	var input_size = data_info[curr_dataset];
+	const curr_dataset = $('#dataset').val();
+	const input_size = data_info[curr_dataset];
 	$('#vis_sz').val(input_size);
 }
 
@@ -148,7 +148,7 @@ function updateVisibleSize() {
  * the number of layers that the user wants to create.
  */
 function updateArchitecture() {
-	var num_hid_layers = +$('#num_hid_layers').val();
+	const num_hid_layers = +$('#num_hid_layers').val();
 	if (num_hid_layers === '')
 		return;
 	if (num_hid_layers < 1) {
@@ -163,10 +163,10 @@ function updateArchitecture() {
 	}
 
 	// how many HTML inputs do we already have?
-	var curr_layers = +$('.lay_sz').length;
+	const curr_layers = +$('.lay_sz').length;
 
 	// add missing hidden layers:
-	for (var i = curr_layers; i < num_hid_layers + 1; i++)
+	for (let i = curr_layers; i < num_hid_layers + 1; i++)
 		$('#layers_sz').append(
 			'<li class="lay_sz">' +
 			'<label for="hid_sz_' + i + '">h' + i + '&nbsp;&nbsp;</label>' +
@@ -174,7 +174,7 @@ function updateArchitecture() {
 			'</li>');
 
 	// remove exceeding hidden layers:
-	for (var i = curr_layers; i > num_hid_layers + 1; i--)
+	for (let i = curr_layers; i > num_hid_layers + 1; i--)
 		$('.lay_sz').last().remove();
 }
 
@@ -183,15 +183,15 @@ function updateArchitecture() {
  * the number of RBMs defined in the architecture form.
  */
 function updateSeries() {
-	var num_layers = +$('#num_hid_layers').val() + 1;
-	var num_rbms = num_layers - 1
+	const num_layers = +$('#num_hid_layers').val() + 1;
+	const num_rbms = num_layers - 1;
 
 	// remove all the series:
-	for (var i = chart.series.length - 1; i >= 0; i--)
+	for (let i = chart.series.length - 1; i >= 0; i--)
 		chart.series[i].remove();
 
 	// add the necessary series:
-	for (var i = 0; i < num_rbms; i++)
+	for (let i = 0; i < num_rbms; i++)
 		chart.addSeries({
 			name: 'RBM ' + (i + 1),
 			data: []
@@ -203,15 +203,15 @@ function updateSeries() {
  * for changes in the HTML form.
  */
 function updateGraph() {
-	var num_layers = +$('#num_hid_layers').val() + 1;
-	var prec_layer_nodes = 0;
+	const num_layers = +$('#num_hid_layers').val() + 1;
+	let prec_layer_nodes = 0;
 	networkGraph = cytoscape({
 		container: document.getElementById('DBNgraph')
 	});
 
 	// gather new nodes and edges:
-	var graphElements = [];
-	for (var layer = 0; layer < num_layers; layer++) {
+	let graphElements = [];
+	for (let layer = 0; layer < num_layers; layer++) {
 		if (layer == 0) {
 			var label = 'Visible layer';
 			var selector = $('#vis_sz');
@@ -219,12 +219,12 @@ function updateGraph() {
 			var label = 'Hidden layer ' + layer;
 			var selector = $('#hid_sz_' + layer);
 		}
-		var num_nodes = (+selector.val())
+		let num_nodes = (+selector.val())
 
 		if (num_nodes > 0) {
-			var max_real_nodes = 10000;
-			var max_rendered_nodes = 15;
-			var edgeThickness = 1.3 + 2 * max_rendered_nodes / (prec_layer_nodes + num_nodes);
+			const max_real_nodes = 10000;
+			const max_rendered_nodes = 15;
+			const edgeThickness = 1.3 + 2 * max_rendered_nodes / (prec_layer_nodes + num_nodes);
 
 			if (num_nodes > max_real_nodes) {
 				alert(label + ' has too many nodes (' + num_nodes + '): aborting; defaulting to ' + max_real_nodes + '.');
@@ -232,7 +232,6 @@ function updateGraph() {
 				num_nodes = max_real_nodes;
 			}
 
-			var parent = label;
 			graphElements.push({
 				group: 'nodes',
 				data: {
@@ -243,17 +242,17 @@ function updateGraph() {
 			});
 
 			if (num_nodes > 10) {
-				var scale_base = Math.pow(max_real_nodes, 1 / max_rendered_nodes);
+				const scale_base = Math.pow(max_real_nodes, 1 / max_rendered_nodes);
 				num_nodes = baseLog(num_nodes, scale_base) + 1;
 			}
 
-			for (var node = 1; node <= num_nodes; node++) {
+			for (let node = 1; node <= num_nodes; node++) {
 				graphElements.push({
 					group: 'nodes',
 					data: {
 						id: nodeId(layer, node),
 						layer: layer,
-						parent: parent
+						parent: label
 					},
 					position: { // X is horizontal, Y is vertical.
 						x: ((num_nodes / 2) - node + 0.5) * networkGraph.width() / num_nodes,
@@ -261,9 +260,9 @@ function updateGraph() {
 					}
 				});
 
-				for (var prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
-					var source_id = nodeId(layer, node);
-					var target_id = nodeId(layer - 1, prec_node);
+				for (let prec_node = 1; prec_node <= prec_layer_nodes; prec_node++) {
+					const source_id = nodeId(layer, node);
+					const target_id = nodeId(layer - 1, prec_node);
 					graphElements.push({
 						group: 'edges',
 						classes: 'rbm' + layer,
@@ -287,11 +286,11 @@ function updateGraph() {
 
 	// bind click events to the graph:
 	networkGraph.$('node').on('tap', function(event) {
-		var layer = event.target.data('layer');
+		const layer = event.target.data('layer');
 		dissect(layer);
 	});
 	networkGraph.$('edge').on('tap', function(event) {
-		var rbm = event.target.data('rbm');
+		const rbm = event.target.data('rbm');
 		plotHistogram(rbm);
 	});
 }
@@ -354,23 +353,23 @@ function getGraphFrom(elements) {
  */
 function dissect(layer) {
 	if (layer == 0) {
-		var dataset = $('#dataset').val();
-		var vis_sz = $('#vis_sz').val();
+		const dataset = $('#dataset').val();
+		const vis_sz = $('#vis_sz').val();
 		$.ajax({
 			url: 'getInput/',
 			data: {dataset: dataset, index: -1},
 			dataType: 'json',
 			success: function(response) {
 				$('#input_image').show();
-				var title = 'Random input image from the "' + dataset + '" dataset';
+				const title = 'Random input image from the "' + dataset + '" dataset';
 				heatmap('input_image', response, title);
 			}
 		});
 	} else {
 		$('#receptive_fields').empty();
-		var neurons = $('#hid_sz_' + layer).val();
-		for (var i = 0; i < 25; i++) {
-			var rc_id = 'rec_field_' + i;
+		const neurons = $('#hid_sz_' + layer).val();
+		for (let i = 0; i < 25; i++) {
+			const rc_id = 'rec_field_' + i;
 			$('#receptive_fields').append('<div id="' + rc_id + '" class="rec_field"></div>');
 			$.ajax({
 				url: 'getReceptiveField/',
@@ -522,7 +521,7 @@ function baseLog(x, base) {
 function retrieveError(autoContinue) {
 	$('#train_plot_loading').css('opacity', 1);
 
-	var parameters = { 'job_id': job_id };
+	const parameters = { 'job_id': job_id };
 	$.ajax({
 		type: 'POST',
 		url: 'getError/',
@@ -535,7 +534,7 @@ function retrieveError(autoContinue) {
 				// announce training has ended for the last RBM:
 				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#ACD');
 			} else {
-				var point = response.error;
+				const point = response.error;
 				if (response.curr_rbm != curr_rbm) {
 					curr_epoch = 0;
 					curr_rbm = response.curr_rbm;
