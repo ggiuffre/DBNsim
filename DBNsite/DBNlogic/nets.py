@@ -1,7 +1,6 @@
 import numpy as np
 import pickle
 import os
-from random import shuffle
 
 from DBNlogic.train import CDTrainer
 from DBNlogic.util import Configuration, sigmoid, activation

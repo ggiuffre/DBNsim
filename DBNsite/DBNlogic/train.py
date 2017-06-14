@@ -1,5 +1,11 @@
 import numpy as np
 
+USE_GPU = True
+try:
+    import cudamat as cm
+except ImportError:
+    USE_GPU = False
+
 from DBNlogic.util import Configuration, sigmoid, activation, squared_error
 
 
