@@ -360,7 +360,7 @@ function dissect(layer) {
 				$('#input_image').show();
 				const title = 'Random input image from the "' + dataset + '" dataset.';
 				heatmap('input_image', response, title);
-				$('<p id="input_image_caption">' + title + '</p>').insertAfter('#input_image');
+				$('#input_image_caption').text(title);
 			}
 		});
 	} else {
