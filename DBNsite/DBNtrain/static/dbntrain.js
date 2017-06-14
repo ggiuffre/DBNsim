@@ -29,12 +29,6 @@ let networkGraph;
  */
 let chart;
 
-/**
- * The shape of each dataset.
- * @type {Object}
- */
-var data_info;
-
 
 
 
@@ -212,12 +206,13 @@ function updateGraph() {
 	// gather new nodes and edges:
 	let graphElements = [];
 	for (let layer = 0; layer < num_layers; layer++) {
+		let label, selector;
 		if (layer == 0) {
-			var label = 'Visible layer';
-			var selector = $('#vis_sz');
+			label = 'Visible layer';
+			selector = $('#vis_sz');
 		} else {
-			var label = 'Hidden layer ' + layer;
-			var selector = $('#hid_sz_' + layer);
+			label = 'Hidden layer ' + layer;
+			selector = $('#hid_sz_' + layer);
 		}
 		let num_nodes = +selector.val();
 

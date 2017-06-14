@@ -21,7 +21,11 @@
 
 		<!-- the shape of each dataset -->
 		<script type="text/javascript">
-			data_info = {{datasets|safe}};
+			/**
+			 * The shape of each dataset.
+			 * @type {Object}
+			 */
+			let data_info = {{datasets|safe}};
 		</script>
 
 		<!-- the form for building the network -->
