@@ -238,8 +238,10 @@ function updateGraph() {
 
 			if (num_nodes > 10) {
 				const scale_base = Math.pow(max_real_nodes, 1 / max_rendered_nodes);
-				num_nodes = baseLog(num_nodes, scale_base) + 1;
+				num_nodes = Math.round(baseLog(num_nodes, scale_base) + 1);
 			}
+
+			const verticalPosition = ((num_layers / 2) - layer + 0.5) * networkGraph.height() / num_layers;
 
 			for (let node = 1; node <= num_nodes; node++) {
 				graphElements.push({
@@ -251,7 +253,7 @@ function updateGraph() {
 					},
 					position: { // X is horizontal, Y is vertical.
 						x: ((num_nodes / 2) - node + 0.5) * networkGraph.width() / num_nodes,
-						y: ((num_layers / 2) - layer + 0.5) * networkGraph.height() / num_layers
+						y: verticalPosition
 					}
 				});
 
