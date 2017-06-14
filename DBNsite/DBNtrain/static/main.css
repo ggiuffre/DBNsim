@@ -74,13 +74,34 @@ form legend {
 
 	#DBNgraph {
 		max-width: 45%;
+		max-height: 60%;
 		position: fixed;
 		right: 0;
+		top: 0;
 		padding: 1em;
 	}
 
-	#train_plot, #input_image,
-	#receptive_fields, #weights_histogram {
+	#input_image {
+		width: 200px;
+		max-width: 45%;
+		max-height: 220px;
+		position: fixed;
+		right: 0;
+		bottom: 0;
+		padding: 1em;
+	}
+
+	#input_image_caption {
+		opacity: 0.8;
+		text-align: right;
+		max-width: 25%;
+		position: fixed;
+		right: 200px;
+		bottom: 2em;
+		padding: 1em 4em;
+	}
+
+	#train_plot, #receptive_fields, #weights_histogram {
 		width: 50%;
 		float: left;
 		clear: left;

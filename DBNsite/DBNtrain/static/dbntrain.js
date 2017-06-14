@@ -361,8 +361,9 @@ function dissect(layer) {
 			dataType: 'json',
 			success: function(response) {
 				$('#input_image').show();
-				const title = 'Random input image from the "' + dataset + '" dataset';
+				const title = 'Random input image from the "' + dataset + '" dataset.';
 				heatmap('input_image', response, title);
+				$('<p id="input_image_caption">' + title + '</p>').insertAfter('#input_image');
 			}
 		});
 	} else {
@@ -447,9 +448,6 @@ function heatmap(container, data, title) {
 			type: 'heatmap',
 			borderWidth: 0
 		},
-		title: {
-			text: title
-		},
 		xAxis: {
 			min: 0,
 			max: Math.sqrt(data.length) - 1,
@@ -461,6 +459,7 @@ function heatmap(container, data, title) {
 			visible: false
 		},
 		//tooltip: { enabled: false },
+		title: { visible: false, text: null },
 		legend: { enabled: false },
 		credits: { enabled: false },
 		exporting: { enabled: false },
