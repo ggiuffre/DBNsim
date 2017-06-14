@@ -123,6 +123,9 @@ def getInput(request):
 def getReceptiveField(request):
     """Return the receptive field of a specific
     neuron in a specific layer of a DBN."""
+    if 'job_id' not in request.GET:
+        return HttpResponse('', content_type = 'application/json')
+
     job = request.GET['job_id']
     net = training_jobs[job]['network']
     layer = int(request.GET['layer'])
@@ -137,6 +140,9 @@ def getReceptiveField(request):
 def getHistogram(request):
     """Return a histogram of the distribution of the weights
     of a specific RBM inside a specific DBN."""
+    if 'job_id' not in request.GET:
+        return HttpResponse('', content_type = 'application/json')
+
     job = request.GET['job_id']
     net = training_jobs[job]['network']
     rbm = int(request.GET['rbm'])

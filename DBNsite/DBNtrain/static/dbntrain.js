@@ -367,9 +367,11 @@ function dissect(layer) {
 			}
 		});
 	} else {
+		if (!job_id) return;
 		$('#receptive_fields').empty();
 		const neurons = $('#hid_sz_' + layer).val();
-		for (let i = 0; i < 25; i++) {
+		const rec_fields_displayed = Math.min(neurons, 25);
+		for (let i = 0; i < rec_fields_displayed; i++) {
 			const rc_id = 'rec_field_' + i;
 			$('#receptive_fields').append('<div id="' + rc_id + '" class="rec_field"></div>');
 			$.ajax({
@@ -377,7 +379,7 @@ function dissect(layer) {
 				data: {
 					job_id: job_id,
 					layer: layer,
-					neuron: Math.floor(i * neurons / 25)
+					neuron: Math.floor(i * neurons / rec_fields_displayed)
 				},
 				async: false,
 				dataType: 'json',
@@ -396,6 +398,7 @@ function dissect(layer) {
  * @param {Number} rbm  the RBM position in the DBN
  */
 function plotHistogram(rbm) {
+	if (!job_id) return;
 	$.ajax({
 		url: 'getHistogram/',
 		data: {
