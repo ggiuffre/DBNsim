@@ -426,7 +426,7 @@ function plotHistogram(rbm) {
 				credits: { enabled: false },
 				series: [{
 					name: 'Weights count',
-					data: response,
+					data: response
 				}]
 			});
 		}
