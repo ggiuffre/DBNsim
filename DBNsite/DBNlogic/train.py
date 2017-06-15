@@ -1,11 +1,11 @@
 import numpy as np
 
 try:
-    from DBNlogic.util import CUDA as pu
+    from DBNlogic.gpu import startProcessor, shutdownProcessor, matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, sigmoid, repeat, activation, squared_error
 except ImportError:
-    from DBNlogic.util import CPU as pu
+    from DBNlogic.util import startProcessor, shutdownProcessor, matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, sigmoid, repeat, activation, squared_error
 
-from DBNlogic.util import Configuration, sigmoid, activation, squared_error
+from DBNlogic.util import Configuration
 
 
 
@@ -21,7 +21,7 @@ class CDTrainer:
 
     def run(self, trainset):
         """Learn from a particular dataset."""
-        pu.start()
+        startProcessor()
 
         net        = self.net
         max_epochs = self.config.max_epochs
@@ -39,34 +39,34 @@ class CDTrainer:
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
                 start = batch_sz * batch_n
-                data = pu.matrix(np.array(trainset[start : start + batch_sz]).T)
+                data = matrix(np.array(trainset[start : start + batch_sz]).T)
 
                 # --- positive phase:
-                pos_hid_probs = pu.numpy(pu.sigmoid(pu.add(pu.dot(net.W, data), pu.repeat(net.b, batch_sz, axis = 1))))
-                hid_states = pu.numpy(pu.activation(pos_hid_probs))
-                pos_corr = pu.numpy(pu.div(pu.dot(pos_hid_probs, data.T), batch_sz)) # vis-hid correlations (+)
-                pos_vis_act = pu.div(pu.cumsum(data, axis = 1), batch_sz)
-                pos_hid_act = pu.div(pu.cumsum(pos_hid_probs, axis = 1), batch_sz)
+                pos_hid_probs = asnumpy(sigmoid(add(dot(net.W, data), repeat(net.b, batch_sz, axis = 1))))
+                hid_states = asnumpy(activation(pos_hid_probs))
+                pos_corr = asnumpy(div(dot(pos_hid_probs, data.T), batch_sz)) # vis-hid correlations (+)
+                pos_vis_act = div(cumsum(data, axis = 1), batch_sz)
+                pos_hid_act = div(cumsum(pos_hid_probs, axis = 1), batch_sz)
 
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
                     self.next_rbm_data.extend(pos_hid_probs.T)
 
                 # --- negative phase:
-                vis_probs = pu.numpy(pu.sigmoid(pu.add(pu.dot(net.W.T, hid_states), pu.repeat(net.a, batch_sz, axis = 1))))
-                reconstr = pu.numpy(pu.activation(vis_probs))
-                neg_hid_probs = pu.numpy(pu.sigmoid(pu.add(pu.dot(net.W, reconstr), pu.repeat(net.b, batch_sz, axis = 1))))
-                neg_corr = pu.numpy(pu.div(pu.dot(neg_hid_probs, reconstr.T), batch_sz)) # vis-hid correlations (-)
-                neg_vis_act = pu.numpy(pu.div(pu.cumsum(reconstr, axis = 1), batch_sz))
-                neg_hid_act = pu.numpy(pu.div(pu.cumsum(neg_hid_probs, axis = 1), batch_sz))
+                vis_probs = asnumpy(sigmoid(add(dot(net.W.T, hid_states), repeat(net.a, batch_sz, axis = 1))))
+                reconstr = asnumpy(activation(vis_probs))
+                neg_hid_probs = asnumpy(sigmoid(add(dot(net.W, reconstr), repeat(net.b, batch_sz, axis = 1))))
+                neg_corr = asnumpy(div(dot(neg_hid_probs, reconstr.T), batch_sz)) # vis-hid correlations (-)
+                neg_vis_act = asnumpy(div(cumsum(reconstr, axis = 1), batch_sz))
+                neg_hid_act = asnumpy(div(cumsum(neg_hid_probs, axis = 1), batch_sz))
 
                 # --- updates:
-                W_update = pu.add(pu.mul(momentum, W_update), pu.mul(learn_rate, pu.sub(pu.sub(pos_corr, neg_corr), pu.mul(w_decay, net.W))))
-                a_update = pu.add(pu.mul(momentum, a_update), pu.mul(learn_rate, pu.sub(pos_vis_act, neg_vis_act)))
-                b_update = pu.add(pu.mul(momentum, b_update), pu.mul(learn_rate, pu.sub(pos_hid_act, neg_hid_act)))
-                net.W += pu.numpy(W_update)
-                net.a += pu.numpy(a_update)
-                net.b += pu.numpy(b_update)
+                W_update = add(mul(momentum, W_update), mul(learn_rate, sub(sub(pos_corr, neg_corr), mul(w_decay, net.W))))
+                a_update = add(mul(momentum, a_update), mul(learn_rate, sub(pos_vis_act, neg_vis_act)))
+                b_update = add(mul(momentum, b_update), mul(learn_rate, sub(pos_hid_act, neg_hid_act)))
+                net.W += asnumpy(W_update)
+                net.a += asnumpy(a_update)
+                net.b += asnumpy(b_update)
                 errors = np.append(errors, squared_error(data, reconstr))
 
             # --- reconstruction error update:
@@ -75,4 +75,4 @@ class CDTrainer:
             epoch += 1
             yield mean_squared_err
 
-        pu.shutdown()
+        shutdownProcessor()
