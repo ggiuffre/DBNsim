@@ -6,6 +6,7 @@ import json
 import string
 import random
 from time import time
+from pickle import UnpicklingError
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
 from DBNlogic.util import Configuration, heatmap
@@ -17,7 +18,12 @@ training_jobs = {}
 
 # available datasets on the server:
 ordered_datasets = sorted(DataSet.allSets(), key = str.lower)
-datasets_info = {d: DataSet.fromWhatever(d).shape[1] for d in ordered_datasets}
+datasets_info = {}
+for d in ordered_datasets:
+    try:
+        datasets_info[d] = DataSet.fromWhatever(d).shape[1]
+    except (UnpicklingError, IndexError):
+        pass
 
 
 
