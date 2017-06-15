@@ -29,6 +29,13 @@ let networkGraph;
  */
 let chart;
 
+/**
+ * Whether the parameters for a new job
+ * have been submitted to the server.
+ * @type {Boolean}
+ */
+let newJobSent = false;
+
 
 
 
@@ -50,7 +57,7 @@ $(function() {
 function setupChart() {
 	chart = Highcharts.chart({
 		chart: {
-			renderTo: 'train_plot_container',
+			renderTo: 'train_plot',
 			defaultSeriesType: 'spline',
 			animation: {
 				duration: 200
@@ -88,41 +95,48 @@ function setupChart() {
 /**
  * Binds the submission of the training form to an AJAX request
  * that submits the training hyper-parameters to the server.
+ * @param {Boolean} autoContinue  whether to automate the training
  */
-function setupTrainForm() {
-	$('#train_form').submit(function(e) {
-
+function setupTrainForm(autoContinue) {
+	if (!newJobSent) {
 		// reset counters and chart series:
 		curr_epoch = 0;
 		curr_rbm = -1;
 		updateSeries();
-
+	
 		const epochs = $('#epochs').val();
 		const num_layers = +$('#num_hid_layers').val() + 1;
 		chart.xAxis[0].setExtremes(1, epochs);
 		for (let i = 1; i < num_layers; i++)
 			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
 		networkGraph.$('.rbm1').style('line-color', '#D89');
-
+	
 		const net_form_data = $('#net_form').serialize();
 		const train_form_data = $('#train_form').serialize();
 		let forms_data = net_form_data + '&' + train_form_data;
 		forms_data += '&last_job_id=' + job_id;
-
+	
 		$.ajax({
 			type: 'POST',
 			url: 'train/',
 			data: forms_data,
+			async: false,
 			success: function(response) {
 				job_id = response;
-				retrieveError(true);
+				newJobSent = true;
 			}
 		});
+	}
 
-		e.preventDefault(); // do not submit the form
-	});
+	retrieveError(autoContinue);
 }
 
+$(function() {
+	$('#train_form').submit(function (e) {
+		setupTrainForm(true);
+		e.preventDefault(); // do not submit the form
+	});
+});
 
 
 
@@ -530,17 +544,19 @@ function retrieveError(autoContinue) {
 			$('#train_plot_loading').css('opacity', 0);
 
 			if (response.stop) {
-				// announce training has ended for the last RBM:
+				// signal that the training has ended for the current RBM:
 				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#ACD');
+				// mark that we are ready for sending a new job:
+				newJobSent = false;
 			} else {
 				const point = response.error;
 				if (response.curr_rbm != curr_rbm) {
 					curr_epoch = 0;
 					curr_rbm = response.curr_rbm;
 
-					// announce training has ended for the last RBM:
+					// announce training has ended for the current RBM:
 					networkGraph.$('.rbm' + curr_rbm).style('line-color', '#ACD');
-					// announce training has started for the current RBM:
+					// announce training has started for the next RBM:
 					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#D89');
 				}
 

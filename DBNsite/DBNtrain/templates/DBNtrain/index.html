@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="{% static 'exporting.js' %}"></script>
 		<script type="text/javascript" src="{% static 'dbntrain.js' %}"></script>
 	</head>
-	<body onload="setupTrainForm(); setupChart(); updateVisibleSize();">
+	<body onload="setupChart(); updateVisibleSize();">
 
 		<!-- the shape of each dataset -->
 		<script type="text/javascript">
@@ -85,20 +85,18 @@
 				<input type="text" name="threshold" id="threshold" value="{{config.threshold}}" /><br />
 			</fieldset>
 
-			<p><input type="submit" value="Train" /></p>
+			<p>
+				<input type="submit" value="Train" />
+				<button type="button" onclick="setupTrainForm(false);">step ahead 1 epoch</button>
+				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
+			</p>
 		</form>
 
 		<!-- the DBN graph -->
 		<div id="DBNgraph"></div>
 
 		<!-- the training error plot -->
-		<div id="train_plot">
-			<div id="train_plot_container"></div>
-			<p>
-				<button onclick="retrieveError();">Step &gt;</button>
-				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
-			</p>
-		</div>
+		<div id="train_plot"></div>
 
 		<!-- a random input example (with rectangular shape) -->
 		<div id="input_image"></div>
