@@ -1,7 +1,6 @@
 import numpy as np
 
 try:
-    import cudamat as cm
     from DBNlogic.util import CUDA as pu
 except ImportError:
     from DBNlogic.util import CPU as pu

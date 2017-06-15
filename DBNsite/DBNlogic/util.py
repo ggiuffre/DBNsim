@@ -113,6 +113,8 @@ class CPU(ProcessingUnit):
 class CUDA(ProcessingUnit):
     """Matrix operations for a CUDA-enabled GPU."""
 
+    import cudamat as cm
+
     @staticmethod
     def start():
         """Start the processing unit."""
