@@ -40,7 +40,7 @@ def dot(A, B):
 
 def div(A, B):
     """Return the result of dividing `A` by `B`."""
-    return matrix(A).divide(B)
+    return matrix(A).divide(matrix(B))
 
 def mul(c, A):
     """Return the result of multiplying `A`
@@ -49,11 +49,11 @@ def mul(c, A):
 
 def add(A, B):
     """Return the result of adding `A` with `B`."""
-    return matrix(A).add(B)
+    return matrix(A).add(matrix(B))
 
 def sub(A, B):
     """Return the result of subtracting `B` from `A`."""
-    return matrix(A).subtract(B)
+    return matrix(A).subtract(matrix(B))
 
 def cumsum(A, axis = None):
     """Return the cumulative sum of `A`."""
