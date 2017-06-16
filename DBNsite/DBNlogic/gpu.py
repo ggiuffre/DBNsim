@@ -79,7 +79,7 @@ def activation(A):
     rand_mat = cm.CUDAMatrix(np.random.uniform(size = A.shape))
     ones_mat = cm.CUDAMatrix(np.ones((A.shape))) # (-1, 1) |--> (0, 2)
     twos_mat = cm.CUDAMatrix(2 * np.ones((A.shape))) # (0, 2) |--> (0, 1)
-    return A.subtract(rand_mat).sign().add(ones_mat).divide(twos_mat)
+    return matrix(A).subtract(rand_mat).sign().add(ones_mat).divide(twos_mat)
 
 def squared_error(A, B):
     """Return the mean error between `A` and `B`."""
