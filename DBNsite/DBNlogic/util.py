@@ -74,15 +74,15 @@ def cumsum(A, axis = None):
     """Return the cumulative sum of `A`."""
     return A.sum(axis = axis, keepdims = True)
 
-def sigmoid(A):
-    """Return the element-wise sigmoid of `A`."""
-    ones = np.ones(A.shape) # (array of ones)
-    return ones / (ones + np.exp(-A))
-
 def repeat(A, times, axis):
     """Return `A` juxtaposed to itself `times` times,
     along the `axis` axis."""
     return np.repeat(A, times, axis)
+
+def sigmoid(A):
+    """Return the element-wise sigmoid of `A`."""
+    ones = np.ones(A.shape) # (array of ones)
+    return ones / (ones + np.exp(-A))
 
 def activation(A):
     """Return the element-wise binary activation of `A`."""

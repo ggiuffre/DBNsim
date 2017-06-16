@@ -25,7 +25,7 @@ def asnumpy(A):
     """Return a NumPy copy of `A`."""
     if type(A) == np.ndarray:
         return A
-    elif type(A) == cm.CUDAMatrix:
+    elif type(A) == cm.CUDAMatrix or type(A) == cm.TransposedCUDAMatrix:
         return A.asarray()
     else:
         return np.array(A)
@@ -59,10 +59,6 @@ def cumsum(A, axis = None):
     """Return the cumulative sum of `A`."""
     return cm.sum(matrix(A), axis)
 
-def sigmoid(A):
-    """Return the element-wise sigmoid of `A`."""
-    return cm.sigmoid(matrix(A))
-
 def repeat(A, times, axis):
     """Return `A` juxtaposed to itself `times` times,
     along the `axis` axis.
@@ -73,6 +69,10 @@ def repeat(A, times, axis):
         return cm.dot(matrix(A), multiplier)
     else:
         raise NotImplementedError
+
+def sigmoid(A):
+    """Return the element-wise sigmoid of `A`."""
+    return cm.sigmoid(matrix(A))
 
 def activation(A):
     """Return the element-wise binary activation of `A`."""

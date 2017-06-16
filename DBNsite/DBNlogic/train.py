@@ -1,11 +1,11 @@
 import numpy as np
 
-try:
-    from DBNlogic.gpu import startProcessor, shutdownProcessor, matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, sigmoid, repeat, activation, squared_error
-except ImportError:
-    from DBNlogic.util import startProcessor, shutdownProcessor, matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, sigmoid, repeat, activation, squared_error
-
 from DBNlogic.util import Configuration
+
+try:
+    from DBNlogic.gpu import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
+except ImportError:
+    from DBNlogic.util import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
 
 
 
@@ -21,8 +21,6 @@ class CDTrainer:
 
     def run(self, trainset):
         """Learn from a particular dataset."""
-        startProcessor()
-
         net        = self.net
         max_epochs = self.config.max_epochs
         batch_sz   = self.config.batch_size
@@ -74,5 +72,3 @@ class CDTrainer:
 
             epoch += 1
             yield mean_squared_err
-
-        shutdownProcessor()
