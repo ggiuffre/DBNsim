@@ -1,0 +1,151 @@
+/* open-sans-regular - latin */
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url('./fonts/open-sans-v13-latin-regular.eot'); /* IE9 Compat Modes */
+	src: local('Open Sans'), local('OpenSans'),
+		url('./fonts/open-sans-v13-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+		url('./fonts/open-sans-v13-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+		url('./fonts/open-sans-v13-latin-regular.woff') format('woff'), /* Modern Browsers */
+		url('./fonts/open-sans-v13-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+		url('./fonts/open-sans-v13-latin-regular.svg#OpenSans') format('svg'); /* Legacy iOS */
+}
+
+body {
+	background-color: #F1F1EF;
+	color: #000036;
+	margin: auto;
+	font-family: 'Open Sans', sans-serif;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+
+
+/*   header   */
+
+#header {
+	padding: 1em;
+	background-color: #000036;
+	text-align: center;
+}
+
+#header * {
+	color: #F1F1EF;
+	font-weight: lighter;
+}
+
+#header h1 {
+	font-size: 3em;
+	margin: 0.4em auto;
+}
+
+#header h1 a {
+	text-decoration: none;
+}
+
+#header h2 {
+	font-size: 1.2em;
+	margin: 0.4em auto;
+}
+
+@media screen and (max-width: 320px) {
+	#header h2 {
+		display: none;
+	}
+}
+
+#header .next, #header .prev {
+	opacity: 0.28;
+}
+
+#header a.next:hover, #header a.prev:hover {
+	opacity: 0.78;
+	transition: 0.2s;
+}
+
+
+
+/*   nav   */
+
+#nav li.app {
+	list-style-type: none;
+	margin-left: -1em;
+}
+
+#nav li.app:before {
+	content: "+ ";
+	color: green;
+}
+
+
+
+/*   content   */
+
+#content {
+	margin: auto;
+	max-width: 52em;
+	padding: 0 2em 4em 2em;
+}
+
+#content h1 {
+	margin-top: 4em;
+	text-align: center;
+}
+
+#content h2 {
+	font-size: 1.4em;
+	margin-top: 2em;
+}
+
+@media screen and (max-width: 680px) {
+	#content {
+		font-size: 120%;
+	}
+}
+
+@media screen and (max-width: 780px) {
+	#content {
+		font-size: 110%;
+	}
+}
+
+
+
+/*   glossario   */
+
+.gloss dt {
+	margin-top: 1em;
+	font-weight: bold;
+}
+
+
+
+/*   footnotes   */
+
+.footnote a {
+	text-decoration: none;
+}
+
+#footnotes {
+	margin: 1em;
+}
+
+
+
+/*   404 page   */
+
+.notFound {
+	text-align: center;
+}
+
+.notFound p {
+	margin-top: 2em;
+}

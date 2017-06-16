@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>User docs &mdash; DBNsim</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="Giorgio Giuffrè" />
+	<meta name="keywords" content="DBNsim, user, manual, docs, documentation" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+</head>
+
+<body id="index">
+
+	<div id="header">
+		<h1><a href="index.html">User docs &mdash; DBNsim</a></h1>
+		<h2>How to use DBNsim properly</h2>
+	</div>
+
+	<div id="content">
+		<h1>What is DBNsim</h1>
+
+		<p>DBNsim is a web application for training and analysing <strong>Deep Belief Networks</strong> (&quot;<abbr title="Deep Belief Networks">DBNs</abbr>&quot;, for short). A <a href="http://www.scholarpedia.org/article/Deep_belief_networks">Deep Belief Network</a> is a particular type of artificial neural network; it is a stack of Restricted Boltzmann Machines (&quot;<abbr title="Restricted Boltzmann Machines">RBMs</abbr>&quot;, for short) that can be trained with an algorithm known as &quot;contrastive divergence&quot;. <abbr title="Restricted Boltzmann Machines">RBMs</abbr> learn to reconstruct a given input and, if properly analysed, they can reveal latent features in the distribution of the input.</p>
+		<p>DBNsim offers a simple interface for defining the architecture of a <abbr title="Deep Belief Network">DBN</abbr>, train it on a remote web server (optionally equipped with a <abbr title="Graphical Processing Unit">GPU</abbr>), analyse it, and then download the <abbr title="Deep Belief Network">DBN</abbr> in various formats for performing further analyses.</p>
+
+		<h2>How to run DBNsim on your machine</h2>
+		<p>As said, DBNsim is a web app. That means you can run it on one computer and access it on another. According to you needs, there are several ways in which you can use DBNsim:</p>
+		<ul>
+			<li>If you want to use it locally (that is, as if it was a normal desktop application on your <abbr title="Personal Computer">PC</abbr>), you just have to download Python and launch the app with the command line; then, you will be able to access the user interface on your browser at the local address <code>http://127.0.0.1:8000/DBNtrain/</code>. Read <a href="...">here</a> for a step-by-step guide.</li>
+			<li>You may want your students to use it in a classroom. For this, you just have to launch the app with the command line; then ask your audience to connect their devices to the University network and to go to <code>http://you-public-ip-address:8000/DBNtrain/</code>. Read <a href="...">here</a> for more details.</li>
+			<li>Finally, if you don't have a local network like above, you can still publish DBNsim on a remote web server: read <a href="...">here</a> for understanding how to do this.</li>
+		</ul>
+		<p>In all three cases, launching DBNsim from a computer equipped with a CUDA-enabled <abbr title="Graphical Processing Unit">GPU</abbr> lets you train a <abbr title="Deep Belief Network">DBN</abbr> directly on the <abbr title="Graphical Processing Unit">GPU</abbr>; DBNsim should automatically detect whether or not your computer has a <abbr title="Graphical Processing Unit">GPU</abbr>. The main advantage of using it is speed: you will be able to train much larger networks in fewer time.</p>
+
+		<h2>Index</h2>
+		<ol id="nav">
+			<li><a href="01_ingreqq.html">Starting DBNsim</a></li>
+			<li><a href="02_first.html">Building our first network</a></li>
+			<li><a href="03_training.html">Training and analysing a network</a></li>
+			<li><a href="04_loading.html">Downloading and uploading a network</a></li>
+			<li><a href="05_datasets.html">Data sets</a></li>
+			<li class="app"><a href="#">Rationale</a></li>
+			<li class="app"><a href="#">Further resources</a></li>
+		</ol>
+
+		<h2>How to contribute</h2>
+		<p>If you would like to improve this project and/or report a bug, please feel free to e-mail Giorgio Giuffrè at <code>[first_name]giuffre23@gmail.com</code>, replacing <code>[first_name]</code> with my first name.</p>
+	</div>
+
+</body>
+</html>
