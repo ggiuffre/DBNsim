@@ -41,12 +41,23 @@ let newJobSent = false;
 
 
 /**
- * Updates the architecture form after after the `tab` key
- * is pressed but _before_ its default behaviour is applied.
+ * Updates the architecture form after the `tab` key is
+ * pressed but _before_ its default behaviour is applied.
  */
 $(function() {
 	$('#net_form').keydown(function (e) {
 		if (e.which == 8) updateArchitecture();
+	});
+});
+
+/**
+ * After having rendered the page, binds the submission of the
+ * hyper-parameters form to the call of `setupTrainForm(true)`.
+ */
+$(function() {
+	$('#train_form').submit(function (e) {
+		setupTrainForm(true);
+		e.preventDefault(); // do not submit the form
 	});
 });
 
@@ -93,8 +104,8 @@ function setupChart() {
 }
 
 /**
- * Binds the submission of the training form to an AJAX request
- * that submits the training hyper-parameters to the server.
+ * If not already done, submits the training hyper-parameters to
+ * the server; then, trains the network for one epoch.
  * @param {Boolean} autoContinue  whether to automate the training
  */
 function setupTrainForm(autoContinue) {
@@ -130,13 +141,6 @@ function setupTrainForm(autoContinue) {
 
 	retrieveError(autoContinue);
 }
-
-$(function() {
-	$('#train_form').submit(function (e) {
-		setupTrainForm(true);
-		e.preventDefault(); // do not submit the form
-	});
-});
 
 
 
@@ -214,7 +218,7 @@ function updateGraph() {
 	const num_layers = +$('#num_hid_layers').val() + 1;
 	let prec_layer_nodes = 0;
 	networkGraph = cytoscape({
-		container: document.getElementById('DBNgraph')
+		container: $('#DBNgraph')
 	});
 
 	// gather new nodes and edges:
@@ -314,7 +318,7 @@ function updateGraph() {
  */
 function getGraphFrom(elements) {
 	return cytoscape({
-		container: document.getElementById('DBNgraph'),
+		container: $('#DBNgraph'),
 		elements: elements,
 		userZoomingEnabled: false,
 		style: [
@@ -371,7 +375,8 @@ function dissect(layer) {
 			data: {dataset: dataset, index: -1},
 			dataType: 'json',
 			success: function(response) {
-				$('#input_image').show();
+				//$('#input_image').show();
+				$('#input_arrow').show();
 				const title = 'Random input image from the "' + dataset + '" dataset.';
 				heatmap('input_image', response, title);
 				$('#input_image_caption').text(title);

@@ -73,32 +73,39 @@ form legend {
 	}
 
 	#DBNgraph {
-		max-width: 45%;
-		max-height: 60%;
 		position: fixed;
+		max-width: 45%;
+		max-height: 50%;
 		right: 0;
 		top: 0;
-		padding: 1em;
+		padding: 1em 1em 0 1em;
+	}
+
+	#input_arrow {
+		position: fixed;
+		height: 8%;
+		opacity: 0.5;
+		right: calc(100px + 6em);
+		top: 48%;
+		margin: 0;
+		padding: 0;
 	}
 
 	#input_image {
-		width: 200px;
-		max-width: 45%;
-		max-height: 220px;
 		position: fixed;
-		right: 0;
+		width: 200px;
+		height: 200px;
+		right: 6em;
 		bottom: 0;
-		padding: 1em;
+		padding: 0 1em 2em 1em;
 	}
 
 	#input_image_caption {
-		opacity: 0.8;
-		text-align: right;
-		max-width: 25%;
 		position: fixed;
-		right: 200px;
-		bottom: 2em;
-		padding: 1em 4em;
+		opacity: 0.8;
+		right: 0;
+		bottom: 0;
+		padding: 1em 2em;
 	}
 
 	#train_plot, #receptive_fields, #weights_histogram {
@@ -108,6 +115,7 @@ form legend {
 	}
 }
 
-#input_image, #receptive_fields, #weights_histogram {
+#input_arrow,
+#receptive_fields, #weights_histogram {
 	display: none;
 }
