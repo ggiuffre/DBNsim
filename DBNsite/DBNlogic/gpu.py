@@ -14,7 +14,7 @@ def shutdownProcessor():
 def matrix(A):
     """Return a representation of `A` suitable
     to the processing unit."""
-    if type(A) == cm.CUDAMatrix:
+    if type(A) == cm.CUDAMatrix or type(A) == cm.TransposedCUDAMatrix:
         return A
     elif type(A) == np.ndarray:
         return cm.CUDAMatrix(A)
