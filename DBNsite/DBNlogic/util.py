@@ -53,14 +53,14 @@ def dot(A, B):
     """Return the result of multiplying `A` with `B`."""
     return np.dot(A, B)
 
-def div(A, B):
-    """Return the result of dividing `A` by `B`."""
-    return A / B
-
 def mul(c, A):
     """Return the result of multiplying `A`
     with the scalar `c`."""
     return A * c
+
+def div(A, c):
+    """Return the result of dividing `A` by the scalar `c`."""
+    return A / c
 
 def add(A, B):
     """Return the result of adding `A` with `B`."""

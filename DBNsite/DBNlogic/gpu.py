@@ -38,14 +38,14 @@ def dot(A, B):
     """Return the result of multiplying `A` with `B`."""
     return cm.dot(matrix(A), matrix(B))
 
-def div(A, B):
-    """Return the result of dividing `A` by `B`."""
-    return matrix(A).divide(matrix(B))
-
 def mul(c, A):
     """Return the result of multiplying `A`
     with the scalar `c`."""
     return matrix(A).mult(c)
+
+def div(A, c):
+    """Return the result of dividing `A` by the scalar `c`."""
+    return matrix(A).divide(c)
 
 def add(A, B):
     """Return the result of adding `A` with `B`."""
