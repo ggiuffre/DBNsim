@@ -45,8 +45,8 @@ class CDTrainer:
                 # --- positive phase:
                 if USE_GPU:
                     pos_hid_probs = cm.sigmoid(add(cm.dot(cm.CUDAMatrix(net.W), data), cm.dot(cm.CUDAMatrix(net.b), cm.CUDAMatrix(np.ones((1, batch_sz)))))).asarray()
-                    hid_states = cm.CUDAMatrix(pos_hid_probs).subtract(cm.CUDAMatrix(np.random.uniform(size = pos_hid_probs.shape))).sign().add(cm.CUDAMatrix(np.ones((pos_hid_probs.shape)))).divide(cm.CUDAMatrix(2 * np.ones((pos_hid_probs.shape)))).asnumpy()
-                    pos_corr = cm.dot(cm.CUDAMatrix(pos_hid_probs), data.transpose()).divide(batch_sz).asnumpy() # vis-hid correlations (+)
+                    hid_states = cm.CUDAMatrix(pos_hid_probs).subtract(cm.CUDAMatrix(np.random.uniform(size = pos_hid_probs.shape))).sign().add(cm.CUDAMatrix(np.ones((pos_hid_probs.shape)))).divide(cm.CUDAMatrix(2 * np.ones((pos_hid_probs.shape)))).asarray()
+                    pos_corr = cm.dot(cm.CUDAMatrix(pos_hid_probs), data.transpose()).divide(batch_sz).asarray() # vis-hid correlations (+)
                     pos_vis_act = cm.sum(data, axis = 1).divide(batch_sz)
                     pos_hid_act = cm.sum(cm.CUDAMatrix(pos_hid_probs), axis = 1).divide(batch_sz)
                 else:
