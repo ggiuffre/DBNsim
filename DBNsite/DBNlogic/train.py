@@ -44,29 +44,37 @@ class CDTrainer:
 
                 # --- positive phase:
                 if USE_GPU:
-                    pos_hid_probs = cm.sigmoid(add(cm.dot(cm.CUDAMatrix(net.W), data), cm.dot(cm.CUDAMatrix(net.b), cm.CUDAMatrix(np.ones((1, batch_sz)))))).asarray()
-                    hid_states = cm.CUDAMatrix(pos_hid_probs).subtract(cm.CUDAMatrix(np.random.uniform(size = pos_hid_probs.shape))).sign().add(cm.CUDAMatrix(np.ones((pos_hid_probs.shape)))).divide(cm.CUDAMatrix(2 * np.ones((pos_hid_probs.shape)))).asarray()
-                    pos_corr = cm.dot(cm.CUDAMatrix(pos_hid_probs), data.transpose()).divide(batch_sz).asarray() # vis-hid correlations (+)
+                    pos_hid_probs = cm.sigmoid(cm.dot(cm.CUDAMatrix(net.W), data).add(cm.dot(cm.CUDAMatrix(net.b), cm.CUDAMatrix(np.ones((1, batch_sz)))))).asarray()
+                    hid_states = cm.CUDAMatrix(pos_hid_probs).subtract(cm.CUDAMatrix(np.random.uniform(size = pos_hid_probs.shape))).sign().add(cm.CUDAMatrix(np.ones((pos_hid_probs.shape)))).divide(cm.CUDAMatrix(2 * np.ones((pos_hid_probs.shape))))
+                    pos_corr = cm.dot(cm.CUDAMatrix(pos_hid_probs), data.transpose()).divide(batch_sz) # vis-hid correlations (+)
                     pos_vis_act = cm.sum(data, axis = 1).divide(batch_sz)
                     pos_hid_act = cm.sum(cm.CUDAMatrix(pos_hid_probs), axis = 1).divide(batch_sz)
                 else:
-                    pos_hid_probs = asnumpy(sigmoid(add(dot(net.W, data), repeat(net.b, batch_sz, axis = 1))))
-                    hid_states = asnumpy(activation(pos_hid_probs))
-                    pos_corr = asnumpy(div(dot(pos_hid_probs, data.T), batch_sz)) # vis-hid correlations (+)
+                    pos_hid_probs = sigmoid(add(dot(net.W, data), repeat(net.b, batch_sz, axis = 1)))
+                    hid_states = activation(pos_hid_probs)
+                    pos_corr = div(dot(pos_hid_probs, data.T), batch_sz) # vis-hid correlations (+)
                     pos_vis_act = div(cumsum(data, axis = 1), batch_sz)
                     pos_hid_act = div(cumsum(pos_hid_probs, axis = 1), batch_sz)
 
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
-                    self.next_rbm_data.extend(pos_hid_probs.T)
+                    self.next_rbm_data.extend(asnumpy(pos_hid_probs.T))
 
                 # --- negative phase:
-                vis_probs = asnumpy(sigmoid(add(dot(net.W.T, hid_states), repeat(net.a, batch_sz, axis = 1))))
-                reconstr = asnumpy(activation(vis_probs))
-                neg_hid_probs = asnumpy(sigmoid(add(dot(net.W, reconstr), repeat(net.b, batch_sz, axis = 1))))
-                neg_corr = asnumpy(div(dot(neg_hid_probs, reconstr.T), batch_sz)) # vis-hid correlations (-)
-                neg_vis_act = asnumpy(div(cumsum(reconstr, axis = 1), batch_sz))
-                neg_hid_act = asnumpy(div(cumsum(neg_hid_probs, axis = 1), batch_sz))
+                if USE_GPU:
+                    vis_probs = cm.sigmoid(cm.dot(cm.CUDAMatrix(net.W).transpose(), hid_states).add(cm.dot(cm.CUDAMatrix(net.a), cm.CUDAMatrix(np.ones((1, batch_sz))))))
+                    reconstr = vis_probs.subtract(rand_mat).sign().add(ones_mat).divide(twos_mat)
+                    neg_hid_probs = sigmoid(add(dot(net.W, reconstr), repeat(net.b, batch_sz, axis = 1)))
+                    neg_corr = div(dot(neg_hid_probs, reconstr.T), batch_sz) # vis-hid correlations (-)
+                    neg_vis_act = div(cumsum(reconstr, axis = 1), batch_sz)
+                    neg_hid_act = div(cumsum(neg_hid_probs, axis = 1), batch_sz)
+                else:
+                    vis_probs = sigmoid(add(dot(net.W.T, hid_states), repeat(net.a, batch_sz, axis = 1)))
+                    reconstr = activation(vis_probs)
+                    neg_hid_probs = sigmoid(add(dot(net.W, reconstr), repeat(net.b, batch_sz, axis = 1)))
+                    neg_corr = div(dot(neg_hid_probs, reconstr.T), batch_sz) # vis-hid correlations (-)
+                    neg_vis_act = div(cumsum(reconstr, axis = 1), batch_sz)
+                    neg_hid_act = div(cumsum(neg_hid_probs, axis = 1), batch_sz)
 
                 # --- updates:
                 W_update = add(mul(momentum, W_update), mul(learn_rate, sub(sub(pos_corr, neg_corr), mul(w_decay, net.W))))
