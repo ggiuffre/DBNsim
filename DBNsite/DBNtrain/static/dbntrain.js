@@ -380,6 +380,9 @@ function dissect(layer) {
 				const title = 'Random input image from the "' + dataset + '" dataset.';
 				heatmap('input_image', response, title);
 				$('#input_image_caption').text(title);
+				$('#input_image').on('click', function () {
+					dissect(0);
+				});
 			}
 		});
 	} else {
@@ -483,14 +486,14 @@ function heatmap(container, data, title) {
 		credits: { enabled: false },
 		exporting: { enabled: false },
 		colorAxis: {
-			minColor: '#FFF',
-			maxColor: '#000'
+			minColor: '#66F',
+			maxColor: '#F66'
 		},
 		series: [{
 			name: 'Image plot',
 			data: data,
-			borderWidth: 1,
-			borderColor: '#EEE'
+			borderWidth: 0.8,
+			borderColor: '#FFF'
 		}]
 	});
 }

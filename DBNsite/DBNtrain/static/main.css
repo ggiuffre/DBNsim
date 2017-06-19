@@ -35,6 +35,10 @@ form legend {
 	opacity: 0;
 }
 
+#layers_sz {
+	padding-left: 1em;
+}
+
 #layers_sz li {
 	color: #A22;
 	list-style-type: none;
@@ -56,6 +60,7 @@ form legend {
 
 #receptive_fields {
 	height: auto;
+	max-width: 580px;
 }
 
 .rec_field {
@@ -78,23 +83,23 @@ form legend {
 		max-height: 50%;
 		right: 0;
 		top: 0;
-		padding: 1em 1em 0 1em;
+		padding: 1em;
 	}
 
 	#input_arrow {
 		position: fixed;
 		height: 8%;
 		opacity: 0.5;
-		right: calc(100px + 6em);
-		top: 48%;
+		right: calc(75px + 6em);
+		top: 50%;
 		margin: 0;
 		padding: 0;
 	}
 
 	#input_image {
 		position: fixed;
-		width: 200px;
-		height: 200px;
+		width: 160px;
+		height: 190px;
 		right: 6em;
 		bottom: 0;
 		padding: 0 1em 2em 1em;

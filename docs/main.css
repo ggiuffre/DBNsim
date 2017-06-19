@@ -1,4 +1,3 @@
-/* open-sans-regular - latin */
 @font-face {
 	font-family: 'Open Sans';
 	font-style: normal;
@@ -39,7 +38,6 @@ a:hover {
 
 #header * {
 	color: #F1F1EF;
-	font-weight: lighter;
 }
 
 #header h1 {
@@ -119,7 +117,7 @@ a:hover {
 
 
 
-/*   glossario   */
+/*   glossary   */
 
 .gloss dt {
 	margin-top: 1em;

@@ -87,7 +87,7 @@
 
 			<p>
 				<input type="submit" value="Train" />
-				<button type="button" onclick="setupTrainForm(false);">step ahead 1 epoch</button>
+				<button type="button" onclick="setupTrainForm(false);">Step ahead 1 epoch</button>
 				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
 			</p>
 		</form>
@@ -96,7 +96,7 @@
 		<div id="DBNgraph"></div>
 
 		<!-- a random input example (with rectangular shape) -->
-		<img id="input_arrow" src="{% static 'up_arrow.png' %}" alt="arrow from image to graph" />
+		<img id="input_arrow" src="{% static 'up_arrow.png' %}" alt="arrow from image to graph" title="The image is fed to the vis. layer" />
 		<div id="input_image"></div>
 		<p id="input_image_caption"></p>
 
