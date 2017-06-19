@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 import string
 import random
+import pickle
 from time import time
 from pickle import UnpicklingError
 from DBNlogic.nets import DBN, RBM
@@ -156,3 +157,16 @@ def getHistogram(request):
     response = net[rbm].weightsHistogram()
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
+
+def saveNet(request):
+    """Return a Pickle file containing the desired network."""
+    if 'job_id' not in request.GET:
+        return HttpResponse('', content_type = 'application/json')
+
+    job = request.GET['job_id']
+    net = training_jobs[job]['network']
+
+    response = HttpResponse()
+    pickle.dump(net, response)
+    response['Content-Disposition'] = 'attachment; filename="network.pkl"'
+    return response

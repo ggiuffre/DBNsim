@@ -80,15 +80,16 @@
 
 				<label for="w_decay">weight decay factor:</label><br />
 				<input type="text" name="w_decay" id="w_decay" value="{{config.w_decay}}" /><br />
-
-				<label for="threshold">target error threshold:</label><br />
-				<input type="text" name="threshold" id="threshold" value="{{config.threshold}}" /><br />
 			</fieldset>
 
 			<p>
-				<input type="submit" value="Train" />
-				<button type="button" onclick="setupTrainForm(false);">Step ahead 1 epoch</button>
+				<input type="submit" value="Train all" />
+				<button type="button" onclick="setupTrainForm(false);">1 epoch</button>
 				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
+			</p>
+			<p>
+				<a download="saveNet/?job_id=">Download</a>
+				<!-- <button type="button" onclick="saveNet();">Download</button> -->
 			</p>
 		</form>
 
@@ -96,7 +97,7 @@
 		<div id="DBNgraph"></div>
 
 		<!-- a random input example (with rectangular shape) -->
-		<img id="input_arrow" src="{% static 'up_arrow.png' %}" alt="arrow from image to graph" title="The image is fed to the vis. layer" />
+		<p><img id="input_arrow" src="{% static 'up_arrow.png' %}" alt="arrow from image to graph" title="The image is fed to the vis. layer" /></p>
 		<div id="input_image"></div>
 		<p id="input_image_caption"></p>
 

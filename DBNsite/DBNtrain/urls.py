@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^getInput/$', views.getInput),
     url(r'^getReceptiveField/$', views.getReceptiveField),
     url(r'^getHistogram/$', views.getHistogram),
+    url(r'^saveNet/$', views.saveNet),
 ]

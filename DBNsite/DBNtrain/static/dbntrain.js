@@ -577,3 +577,18 @@ function retrieveError(autoContinue) {
 		}
 	});
 }
+
+
+
+/* ... */
+function saveNet() {
+	const parameters = { 'job_id': job_id };
+	$.ajax({
+		type: 'GET',
+		url: 'saveNet/',
+		data: JSON.stringify(parameters),
+		success: function(response) {
+			// ...
+		}
+	});
+}

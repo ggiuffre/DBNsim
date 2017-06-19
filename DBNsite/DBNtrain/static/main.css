@@ -120,7 +120,6 @@ form legend {
 	}
 }
 
-#input_arrow,
-#receptive_fields, #weights_histogram {
+#input_arrow, #receptive_fields, #weights_histogram {
 	display: none;
 }
