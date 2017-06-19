@@ -6,6 +6,7 @@ USE_GPU = False
 try:
     from DBNlogic.gpu import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
     USE_GPU = True
+    import cudamat as cm
 except ImportError:
     from DBNlogic.util import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
 
@@ -44,7 +45,7 @@ class CDTrainer:
                 # --- positive phase:
                 if USE_GPU:
                     pos_hid_probs = cm.sigmoid(add(cm.dot(cm.CUDAMatrix(net.W), data), cm.dot(cm.CUDAMatrix(net.b), cm.CUDAMatrix(np.ones((1, batch_sz)))))).asarray()
-                    hid_states = pos_hid_probs.subtract(cm.CUDAMatrix(np.random.uniform(size = pos_hid_probs.shape))).sign().add(cm.CUDAMatrix(np.ones((pos_hid_probs.shape)))).divide(cm.CUDAMatrix(2 * np.ones((pos_hid_probs.shape)))).asnumpy()
+                    hid_states = cm.CUDAMatrix(pos_hid_probs).subtract(cm.CUDAMatrix(np.random.uniform(size = pos_hid_probs.shape))).sign().add(cm.CUDAMatrix(np.ones((pos_hid_probs.shape)))).divide(cm.CUDAMatrix(2 * np.ones((pos_hid_probs.shape)))).asnumpy()
                     pos_corr = cm.dot(cm.CUDAMatrix(pos_hid_probs), data.transpose()).divide(batch_sz).asnumpy() # vis-hid correlations (+)
                     pos_vis_act = cm.sum(data, axis = 1).divide(batch_sz)
                     pos_hid_act = cm.sum(cm.CUDAMatrix(pos_hid_probs), axis = 1).divide(batch_sz)
