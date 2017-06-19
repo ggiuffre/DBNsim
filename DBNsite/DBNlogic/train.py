@@ -79,8 +79,8 @@ class CDTrainer:
                 # --- updates:
                 if USE_GPU:
                     W_update = W_update.mult(momentum).add(pos_corr.subtract(neg_corr).subtract(cm.CUDAMatrix(net.W).mult(w_decay)).mult(learn_rate))
-                    a_update = a_update.mult(momentum).add(pos_vis_act.sub(neg_vis_act).mult(learn_rate))
-                    b_update = b_update.mult(momentum).add(pos_hid_act.sub(neg_hid_act).mult(learn_rate))
+                    a_update = a_update.mult(momentum).add(pos_vis_act.subtract(neg_vis_act).mult(learn_rate))
+                    b_update = b_update.mult(momentum).add(pos_hid_act.subtract(neg_hid_act).mult(learn_rate))
                 else:
                     W_update = add(mul(momentum, W_update), mul(learn_rate, sub(sub(pos_corr, neg_corr), mul(w_decay, net.W))))
                     a_update = add(mul(momentum, a_update), mul(learn_rate, sub(pos_vis_act, neg_vis_act)))
