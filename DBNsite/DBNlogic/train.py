@@ -52,8 +52,8 @@ class CDTrainer:
                     pos_hid_probs = asnumpy(sigmoid(add(dot(net.W, data), repeat(net.b, batch_sz, axis = 1))))
                     hid_states = asnumpy(activation(pos_hid_probs))
                     pos_corr = asnumpy(div(dot(pos_hid_probs, data.T), batch_sz)) # vis-hid correlations (+)
-                    pos_vis_act = cm.sum(data, axis = 1).divide(batch_sz)
-                    pos_hid_act = cm.sum(cm.CUDAMatrix(pos_hid_probs), axis = 1).divide(batch_sz)
+                    pos_vis_act = div(cumsum(data, axis = 1), batch_sz)
+                    pos_hid_act = div(cumsum(pos_hid_probs, axis = 1), batch_sz)
 
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
