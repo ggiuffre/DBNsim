@@ -6,10 +6,12 @@ import cudamat as cm
 def startProcessor():
     """Start the processing unit."""
     cm.cublas_init()
+    print('using GPU')
 
 def shutdownProcessor():
     """Shut the processing unit down."""
     cm.shutdown()
+    print('done with the GPU')
 
 def matrix(A):
     """Return a representation of `A` suitable
