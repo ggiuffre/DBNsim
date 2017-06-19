@@ -2,8 +2,10 @@ import numpy as np
 
 from DBNlogic.util import Configuration
 
+USE_GPU = False
 try:
     from DBNlogic.gpu import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
+    USE_GPU = True
 except ImportError:
     from DBNlogic.util import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
 
@@ -40,11 +42,18 @@ class CDTrainer:
                 data = matrix(np.array(trainset[start : start + batch_sz]).T)
 
                 # --- positive phase:
-                pos_hid_probs = asnumpy(sigmoid(add(dot(net.W, data), repeat(net.b, batch_sz, axis = 1))))
-                hid_states = asnumpy(activation(pos_hid_probs))
-                pos_corr = asnumpy(div(dot(pos_hid_probs, data.T), batch_sz)) # vis-hid correlations (+)
-                pos_vis_act = div(cumsum(data, axis = 1), batch_sz)
-                pos_hid_act = div(cumsum(pos_hid_probs, axis = 1), batch_sz)
+                if USE_GPU:
+                    pos_hid_probs = cm.sigmoid(add(cm.dot(cm.CUDAMatrix(net.W), data), cm.dot(cm.CUDAMatrix(net.b), cm.CUDAMatrix(np.ones((1, batch_sz)))))).asarray()
+                    hid_states = pos_hid_probs.subtract(cm.CUDAMatrix(np.random.uniform(size = pos_hid_probs.shape))).sign().add(cm.CUDAMatrix(np.ones((pos_hid_probs.shape)))).divide(cm.CUDAMatrix(2 * np.ones((pos_hid_probs.shape)))).asnumpy()
+                    pos_corr = cm.dot(cm.CUDAMatrix(pos_hid_probs), data.transpose()).divide(batch_sz).asnumpy() # vis-hid correlations (+)
+                    pos_vis_act = cm.sum(data, axis = 1).divide(batch_sz)
+                    pos_hid_act = cm.sum(cm.CUDAMatrix(pos_hid_probs), axis = 1).divide(batch_sz)
+                else:
+                    pos_hid_probs = asnumpy(sigmoid(add(dot(net.W, data), repeat(net.b, batch_sz, axis = 1))))
+                    hid_states = asnumpy(activation(pos_hid_probs))
+                    pos_corr = asnumpy(div(dot(pos_hid_probs, data.T), batch_sz)) # vis-hid correlations (+)
+                    pos_vis_act = cm.sum(data, axis = 1).divide(batch_sz)
+                    pos_hid_act = cm.sum(cm.CUDAMatrix(pos_hid_probs), axis = 1).divide(batch_sz)
 
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
