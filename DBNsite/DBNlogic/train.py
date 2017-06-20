@@ -62,7 +62,7 @@ class CDTrainer:
 
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
-                    self.next_rbm_data.extend(asnumpy(pos_hid_probs.T))
+                    self.next_rbm_data.extend(asnumpy(pos_hid_probs).T)
 
                 # --- negative phase:
                 if USE_GPU:
