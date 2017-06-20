@@ -33,19 +33,23 @@
 			<fieldset>
 				<legend>Dataset info</legend>
 
-				<label for="dataset">training dataset:</label><br />
-				<select name="dataset" id="dataset" onchange="updateVisibleSize();">
-					{% for s in datasets %}
-						<option value="{{s}}">{{s}}</option>
-					{% endfor %}
-				</select>
+				<p>
+					<label for="dataset">training dataset:</label><br />
+					<select name="dataset" id="dataset" onchange="updateVisibleSize();">
+						{% for s in datasets %}
+							<option value="{{s}}">{{s}}</option>
+						{% endfor %}
+					</select>
+				</p>
 			</fieldset>
 
 			<fieldset id="arch_form">
 				<legend>Network architecture</legend>
 
-				<label for="num_hid_layers">number of hidden layers:</label><br />
-				<input type="text" value="1" name="num_hid_layers" id="num_hid_layers" onchange="updateArchitecture(); updateSeries(); updateGraph();" /><br />
+				<p>
+					<label for="num_hid_layers">number of hidden layers:</label><br />
+					<input type="text" value="1" name="num_hid_layers" id="num_hid_layers" onchange="updateArchitecture(); updateSeries(); updateGraph();" />
+				</p>
 
 				<p>n. of units per layer:</p>
 				<ol id="layers_sz">
@@ -59,6 +63,9 @@
 					</li>
 				</ol>
 			</fieldset>
+			<p>
+				<a id="save_net" href="saveNet/?job_id=" type="application/octet-stream">Save the net</a> or load a new one: <input id="load_net" type="file" name="load_net" onchange="loadNet();" />
+			</p>
 		</form>
 
 		<!-- the form for the training hyper-parameters -->
@@ -66,30 +73,36 @@
 			<fieldset>
 				<legend>Training parameters</legend>
 
-				<label for="epochs">max n. of epochs:</label><br />
-				<input type="text" name="epochs" id="epochs" value="{{config.max_epochs}}" /><br />
+				<p>	
+					<label for="epochs">max n. of epochs:</label><br />
+					<input type="text" name="epochs" id="epochs" value="{{config.max_epochs}}" />
+				</p>
 
-				<label for="batch_size">size of a mini-batch:</label><br />
-				<input type="text" name="batch_size" id="batch_size" value="{{config.batch_size}}" /><br />
+				<p>	
+					<label for="batch_size">size of a mini-batch:</label><br />
+					<input type="text" name="batch_size" id="batch_size" value="{{config.batch_size}}" />
+				</p>
 
-				<label for="learn_rate">learning rate:</label><br />
-				<input type="text" name="learn_rate" id="learn_rate" value="{{config.learn_rate}}" /><br />
+				<p>	
+					<label for="learn_rate">learning rate:</label><br />
+					<input type="text" name="learn_rate" id="learn_rate" value="{{config.learn_rate}}" />
+				</p>
 
-				<label for="momentum">momentum:</label><br />
-				<input type="text" name="momentum" id="momentum" value="{{config.momentum}}" /><br />
+				<p>	
+					<label for="momentum">momentum:</label><br />
+					<input type="text" name="momentum" id="momentum" value="{{config.momentum}}" />
+				</p>
 
-				<label for="w_decay">weight decay factor:</label><br />
-				<input type="text" name="w_decay" id="w_decay" value="{{config.w_decay}}" /><br />
+				<p>	
+					<label for="w_decay">weight decay factor:</label><br />
+					<input type="text" name="w_decay" id="w_decay" value="{{config.w_decay}}" />
+				</p>
 			</fieldset>
 
 			<p>
-				<input type="submit" value="Train all" />
+				<input type="submit" value="Train all" /> or
 				<button type="button" onclick="setupTrainForm(false);">1 epoch</button>
 				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
-			</p>
-			<p>
-				<a download="saveNet/?job_id=">Download</a>
-				<!-- <button type="button" onclick="saveNet();">Download</button> -->
 			</p>
 		</form>
 

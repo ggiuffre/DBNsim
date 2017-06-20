@@ -22,6 +22,10 @@ class CDTrainer:
         self.config = config    # hyper-parameters for training
         self.next_rbm_data = [] # the training set built from the positive probs
 
+        self.train_manually = False # hand training:
+        # set to True when you want to train the network indefinitely;
+        # then set to False when you're done with the training.
+
     def run(self, trainset):
         """Learn from a particular dataset."""
         net        = self.net
@@ -36,7 +40,7 @@ class CDTrainer:
         b_update = matrix(np.zeros(net.b.shape))
 
         epoch = 1
-        while epoch <= max_epochs:
+        while (epoch <= max_epochs) or self.train_manually:
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
                 start = batch_sz * batch_n

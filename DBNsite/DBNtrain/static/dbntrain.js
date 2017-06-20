@@ -66,6 +66,14 @@ $(function() {
  * To be called _after_ the page has loaded!
  */
 function setupChart() {
+	let maxZoom = 10;
+	let max = undefined;
+	const epochs = $('#epochs').val();
+	if (epochs != 'inf') {
+		max = epochs
+		maxZoom = undefined;
+	}
+
 	chart = Highcharts.chart({
 		chart: {
 			renderTo: 'train_plot',
@@ -81,8 +89,8 @@ function setupChart() {
 			enabled: false
 		},
 		xAxis: {
-			min: 1,
-			max: $('#epochs').val(),
+			max: max,
+			maxZoom: maxZoom,
 			title: {
 				text: 'Epoch number'
 			},
@@ -109,24 +117,28 @@ function setupChart() {
  * @param {Boolean} autoContinue  whether to automate the training
  */
 function setupTrainForm(autoContinue) {
+	if (!autoContinue)
+		$('#epochs').val('inf');
+
 	if (!newJobSent) {
 		// reset counters and chart series:
 		curr_epoch = 0;
 		curr_rbm = -1;
+		setupChart();
 		updateSeries();
-	
-		const epochs = $('#epochs').val();
+
 		const num_layers = +$('#num_hid_layers').val() + 1;
-		chart.xAxis[0].setExtremes(1, epochs);
+		chart.xAxis[0].setExtremes(1, 10);
 		for (let i = 1; i < num_layers; i++)
 			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
 		networkGraph.$('.rbm1').style('line-color', '#D89');
-	
+
 		const net_form_data = $('#net_form').serialize();
 		const train_form_data = $('#train_form').serialize();
 		let forms_data = net_form_data + '&' + train_form_data;
-		forms_data += '&last_job_id=' + job_id;
-	
+		forms_data += '&last_job_id=' + job_id; // delete the last job from the server
+		forms_data += '&train_manually=' + (autoContinue ? 'no' : 'yes');
+
 		$.ajax({
 			type: 'POST',
 			url: 'train/',
@@ -135,6 +147,7 @@ function setupTrainForm(autoContinue) {
 			success: function(response) {
 				job_id = response;
 				newJobSent = true;
+				$('#save_net').attr('href', 'saveNet/?job_id=' + job_id);
 			}
 		});
 	}
@@ -569,7 +582,8 @@ function retrieveError(autoContinue) {
 				}
 
 				curr_epoch++;
-				chart.series[curr_rbm].addPoint([curr_epoch, point], true);
+				let shift = (chart.series[curr_rbm].data.length > 10);
+				chart.series[curr_rbm].addPoint([curr_epoch, point], true, shift);
 
 				if (autoContinue)
 					retrieveError(true);
@@ -580,15 +594,6 @@ function retrieveError(autoContinue) {
 
 
 
-/* ... */
-function saveNet() {
-	const parameters = { 'job_id': job_id };
-	$.ajax({
-		type: 'GET',
-		url: 'saveNet/',
-		data: JSON.stringify(parameters),
-		success: function(response) {
-			// ...
-		}
-	});
+function loadNet() {
+	alert('olé');
 }

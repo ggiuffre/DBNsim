@@ -46,12 +46,13 @@ class DBN(list):
         self.observe(data)
         return self.generate()
 
-    def learn(self, trainset, config = Configuration()):
+    def learn(self, trainset, config = Configuration(), train_manually = False):
         """Learn from a particular dataset."""
         np.random.shuffle(trainset)
         startProcessor()
         for rbm in self:
             trainer = CDTrainer(rbm, config = config)
+            trainer.train_manually = train_manually
             for curr_error in trainer.run(trainset):
                 yield {'rbm': self.index(rbm), 'err': curr_error}
             trainset = np.array(trainer.next_rbm_data)

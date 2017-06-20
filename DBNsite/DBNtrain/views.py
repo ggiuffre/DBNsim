@@ -6,8 +6,9 @@ import json
 import string
 import random
 import pickle
-from time import time
 from pickle import UnpicklingError
+from sys import maxsize
+from time import time
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
 from DBNlogic.util import Configuration, heatmap
@@ -57,18 +58,20 @@ def train(request):
         net.append(RBM(vis_size, hid_size))
         vis_size = hid_size # for constructing the next RBM
 
+    epochs = request.POST['epochs']
     config = {
-        'max_epochs' : int(request.POST['epochs']),
+        'max_epochs' : int(epochs if (epochs != 'inf') else maxsize),
         'batch_size' : int(request.POST['batch_size']),
         'learn_rate' : float(request.POST['learn_rate']),
         'momentum'   : float(request.POST['momentum'])
     }
 
     random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
+    train_manually = (request.POST['train_manually'] == 'yes')
     training_jobs[random_id] = {
         'birthday': time(),
         'network': net,
-        'generator': net.learn(trainset, Configuration(**config))
+        'generator': net.learn(trainset, Configuration(**config), train_manually)
     }
 
     # delete the old client job that is being replaced (if any):
