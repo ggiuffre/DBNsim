@@ -10,7 +10,6 @@ sys.path.insert(0, os.path.join(myPath, '../DBNlogic'))
 import DBNlogic.nets as nets
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
-from DBNlogic.util import squared_error
 from DBNlogic.train import CDTrainer
 
 
@@ -48,7 +47,7 @@ def test_DBN_error():
     trainset = DataSet.fromWhatever('left_8')
     for train_info in net.learn(trainset):
         pass
-    mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
+    mean_err = np.sqrt(((trainset[0] - net.evaluate(trainset[0])) ** 2).mean())
     assert mean_err <= 1
 
 def test_receptiveField():
@@ -108,5 +107,5 @@ def test_RBM_error():
     trainer = CDTrainer(net)
     for err in trainer.run(trainset):
         pass
-    mean_err = squared_error(trainset[0], net.evaluate(trainset[0]))
+    mean_err = np.sqrt(((trainset[0] - net.evaluate(trainset[0])) ** 2).mean())
     assert mean_err <= 1

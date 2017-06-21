@@ -37,12 +37,12 @@ def test_save():
 def test_fromCSV():
     """A DataSet object can be constructed from a CSV file."""
     dataset = DataSet.fromCSV(full('left_8.csv'))
-    assert dataset.data.shape == (14, 8)
+    assert dataset.shape == (14, 8)
 
 def test_fromPickle():
     """A DataSet object can be constructed from a Pickle file."""
-    dataset = DataSet.fromPickle(full('small_MNIST.pkl'))
-    assert dataset.data.shape == (60000, 49)
+    dataset = DataSet.fromPickle(full('left_8.pkl'))
+    assert dataset.shape == (14, 8)
 
 def test_fromMatlab():
     """A DataSet object can be constructed from a Matlab file."""
@@ -54,18 +54,18 @@ def test_fromMatlab():
 
 def test_fromWhatever():
     """A DataSet object can be constructed from a file."""
-    dataset = DataSet.fromWhatever('small_MNIST')
-    assert dataset.shape == (60000, 49)
+    dataset = DataSet.fromWhatever('left_8')
+    assert dataset.shape == (14, 8)
 
-def test_allSets():
-    """The available datasets include the MNIST dataset
-    and a downsampling the MNIST dataset."""
-    datasets = DataSet.allSets()
-    assert 'MNIST' in datasets
-    assert 'small_MNIST' in datasets
+# def test_allSets():
+#     """The available datasets include the MNIST dataset
+#     and a downsampling the MNIST dataset."""
+#     datasets = DataSet.allSets()
+#     assert 'MNIST' in datasets
+#     assert 'small_MNIST' in datasets
 
-def test_SmallerMNIST():
-    """A downsampling of the MNIST dataset
-    can be constructed from a file."""
-    mnist = SmallerMNIST()
-    assert mnist.data.shape == (60000, 49)
+# def test_SmallerMNIST():
+#     """A downsampling of the MNIST dataset
+#     can be constructed from a file."""
+#     mnist = SmallerMNIST()
+#     assert mnist.data.shape == (60000, 49)

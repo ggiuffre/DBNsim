@@ -6,7 +6,7 @@ import sys, os
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(myPath, '..'))
 
-from DBNlogic.util import sigmoid, activation, squared_error, heatmap
+from DBNlogic.util import sigmoid, activation, heatmap
 
 def test_sigmoidDefinition():
     """The `sigmoid` function applied to `x` returns 1 / (1 + e^-x)."""
@@ -37,11 +37,6 @@ def test_activationShape():
     the same shape as the input array."""
     v = np.random.randn(5, 12)
     assert activation(v).shape == v.shape
-
-def test_MSQZero():
-    """The `squared_error` function applied to `x` and `x` returns 0."""
-    x = np.random.rand(13, 4, 1)
-    assert squared_error(x, x) == 0
 
 def test_heatmap():
     """A heatmap of an array has the same length as the array."""
