@@ -5,6 +5,7 @@ import numpy as np
 import sys
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(myPath, '..'))
+sys.path.insert(0, os.path.join(myPath, '../DBNlogic'))
 
 import DBNlogic.nets as nets
 from DBNlogic.nets import DBN, RBM

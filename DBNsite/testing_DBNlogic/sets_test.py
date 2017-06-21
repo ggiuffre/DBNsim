@@ -55,7 +55,7 @@ def test_fromMatlab():
 def test_fromWhatever():
     """A DataSet object can be constructed from a file."""
     dataset = DataSet.fromWhatever('small_MNIST')
-    assert dataset.data.shape == (60000, 49)
+    assert dataset.shape == (60000, 49)
 
 def test_allSets():
     """The available datasets include the MNIST dataset
