@@ -1,6 +1,5 @@
 language: python
 python: "2.7"
-install: pip install -r requirements.txt
 script:
   - pytest --cov=DBNsite/DBNlogic
   - CODECLIMATE_REPO_TOKEN=368b98cb3ee40b7b3c9ad38aab86d6ea29b0ad368ca90e7a8c3a66802dcc078b codeclimate-test-reporter
