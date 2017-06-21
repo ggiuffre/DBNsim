@@ -115,8 +115,8 @@ class SmallerMNIST(MNIST):
         if (exists(pkl_file)):
             self.data = DataSet.fromPickle(pkl_file)
         else:
-            super().__init__()
-            self.data = self.data.reshape(60000, 28, 28)
+            mnist = MNIST()
+            self.data = mnist.data.reshape(60000, 28, 28)
             print('downsampling data...')
             self.data = np.array([image[::4, ::4] for image in self.data])
             self.data = self.data.reshape(60000, 49)

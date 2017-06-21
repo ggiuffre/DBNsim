@@ -7,8 +7,8 @@ import string
 import random
 import pickle
 from pickle import UnpicklingError
-from sys import maxsize
 from time import time
+from sys import maxsize
 from DBNlogic.nets import DBN, RBM
 from DBNlogic.sets import DataSet
 from DBNlogic.util import Configuration, heatmap

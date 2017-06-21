@@ -1,14 +1,14 @@
 import numpy as np
 
-from DBNlogic.util import Configuration
+from .util import Configuration
 
 USE_GPU = False
 try:
-    from DBNlogic.gpu import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
+    from .gpu import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
     USE_GPU = True
     import cudamat as cm
 except ImportError:
-    from DBNlogic.util import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
+    from .util import matrix, asnumpy, transpose, dot, div, mul, add, sub, cumsum, repeat, sigmoid, activation, squared_error
 
 
 
@@ -62,7 +62,7 @@ class CDTrainer:
 
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
-                    self.next_rbm_data.extend(asnumpy(pos_hid_probs).T)
+                    self.next_rbm_data.extend(asnumpy(pos_hid_probs.transpose()))
 
                 # --- negative phase:
                 if USE_GPU:

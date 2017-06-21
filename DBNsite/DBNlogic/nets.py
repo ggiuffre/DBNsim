@@ -2,13 +2,13 @@ import numpy as np
 import pickle
 import os
 
-from DBNlogic.train import CDTrainer
-from DBNlogic.util import Configuration
+from .train import CDTrainer
+from .util import Configuration
 
 try:
-    from DBNlogic.gpu import startProcessor, shutdownProcessor, sigmoid, activation
+    from .gpu import startProcessor, shutdownProcessor, sigmoid, activation
 except ImportError:
-    from DBNlogic.util import startProcessor, shutdownProcessor, sigmoid, activation
+    from .util import startProcessor, shutdownProcessor, sigmoid, activation
 
 
 
@@ -23,7 +23,7 @@ class DBN(list):
 
     def __init__(self, layers = [], name = 'untitled'):
         """Construct a DBN from a list of RBMs."""
-        super().__init__(layers)
+        super(self.__class__, self).__init__(layers)
         self.name = name
 
     def observe(self, data):
@@ -116,7 +116,7 @@ class RBM:
     def weightsHistogram(self):
         """Return a histogram of the distribution of
         the weights in the RBM."""
-        hist, bin_edges = np.histogram(self.W, bins='auto')
+        hist, bin_edges = np.histogram(self.W, bins = 20)
         hist = hist.tolist()
         response = []
         for i in range(len(hist)):

@@ -27,7 +27,7 @@ def asnumpy(A):
     """Return a NumPy copy of `A`."""
     if type(A) == np.ndarray:
         return A
-    elif type(A) == cm.CUDAMatrix or type(A) == cm.TransposedCUDAMatrix:
+    elif type(A) == cm.CUDAMatrix:
         return A.asarray()
     else:
         return np.array(A)
