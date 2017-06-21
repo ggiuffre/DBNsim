@@ -1,7 +1,7 @@
 import numpy as np
 import gnumpy as gpu
 
-from .util import Configuration, squared_error
+from .util import Configuration
 
 
 
@@ -82,7 +82,8 @@ class CDTrainer:
                 net.W += W_update
                 net.a += a_update
                 net.b += b_update
-                errors = np.append(errors, squared_error(data.as_numpy_array(), reconstr.as_numpy_array()))
+                mean_err = gpu.sqrt(((data - reconstr) ** 2).mean())
+                errors = np.append(errors, mean_err)
 
             # --- reconstruction error update:
             mean_squared_err = errors.mean()

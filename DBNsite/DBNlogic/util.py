@@ -25,60 +25,6 @@ class Configuration:
 
 
 
-def startProcessor():
-    """Start the processing unit."""
-    pass
-
-def shutdownProcessor():
-    """Shut the processing unit down."""
-    pass
-
-def matrix(A):
-    """Return a representation of `A` suitable
-    to the processing unit."""
-    return np.array(A)
-
-def asnumpy(A):
-    """Return a NumPy copy of `A`."""
-    if type(A) == np.ndarray:
-        return A
-    else:
-        return np.array(A)
-
-def transpose(A):
-    """Return the transpose of `A`."""
-    return A.T
-
-def dot(A, B):
-    """Return the result of multiplying `A` with `B`."""
-    return np.dot(A, B)
-
-def mul(c, A):
-    """Return the result of multiplying `A`
-    with the scalar `c`."""
-    return A * c
-
-def div(A, c):
-    """Return the result of dividing `A` by the scalar `c`."""
-    return A / c
-
-def add(A, B):
-    """Return the result of adding `A` with `B`."""
-    return A + B
-
-def sub(A, B):
-    """Return the result of subtracting `B` from `A`."""
-    return A - B
-
-def cumsum(A, axis = None):
-    """Return the cumulative sum of `A`."""
-    return A.sum(axis = axis, keepdims = True)
-
-def repeat(A, times, axis):
-    """Return `A` juxtaposed to itself `times` times,
-    along the `axis` axis."""
-    return np.repeat(A, times, axis)
-
 def sigmoid(A):
     """Return the element-wise sigmoid of `A`."""
     ones = np.ones(A.shape) # (array of ones)
@@ -87,10 +33,6 @@ def sigmoid(A):
 def activation(A):
     """Return the element-wise binary activation of `A`."""
     return A > np.random.uniform(size = A.shape)
-
-def squared_error(A, B):
-    """Return the mean error between `A` and `B`."""
-    return np.sqrt(((A - B) ** 2).mean())
 
 
 
