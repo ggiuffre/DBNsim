@@ -3,12 +3,7 @@ import pickle
 import os
 
 from .train import CDTrainer
-from .util import Configuration
-
-try:
-    from .gpu import startProcessor, shutdownProcessor, sigmoid, activation
-except ImportError:
-    from .util import startProcessor, shutdownProcessor, sigmoid, activation
+from .util import Configuration, sigmoid, activation
 
 
 
@@ -49,14 +44,12 @@ class DBN(list):
     def learn(self, trainset, config = Configuration(), train_manually = False):
         """Learn from a particular dataset."""
         np.random.shuffle(trainset)
-        startProcessor()
         for rbm in self:
             trainer = CDTrainer(rbm, config = config)
             trainer.train_manually = train_manually
             for curr_error in trainer.run(trainset):
                 yield {'rbm': self.index(rbm), 'err': curr_error}
-            trainset = np.array(trainer.next_rbm_data)
-        shutdownProcessor()
+            trainset = trainer.next_rbm_data
 
     def receptiveField(self, layer, neuron):
         """Return the receptive field of a specific
