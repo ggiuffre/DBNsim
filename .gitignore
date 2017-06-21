@@ -5,6 +5,9 @@
 *.sublime-project
 *.sublime-workspace
 
+# ...
+MNIST.*
+
 # Astah
 *.asta.lock
 
