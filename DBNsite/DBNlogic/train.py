@@ -45,11 +45,8 @@ class CDTrainer:
         a_update = gpu.zeros(net.a.shape)
         b_update = gpu.zeros(net.b.shape)
 
-        gpu_trainset = gpu.zeros(trainset.shape)
-        for i in range(len(trainset)):
-            gpu_trainset[i, :] = gpu.garray(trainset[i])
-        # if type(trainset) != gpu.garray:
-        #     trainset = gpu.garray(trainset)
+        if type(trainset) != gpu.garray:
+            trainset = gpu.garray(trainset)
         self.next_rbm_data = gpu.zeros((trainset.shape[0], net.W.shape[0]))
 
         epoch = 1
@@ -57,7 +54,7 @@ class CDTrainer:
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
                 start = batch_n * batch_sz
-                data = gpu_trainset[start : start + batch_sz].T
+                data = trainset[start : start + batch_sz].T
 
                 # --- positive phase:
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
