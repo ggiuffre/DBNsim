@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Installation - DBNsim</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="FIUP" />
+	<meta name="keywords" content="DBNsim, user, manual, docs, install" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+	<link rel="next" href="02_first.html" />
+</head>
+
+<body>
+
+	<div id="header">
+		<h1>
+			<span class="prev">&lt;</span>
+			<a href="index.html">DBNsim</a>
+			<a class="next" title="next" href="02_first.html">&gt;</a>
+		</h1>
+		<h2>train and analyse Deep Belief Networks</h2>
+	</div>
+
+	<div id="content">
+		<h1>Installing DBNsim</h1>
+
+		<h2 id="install">Basic installation</h2>
+		<p>For installing DBNsim (both for CPU and GPU usage) follow the following steps:</p>
+		<pre>
+git clone https://github.com/ggiuffre/DBNsim.git
+cd DBNsim
+pip install --user -r requirements.txt
+		</pre>
+
+		<h2>Adding GPU support</h2>
+		<p>If you have a CUDA-enabled GPU, you can install CUDAMat:</p>
+		<pre>
+cd ~
+git clone https://github.com/cudamat/cudamat.git
+cd cudamat
+pip install --user .
+		</pre>
+		<p>If you get errors, make sure you have CUDA installed. If you don't have it and you're using Ubuntu, then you can install it with:</p>
+		<pre>sudo apt-get install nvidia-cuda-toolkit</pre>
+		<p>After you have managed to get CUDA working, remember to test CUDAMat; enter a Python interpreter and type:</p>
+		<pre>
+import numpy as np
+import cudamat as cm
+
+cm.cublas_init()
+
+a = cm.CUDAMatrix(np.random.rand(32, 256))
+b = cm.CUDAMatrix(np.random.rand(256, 32))
+
+c = cm.dot(a, b)
+d = c.sum(axis = 0)
+
+print(d.asarray())
+		</pre>
+
+		<h2>Launching DBNsim</h2>
+		<p>Finally, launch DBNsim with:</p>
+		<pre>
+cd &lt;path to DBNsim&gt;
+python DBNsite/manage.py runserver
+		</pre>
+		<p>You should see something like:</p>
+		<pre>
+Performing system checks...
+
+loading data from pickle...
+loading data from pickle...
+loading data from pickle...
+loading data from pickle...
+System check identified no issues (0 silenced).
+June 22, 2017 - 16:02:15
+Django version 1.11.2, using settings 'DBNsite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+		</pre>
+		<p>This means the server is up and running. Now you can find the user interface at <code>http://127.0.0.1:8000/DBNtrain/</code> (don't forget the trailing &quot;DBNtrain/&quot; in the address).</p>
+		<p>When you want to shut down the server, return to the command line interface and press CONTROL-C.</p>
+	</div>
+
+</body>
+</html>
