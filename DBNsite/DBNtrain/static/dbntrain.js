@@ -52,11 +52,11 @@ $(function() {
 
 /**
  * After having rendered the page, binds the submission of the
- * hyper-parameters form to the call of `setupTrainForm()`.
+ * hyper-parameters form to the call of `setupTrainForm(true)`.
  */
 $(function() {
 	$('#train_form').submit(function (e) {
-		setupTrainForm();
+		setupTrainForm(true);
 		e.preventDefault(); // do not submit the form
 	});
 });
@@ -116,9 +116,7 @@ function setupChart() {
  * the server; then, trains the network for one epoch.
  * @param {Boolean} autoContinue  whether to automate the training
  */
-function setupTrainForm() {
-	const autoContinue = ($('#trainee_opt').val() == 'all');
-
+function setupTrainForm(autoContinue) {
 	if (!newJobSent) {
 
 		if (!autoContinue)

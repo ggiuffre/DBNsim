@@ -105,7 +105,7 @@
 					<option class="trainee" value="all">all RBMs</option>
 					<option class="trainee" value="1">RBM 1</option>
 				</select><br />
-				for <button type="button" onclick="setupTrainForm();">1 epoch</button> or <button type="button" onclick="setupTrainForm();">all epochs</button>
+				for <button type="button" onclick="setupTrainForm(false);">1 epoch</button> or <button type="button" onclick="setupTrainForm(true);">all epochs</button>
 				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
 			</p>
 		</form>
