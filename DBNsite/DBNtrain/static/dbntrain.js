@@ -52,11 +52,11 @@ $(function() {
 
 /**
  * After having rendered the page, binds the submission of the
- * hyper-parameters form to the call of `setupTrainForm(true)`.
+ * hyper-parameters form to the call of `setupTrainForm()`.
  */
 $(function() {
 	$('#train_form').submit(function (e) {
-		setupTrainForm(true);
+		setupTrainForm();
 		e.preventDefault(); // do not submit the form
 	});
 });
@@ -116,8 +116,11 @@ function setupChart() {
  * the server; then, trains the network for one epoch.
  * @param {Boolean} autoContinue  whether to automate the training
  */
-function setupTrainForm(autoContinue) {
+function setupTrainForm() {
+	const autoContinue = ($('#trainee_opt').val() == 'all');
+
 	if (!newJobSent) {
+
 		if (!autoContinue)
 			$('#epochs').val('inf');
 
@@ -176,7 +179,7 @@ function updateVisibleSize() {
  */
 function updateArchitecture() {
 
-	// how many hidden layers (hence, RBMs) do we already have?
+	// how many hidden layers (hence, RBMs) do we want to have?
 	const num_hid_layers = +$('#num_hid_layers').val();
 
 	// check for illegal values...
@@ -203,13 +206,13 @@ function updateArchitecture() {
 			'<label for="hid_sz_' + i + '">h' + i + '&nbsp;&nbsp;</label>' +
 			'<input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();" />' +
 			'</li>');
-		$('<option value="' + i + '">RBM ' + i + '</option>').insertBefore($('.trainee').last());
+		$('#trainee_opt').append('<option class="trainee" value="' + i + '">RBM ' + i + '</option>');
 	}
 
 	// remove exceeding hidden layers and RBMs:
 	for (let i = curr_layers; i > num_hid_layers + 1; i--) {
 		$('.lay_sz').last().remove();
-		$('.trainee').last().prev().remove();
+		$('.trainee').last().remove();
 	}
 }
 
@@ -567,10 +570,8 @@ function retrieveError(autoContinue) {
 
 	let goto_next_rbm = 'no';
 	const trainee_opt = $('#trainee_opt').val();
-	if (trainee_opt - 1 != curr_rbm && trainee_opt != 'all') {
-		alert(trainee_opt);
+	if (trainee_opt - 1 != curr_rbm && trainee_opt != 'all')
 		goto_next_rbm = 'yes';
-	}
 	const parameters = { 'job_id': job_id, 'goto_next_rbm': goto_next_rbm };
 
 	$.ajax({
