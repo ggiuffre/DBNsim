@@ -23,9 +23,8 @@ class CDTrainer:
         # the next RBM in the DBN hierarchy.
         self.next_rbm_data = None
 
-        # Set to True when you want to train the network indefinitely;
-        # then set to False when you're done with the training.
-        self.train_manually = False
+        # Set to True for manually stopping the training.
+        self.handbrake = False
 
     def run(self, trainset):
         """Learn from a particular dataset."""
@@ -36,6 +35,8 @@ class CDTrainer:
         learn_rate = self.config.learn_rate
         momentum   = self.config.momentum
         w_decay    = self.config.w_decay
+
+        gpu.board_id_to_use = 0
 
         net.W = gpu.garray(net.W) # move net.W to the GPU RAM
         net.a = gpu.garray(net.a) # move net.a to the GPU RAM
@@ -50,7 +51,7 @@ class CDTrainer:
         self.next_rbm_data = gpu.zeros((trainset.shape[0], net.W.shape[0]))
 
         epoch = 1
-        while (epoch <= max_epochs) or self.train_manually:
+        while (epoch <= max_epochs) and (not self.handbrake):
             errors = np.array([])
             for batch_n in range(int(len(trainset) / batch_sz)):
                 start = batch_n * batch_sz

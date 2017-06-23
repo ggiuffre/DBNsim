@@ -96,6 +96,9 @@ def getError(request):
     body = json.loads(request.body.decode())
     job = body['job_id']
     train_gen = training_jobs[job]['generator']
+    net = training_jobs[job]['network']
+    if body['goto_next_rbm'] == 'yes' and net.curr_trainer != None:
+        net.curr_trainer.handbrake = True
 
     curr_rbm = None
     next_err = None
@@ -106,7 +109,6 @@ def getError(request):
         curr_rbm = train_info['rbm']
         next_err = round(train_info['err'], 3)
     except StopIteration:
-        # training_jobs[job]['network'].save()
         del training_jobs[job]['generator']
         stop = True
 

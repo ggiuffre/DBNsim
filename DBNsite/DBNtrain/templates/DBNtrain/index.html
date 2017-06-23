@@ -100,8 +100,12 @@
 			</fieldset>
 
 			<p>
-				<input type="submit" value="Train all layers" /> or
-				<button type="button" onclick="setupTrainForm(false);">1 epoch</button>
+				Train
+				<select id="trainee_opt" name="trainee_opt">
+					<option class="trainee" value="1">RBM 1</option>
+					<option class="trainee" value="all">all RBMs</option>
+				</select><br />
+				for <button type="button" onclick="setupTrainForm(false);">1 epoch</button> or <input type="submit" value="all epochs" />
 				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
 			</p>
 		</form>

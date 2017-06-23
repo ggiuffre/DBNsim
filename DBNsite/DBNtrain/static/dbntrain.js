@@ -117,10 +117,10 @@ function setupChart() {
  * @param {Boolean} autoContinue  whether to automate the training
  */
 function setupTrainForm(autoContinue) {
-	if (!autoContinue)
-		$('#epochs').val('inf');
-
 	if (!newJobSent) {
+		if (!autoContinue)
+			$('#epochs').val('inf');
+
 		// reset counters and chart series:
 		curr_epoch = 0;
 		curr_rbm = -1;
@@ -150,6 +150,7 @@ function setupTrainForm(autoContinue) {
 				$('#save_net').attr('href', 'saveNet/?job_id=' + job_id);
 			}
 		});
+		curr_rbm = 0;
 	}
 
 	retrieveError(autoContinue);
@@ -169,11 +170,16 @@ function updateVisibleSize() {
 }
 
 /**
- * Updates the form for defining the DBN layers, based on
- * the number of layers that the user wants to create.
+ * Updates the form for defining the DBN layers and the
+ * button for training them, based on the number of
+ * layers that the user wants to create.
  */
 function updateArchitecture() {
+
+	// how many hidden layers (hence, RBMs) do we already have?
 	const num_hid_layers = +$('#num_hid_layers').val();
+
+	// check for illegal values...
 	if (num_hid_layers === '')
 		return;
 	if (num_hid_layers < 1) {
@@ -190,17 +196,21 @@ function updateArchitecture() {
 	// how many HTML inputs do we already have?
 	const curr_layers = +$('.lay_sz').length;
 
-	// add missing hidden layers:
-	for (let i = curr_layers; i < num_hid_layers + 1; i++)
+	// add missing hidden layers and RBMs:
+	for (let i = curr_layers; i < num_hid_layers + 1; i++) {
 		$('#layers_sz').append(
 			'<li class="lay_sz">' +
 			'<label for="hid_sz_' + i + '">h' + i + '&nbsp;&nbsp;</label>' +
 			'<input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();" />' +
 			'</li>');
+		$('<option value="' + i + '">RBM ' + i + '</option>').insertBefore($('.trainee').last());
+	}
 
-	// remove exceeding hidden layers:
-	for (let i = curr_layers; i > num_hid_layers + 1; i--)
+	// remove exceeding hidden layers and RBMs:
+	for (let i = curr_layers; i > num_hid_layers + 1; i--) {
 		$('.lay_sz').last().remove();
+		$('.trainee').last().prev().remove();
+	}
 }
 
 /**
@@ -555,7 +565,14 @@ function baseLog(x, base) {
 function retrieveError(autoContinue) {
 	$('#train_plot_loading').css('opacity', 1);
 
-	const parameters = { 'job_id': job_id };
+	let goto_next_rbm = 'no';
+	const trainee_opt = $('#trainee_opt').val();
+	if (trainee_opt - 1 != curr_rbm && trainee_opt != 'all') {
+		alert(trainee_opt);
+		goto_next_rbm = 'yes';
+	}
+	const parameters = { 'job_id': job_id, 'goto_next_rbm': goto_next_rbm };
+
 	$.ajax({
 		type: 'POST',
 		url: 'getError/',

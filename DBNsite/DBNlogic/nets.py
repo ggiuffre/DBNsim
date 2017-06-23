@@ -20,6 +20,7 @@ class DBN(list):
         """Construct a DBN from a list of RBMs."""
         super(self.__class__, self).__init__(layers)
         self.name = name
+        self.curr_trainer = None
 
     def observe(self, data):
         """Set the DBN state according to a particular input."""
@@ -45,11 +46,10 @@ class DBN(list):
         """Learn from a particular dataset."""
         np.random.shuffle(trainset)
         for rbm in self:
-            trainer = CDTrainer(rbm, config = config)
-            trainer.train_manually = train_manually
-            for curr_error in trainer.run(trainset):
+            self.curr_trainer = CDTrainer(rbm, config = config)
+            for curr_error in self.curr_trainer.run(trainset):
                 yield {'rbm': self.index(rbm), 'err': curr_error}
-            trainset = trainer.next_rbm_data
+            trainset = self.curr_trainer.next_rbm_data
 
     def receptiveField(self, layer, neuron):
         """Return the receptive field of a specific
