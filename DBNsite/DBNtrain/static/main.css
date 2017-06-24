@@ -15,6 +15,8 @@ body {
 	font-family: 'Open Sans', sans-serif;
 }
 
+
+
 form legend {
 	font-weight: bold;
 }
@@ -46,6 +48,12 @@ form fieldset {
 	color: green;
 }
 
+.lay_sz input {
+	max-width: 5em;
+}
+
+
+
 #train_plot, #DBNgraph, #input_image,
 #receptive_fields, #weights_histogram {
 	padding: 1em;
@@ -58,6 +66,8 @@ form fieldset {
 	height: 400px;
 }
 
+
+
 @media screen and (max-height: 620px) {
 	#net_form fieldset p, #net_form fieldset ol, #train_form fieldset p {
 		margin: 0.2em auto;
@@ -67,6 +77,8 @@ form fieldset {
 		height: 300px;
 	}
 }
+
+
 
 #receptive_fields {
 	height: auto;
@@ -80,11 +92,17 @@ form fieldset {
 	margin: 0 1px;
 }
 
+#input_arrow, #receptive_fields, #weights_histogram {
+	display: none;
+}
+
+
+
 @media screen and (min-width: 460px) {
 	#net_form, #train_form {
 		float: left;
 		width: 24%;
-		padding: 1em;
+		padding: 0.8em;
 	}
 
 	#DBNgraph {
@@ -130,6 +148,47 @@ form fieldset {
 	}
 }
 
-#input_arrow, #receptive_fields, #weights_histogram {
-	display: none;
+
+
+@media screen and (min-width: 1000px) {
+	#net_form {
+		width: 16%;
+	}
+
+	#train_form {
+		width: 15%;
+	}
+
+	#DBNgraph, #input_image_caption {
+		max-width: 33%;
+	}
+
+	#train_plot, #receptive_fields, #weights_histogram {
+		width: 33%;
+	}
+
+	#receptive_fields {
+		position: fixed;
+		top: 0;
+		right: 33%;
+		max-width: 31%;
+		max-height: 55%;
+		padding: 0.5em;
+	}
+
+	.rec_field {
+		height: 80px;
+		width: 70px;
+		float: left;
+		margin: 0 0.4px;
+	}
+
+	#weights_histogram {
+		position: fixed;
+		right: 30%;
+		max-width: 33%;
+		height: 40%;
+		bottom: 0;
+		padding: 0 0.5em;
+	}
 }

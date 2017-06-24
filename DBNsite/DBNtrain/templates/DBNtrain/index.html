@@ -34,7 +34,7 @@
 				<legend>Dataset info</legend>
 
 				<p>
-					<label for="dataset">training dataset:</label><br />
+					<label for="dataset">training set:</label><br />
 					<select name="dataset" id="dataset" onchange="updateVisibleSize();">
 						{% for s in datasets %}
 							<option value="{{s}}">{{s}}</option>
@@ -44,7 +44,7 @@
 			</fieldset>
 
 			<fieldset id="arch_form">
-				<legend>Network architecture</legend>
+				<legend>DBN architecture</legend>
 
 				<p>
 					<label for="num_hid_layers">number of hidden layers:</label><br />
@@ -64,7 +64,7 @@
 				</ol>
 			</fieldset>
 			<p>
-				<a id="save_net" href="saveNet/?job_id=" type="application/octet-stream">Save the net</a> or load a new one: <input id="load_net" type="file" name="load_net" onchange="loadNet();" />
+				<a id="save_net" href="saveNet/?job_id=" type="application/octet-stream" download="network.pkl">Save the net</a> or load a new one: <input id="load_net" type="file" name="load_net" onchange="loadNet();" />
 			</p>
 		</form>
 
