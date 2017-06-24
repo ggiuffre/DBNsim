@@ -70,7 +70,7 @@ function setupChart() {
 	let max = undefined;
 	const epochs = $('#epochs').val();
 	if (epochs != 'inf') {
-		max = epochs
+		max = epochs;
 		maxZoom = undefined;
 	}
 
@@ -441,7 +441,9 @@ function dissect(layer) {
  * @param {Number} rbm  the RBM position in the DBN
  */
 function plotHistogram(rbm) {
+	// give up if the network isn't already on the server
 	if (!job_id) return;
+
 	$.ajax({
 		url: 'getHistogram/',
 		data: {
@@ -510,8 +512,8 @@ function heatmap(container, data, title) {
 		credits: { enabled: false },
 		exporting: { enabled: false },
 		colorAxis: {
-			minColor: '#66F',
-			maxColor: '#F66'
+			minColor: '#66F', // blue
+			maxColor: '#F66'  // red
 		},
 		series: [{
 			name: 'Image plot',
@@ -611,5 +613,5 @@ function retrieveError(autoContinue) {
 
 
 function loadNet() {
-	alert('olé');
+	// ...
 }
