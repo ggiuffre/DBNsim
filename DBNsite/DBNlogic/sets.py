@@ -29,7 +29,7 @@ class DataSet:
         if extension == '.csv':
             np.savetxt(filename, self.data, delimiter = ',')
         elif extension == '.pkl':
-            pickle.dump(self.data, filename)
+            pickle.dump(self.data, filename, protocol = 2)
         elif extension == '.mat':
             savemat(filename, {'data': self.data})
 
@@ -58,7 +58,9 @@ class DataSet:
         data = None
         print('loading data from pickle...')
         with open(path, 'rb') as f:
-            data = np.array(pickle.load(f))
+            data = pickle.load(f)
+            if type(data) != np.ndarray:
+                data = np.array(data)
         return data
 
     @staticmethod
@@ -86,7 +88,7 @@ class DataSet:
     def allSets(path = full()):
         """Return a set with the filenames of all the
         available training datasets (without the extension)."""
-        return set([os.path.splitext(f)[0] for f in os.listdir(path) if (os.path.splitext(f)[1] in ['.pkl', '.csv', '.mat'])])
+        return frozenset([os.path.splitext(f)[0] for f in os.listdir(path) if (os.path.splitext(f)[1] in ['.pkl', '.csv', '.mat'])])
 
 
 
@@ -102,7 +104,7 @@ class MNIST(DataSet):
         else:
             self.data = DataSet.fromCSV(csv_file)[:, 1:] / 255.0
             with open(pkl_file, 'wb') as f:
-                pickle.dump(self.data, f)
+                pickle.dump(self.data, f, protocol = 2)
 
 
 
@@ -118,7 +120,7 @@ class SmallerMNIST(MNIST):
             mnist = MNIST()
             self.data = mnist.data.reshape(60000, 28, 28)
             print('downsampling data...')
-            self.data = np.array([image[::4, ::4] for image in self.data])
+            self.data = self.data[:, ::4, ::4]
             self.data = self.data.reshape(60000, 49)
             with open(pkl_file, 'wb') as f:
-                pickle.dump(self.data, open(pkl_file, 'wb'))
+                pickle.dump(self.data, f, protocol = 2)

@@ -21,9 +21,10 @@ from DBNlogic.util import Configuration, heatmap
 training_jobs = {}
 
 # available datasets on the server:
-ordered_datasets = sorted(DataSet.allSets(), key = str.lower)
+datasets_cache = {}
+datasets_name = sorted(DataSet.allSets(), key = str.lower)
 datasets_info = {}
-for d in ordered_datasets:
+for d in datasets_name:
     try:
         datasets_info[d] = DataSet.fromWhatever(d).shape[1]
     except (UnpicklingError, IndexError):
@@ -123,7 +124,10 @@ def getError(request):
 def getInput(request):
     """Return a specific input image of a specific dataset."""
     dataset_name = request.GET['dataset']
-    dataset = DataSet.fromWhatever(dataset_name)
+    if dataset_name not in datasets_cache:
+        datasets_cache[dataset_name] = DataSet.fromWhatever(dataset_name)
+        print('cached', dataset_name, 'dataset')
+    dataset = datasets_cache[dataset_name]
     index = int(request.GET['index'])
     if index < 0:
         index = random.randint(0, len(dataset) - 1)
