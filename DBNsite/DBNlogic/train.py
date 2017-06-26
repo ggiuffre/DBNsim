@@ -37,7 +37,7 @@ class CDTrainer:
         w_decay    = self.config.w_decay
 
         gpu.board_id_to_use = 0
-        gpu.max_memory_usage = 480 * 1000 * 1000 # not sure...
+        gpu.max_memory_usage = 900 * 1000 * 1000 # almost 1GB
 
         net.W = gpu.garray(net.W) # move net.W to the GPU RAM
         net.a = gpu.garray(net.a) # move net.a to the GPU RAM
