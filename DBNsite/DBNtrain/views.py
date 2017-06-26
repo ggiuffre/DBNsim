@@ -21,9 +21,9 @@ from DBNlogic.util import Configuration, heatmap
 training_jobs = {}
 
 # available datasets on the server:
-datasets_cache = {}
-datasets_name = sorted(DataSet.allSets(), key = str.lower)
-datasets_info = {}
+datasets_cache = {} # actual datasets, for caching input examples
+datasets_info = {}  # shapes
+datasets_name = sorted(DataSet.allSets(), key = lambda s: s.lower())
 for d in datasets_name:
     try:
         datasets_info[d] = DataSet.fromWhatever(d).shape[1]
