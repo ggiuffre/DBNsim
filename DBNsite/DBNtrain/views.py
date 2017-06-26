@@ -8,7 +8,6 @@ import json
 import string
 import random
 import pickle
-from pickle import UnpicklingError
 from time import time
 from sys import maxsize
 from DBNlogic.nets import DBN, RBM
@@ -20,14 +19,16 @@ from DBNlogic.util import Configuration, heatmap
 # pending training jobs on the server:
 training_jobs = {}
 
-# available datasets on the server:
-datasets_cache = {} # actual datasets, for caching input examples
-datasets_info = {}  # shapes
+# actual datasets, for caching input examples:
+datasets_cache = {}
+
+# datasets available on the server:
+datasets_info = {}  # datasets shapes
 datasets_name = sorted(DataSet.allSets(), key = lambda s: s.lower())
 for d in datasets_name:
     try:
         datasets_info[d] = DataSet.fromWhatever(d).shape[1]
-    except (UnpicklingError, IndexError):
+    except (pickle.UnpicklingError, IndexError):
         pass
 
 

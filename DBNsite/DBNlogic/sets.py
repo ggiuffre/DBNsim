@@ -1,7 +1,9 @@
+from __future__ import print_function
+
+import os
 import numpy as np
 import pickle
 from scipy.io import savemat, loadmat
-import os
 
 
 
