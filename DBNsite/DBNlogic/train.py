@@ -1,5 +1,6 @@
 import numpy as np
 import gnumpy as gpu
+from time import time # debugging
 
 from .util import Configuration
 
@@ -58,11 +59,21 @@ class CDTrainer:
                 data = trainset[start : start + batch_sz].T
 
                 # --- positive phase:
+                x = time()
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
+                print '> 1:', time() - x
+                x = time()
                 hid_states = pos_hid_probs > pos_hid_probs.rand()
+                print '> 2:', time() - x
+                x = time()
                 pos_corr = gpu.dot(pos_hid_probs, data.T) / batch_sz # vis-hid correlations (+)
+                print '> 3:', time() - x
+                x = time()
                 pos_vis_act = data.sum(axis = 1).reshape(-1, 1) / batch_sz
+                print '> 4:', time() - x
+                x = time()
                 pos_hid_act = pos_hid_probs.sum(axis = 1).reshape(-1, 1) / batch_sz
+                print '> 5:', time() - x
 
                 # --- build the training set for the next RBM:
                 if epoch == max_epochs:
