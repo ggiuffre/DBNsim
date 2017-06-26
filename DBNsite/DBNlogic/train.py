@@ -58,28 +58,18 @@ class CDTrainer:
                 start = batch_n * batch_sz
                 data = trainset[start : start + batch_sz].T
 
-                # --- positive phase:
-                x = time()
+                # --> positive phase:
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
-                print '> 1:', time() - x
-                x = time()
                 hid_states = pos_hid_probs > pos_hid_probs.rand()
-                print '> 2:', time() - x
-                x = time()
                 pos_corr = gpu.dot(pos_hid_probs, data.T) / batch_sz # vis-hid correlations (+)
-                print '> 3:', time() - x
-                x = time()
                 pos_vis_act = data.sum(axis = 1).reshape(-1, 1) / batch_sz
-                print '> 4:', time() - x
-                x = time()
                 pos_hid_act = pos_hid_probs.sum(axis = 1).reshape(-1, 1) / batch_sz
-                print '> 5:', time() - x
 
-                # --- build the training set for the next RBM:
+                # --> build the training set for the next RBM:
                 if epoch == max_epochs:
                     self.next_rbm_data[start : start + batch_sz] = pos_hid_probs.T
 
-                # --- negative phase:
+                # --> negative phase:
                 vis_probs = (gpu.dot(net.W.T, hid_states) + net.a.tile(batch_sz)).logistic()
                 reconstr = vis_probs > vis_probs.rand()
                 neg_hid_probs = (gpu.dot(net.W, reconstr) + net.b.tile(batch_sz)).logistic()
@@ -87,7 +77,7 @@ class CDTrainer:
                 neg_vis_act = reconstr.sum(axis = 1).reshape(-1, 1) / batch_sz
                 neg_hid_act = neg_hid_probs.sum(axis = 1).reshape(-1, 1) / batch_sz
 
-                # --- updates:
+                # --> updates:
                 W_update = momentum * W_update + learn_rate * (pos_corr - neg_corr) - (w_decay * net.W)
                 a_update = (momentum * a_update) + learn_rate * (pos_vis_act - neg_vis_act)
                 b_update = (momentum * b_update) + learn_rate * (pos_hid_act - neg_hid_act)
@@ -97,7 +87,7 @@ class CDTrainer:
                 mean_err = gpu.sqrt(((data - reconstr) ** 2).mean())
                 errors = np.append(errors, mean_err)
 
-            # --- reconstruction error update:
+            # --> reconstruction error update:
             mean_squared_err = errors.mean()
 
             epoch += 1
