@@ -1,6 +1,5 @@
 import numpy as np
 import gnumpy as gpu
-from time import time # debugging
 
 from .util import Configuration
 

@@ -70,11 +70,10 @@ def train(request):
     }
 
     random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
-    train_manually = (request.POST['train_manually'] == 'yes')
     training_jobs[random_id] = {
         'birthday': time(),
         'network': net,
-        'generator': net.learn(trainset, Configuration(**config), train_manually)
+        'generator': net.learn(trainset, Configuration(**config))
     }
 
     # delete the old client job that is being replaced (if any):

@@ -42,7 +42,7 @@ class DBN(list):
         self.observe(data)
         return self.generate()
 
-    def learn(self, trainset, config = Configuration(), train_manually = False):
+    def learn(self, trainset, config = Configuration()):
         """Learn from a particular dataset."""
         np.random.shuffle(trainset)
         for rbm in self:
@@ -64,7 +64,7 @@ class DBN(list):
         """Save the network weights to a Pickle file."""
         net_file = full(self.name + '.pkl')
         with open(net_file, 'wb') as f:
-            pickle.dump(self[:], f)
+            pickle.dump(self[:], f, protocol = 2)
 
     @staticmethod
     def load(name):
