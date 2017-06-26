@@ -62,8 +62,8 @@ class CDTrainer:
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
                 hid_states = pos_hid_probs > pos_hid_probs.rand()
                 pos_corr = gpu.dot(pos_hid_probs, data.T) / batch_sz # vis-hid correlations (+)
-                pos_vis_act = data.sum(axis = 1).reshape(-1, 1) / batch_sz
-                pos_hid_act = pos_hid_probs.sum(axis = 1).reshape(-1, 1) / batch_sz
+                pos_vis_act = data.sum(axis = 1)
+                pos_hid_act = pos_hid_probs.sum(axis = 1)
 
                 # --> build the training set for the next RBM:
                 if epoch == max_epochs:
@@ -74,13 +74,13 @@ class CDTrainer:
                 reconstr = vis_probs > vis_probs.rand()
                 neg_hid_probs = (gpu.dot(net.W, reconstr) + net.b.tile(batch_sz)).logistic()
                 neg_corr = gpu.dot(neg_hid_probs, reconstr.T) / batch_sz # vis-hid correlations (-)
-                neg_vis_act = reconstr.sum(axis = 1).reshape(-1, 1) / batch_sz
-                neg_hid_act = neg_hid_probs.sum(axis = 1).reshape(-1, 1) / batch_sz
+                neg_vis_act = reconstr.sum(axis = 1)
+                neg_hid_act = neg_hid_probs.sum(axis = 1)
 
                 # --> updates:
                 W_update = momentum * W_update + learn_rate * (pos_corr - neg_corr) - (w_decay * net.W)
-                a_update = (momentum * a_update) + learn_rate * (pos_vis_act - neg_vis_act)
-                b_update = (momentum * b_update) + learn_rate * (pos_hid_act - neg_hid_act)
+                a_update = (momentum * a_update) + learn_rate * (pos_vis_act - neg_vis_act).reshape(-1, 1) / batch_sz
+                b_update = (momentum * b_update) + learn_rate * (pos_hid_act - neg_hid_act).reshape(-1, 1) / batch_sz
                 net.W += W_update
                 net.a += a_update
                 net.b += b_update
