@@ -66,13 +66,10 @@ $(function() {
  * To be called _after_ the page has loaded!
  */
 function setupChart() {
-	let maxZoom = 10;
-	let max = undefined;
+	let minRange = undefined;
 	const epochs = $('#epochs').val();
-	if (epochs != 'inf') {
-		max = epochs;
-		maxZoom = undefined;
-	}
+	if (epochs != 'inf')
+		minRange = +epochs + 1;
 
 	chart = Highcharts.chart({
 		chart: {
@@ -89,8 +86,8 @@ function setupChart() {
 			enabled: false
 		},
 		xAxis: {
-			max: max,
-			maxZoom: maxZoom,
+			min: 1,
+			minRange: minRange,
 			title: {
 				text: 'Epoch number'
 			},
@@ -98,11 +95,8 @@ function setupChart() {
 		},
 		yAxis: {
 			min: 0,
-			max: 1,
-			title: {
-				text: 'Mean unit error',
-				margin: 80
-			}
+			max: 1, // comment out for saving vertical space
+			title: { visible: false, text: null }
 		},
 		series: [{
 			name: 'RBM 1',
@@ -506,7 +500,7 @@ function heatmap(container, data, title) {
 			max: Math.sqrt(data.length) - 1,
 			visible: false
 		},
-		//tooltip: { enabled: false },
+		tooltip: { enabled: false },
 		title: { visible: false, text: null },
 		legend: { enabled: false },
 		credits: { enabled: false },
@@ -600,8 +594,8 @@ function retrieveError(autoContinue) {
 				}
 
 				curr_epoch++;
-				let shift = (chart.series[curr_rbm].data.length > 10);
-				chart.series[curr_rbm].addPoint([curr_epoch, point], true, shift);
+				//let shift = (chart.series[curr_rbm].data.length > 10);
+				chart.series[curr_rbm].addPoint([curr_epoch, point], true);//, shift);
 
 				if (autoContinue)
 					retrieveError(true);

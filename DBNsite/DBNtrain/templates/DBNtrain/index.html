@@ -29,7 +29,7 @@
 		</script>
 
 		<!-- the form for building the network -->
-		<form action="#" id="net_form">
+		<form action="" id="net_form">
 			<fieldset>
 				<legend>Dataset info</legend>
 
@@ -47,7 +47,7 @@
 				<legend>DBN architecture</legend>
 
 				<p>
-					<label for="num_hid_layers">number of hidden layers:</label><br />
+					<label for="num_hid_layers">number of hidden layers: </label>
 					<input type="text" value="1" name="num_hid_layers" id="num_hid_layers" onchange="updateArchitecture(); updateSeries(); updateGraph();" />
 				</p>
 
@@ -64,14 +64,15 @@
 				</ol>
 			</fieldset>
 			<p>
-				<a id="save_net" href="saveNet/?job_id=" type="application/octet-stream" download="network.pkl">Save the net</a> or load a new one: <input id="load_net" type="file" name="load_net" onchange="loadNet();" />
+				<a href="" onclick="loadNet();"><img id="load_net" src="{% static 'upload.png' %}" /></a>
+				<a href="saveNet/?job_id=" type="application/octet-stream" download="network.pkl"><img id="save_net" src="{% static 'download.png' %}" /></a>
 			</p>
 		</form>
 
 		<!-- the form for the training hyper-parameters -->
-		<form action="#" id="train_form">
+		<form action="" id="train_form">
 			<fieldset>
-				<legend>Training parameters</legend>
+				<legend>Hyper-parameters</legend>
 
 				<p>	
 					<label for="epochs">max n. of epochs:</label><br />
