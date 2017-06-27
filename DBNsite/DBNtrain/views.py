@@ -112,6 +112,7 @@ def getError(request):
         curr_rbm = train_info['rbm']
         next_err = round(train_info['err'], 3)
     except StopIteration:
+        net.save()
         del training_jobs[job]['generator']
         stop = True
 
@@ -184,6 +185,7 @@ def saveNet(request):
     response['Content-Disposition'] = 'attachment; filename="network.pkl"'
     return response
 
+@csrf_exempt
 def getArchFromNet(request):
     """Given a pickle file containing a network, return
     the architecture specifications for that network."""
