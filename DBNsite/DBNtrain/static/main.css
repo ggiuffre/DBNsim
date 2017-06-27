@@ -56,11 +56,25 @@ form fieldset {
 	max-width: 4em;
 }
 
+#net_actions {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0.2em 10%;
+	width: 15%;
+}
+
 #save_net, #load_net {
-	height: 3em;
+	height: 2em;
 	width: auto;
 	padding: 0 1em;
 	margin: 0;
+	opacity: 0.5;
+}
+
+#save_net:hover, #load_net:hover {
+	opacity: 1;
 }
 
 #save_net {

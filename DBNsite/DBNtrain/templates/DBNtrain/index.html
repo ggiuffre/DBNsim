@@ -63,10 +63,6 @@
 					</li>
 				</ol>
 			</fieldset>
-			<p>
-				<a href="" onclick="loadNet();"><img id="load_net" src="{% static 'upload.png' %}" /></a>
-				<a href="saveNet/?job_id=" type="application/octet-stream" download="network.pkl"><img id="save_net" src="{% static 'download.png' %}" /></a>
-			</p>
 		</form>
 
 		<!-- the form for the training hyper-parameters -->
@@ -113,6 +109,11 @@
 
 		<!-- the DBN graph -->
 		<div id="DBNgraph"></div>
+
+		<p id="net_actions">
+			<a href="" onclick="loadNet();"><img id="load_net" src="{% static 'upload.png' %}" /></a>
+			<a href="saveNet/?job_id=" type="application/octet-stream" download="network.pkl"><img id="save_net" src="{% static 'download.png' %}" /></a>
+		</p>
 
 		<!-- a random input example (with rectangular shape) -->
 		<p><img id="input_arrow" src="{% static 'up_arrow.png' %}" alt="arrow from image to graph" title="The image is fed to the vis. layer" /></p>

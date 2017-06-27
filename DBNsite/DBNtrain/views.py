@@ -54,12 +54,14 @@ def train(request):
         num_layers = 1
         # return HttpResponse({'error': 'you haven\'t specified [...]'})
 
+    std_dev = 0.01
+    # std_dev = float(request.POST['std_dev'])
     net = DBN(name = trainset_name)
     vis_size = int(request.POST['vis_sz'])
     for layer in range(1, num_layers):
         hid_size = int(request.POST['hid_sz_' + str(layer)])
         print('creating a', vis_size, 'x', hid_size, 'RBM...')
-        net.append(RBM(vis_size, hid_size))
+        net.append(RBM(vis_size, hid_size, std_dev = std_dev))
         vis_size = hid_size # for constructing the next RBM
 
     epochs = request.POST['epochs']
@@ -181,3 +183,11 @@ def saveNet(request):
     pickle.dump(net, response)
     response['Content-Disposition'] = 'attachment; filename="network.pkl"'
     return response
+
+def getArchFromNet(request):
+    """Given a pickle file containing a network, return
+    the architecture specifications for that network."""
+    # ...
+    response = {}
+    json_response = json.dumps(response)
+    return HttpResponse(json_response, content_type = 'application/json')

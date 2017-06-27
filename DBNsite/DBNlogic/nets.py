@@ -80,13 +80,16 @@ class DBN(list):
 class RBM:
     """Restricted Boltzmann Machine (RBM)."""
 
-    def __init__(self, vis_size, hid_size):
-        """Construct a RBM from the two given dimensions."""
-        self.v = np.zeros((vis_size, 1)) # visible units
+    def __init__(self, vis_size, hid_size, std_dev = 0.01):
+        """Construct a RBM from the two given dimensions,
+        initializing the connection weights to a normal
+        distribution with the given standard deviation."""
+        self.std_dev = std_dev # std. deviation of the weights distribution
+        self.v = np.zeros((vis_size, 1)) # visible units activations
         self.a = np.zeros((vis_size, 1)) # visible biases
-        self.h = np.zeros((hid_size, 1)) # hidden units
+        self.h = np.zeros((hid_size, 1)) # hidden units activations
         self.b = np.zeros((hid_size, 1)) # hidden biases
-        self.W = np.random.randn(hid_size, vis_size) * 0.01 # weights
+        self.W = np.random.randn(hid_size, vis_size) * self.std_dev # weights
 
     def observe(self, data):
         """Set the RBM state according to a particular input."""
