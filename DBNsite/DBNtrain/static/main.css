@@ -104,7 +104,7 @@ form fieldset {
 	height: 110px;
 	width: 100px;
 	float: left;
-	margin: 0 1px;
+	margin: 0 0.5px;
 }
 
 #input_arrow, #receptive_fields, #weights_histogram {
@@ -212,10 +212,8 @@ form fieldset {
 	}
 
 	.rec_field {
-		height: 100px;
-		width: 90px;
-		float: left;
 		margin: 0 0.4px;
+		padding: 0;
 	}
 
 	#weights_histogram {
