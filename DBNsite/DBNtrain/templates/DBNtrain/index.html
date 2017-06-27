@@ -70,13 +70,13 @@
 			<fieldset>
 				<legend>Hyper-parameters</legend>
 
-				<p>	
-					<label for="epochs">max n. of epochs:</label><br />
+				<p title="maximum number of training epochs">	
+					<label for="epochs">max. epochs:</label><br />
 					<input type="text" name="epochs" id="epochs" value="{{config.max_epochs}}" />
 				</p>
 
-				<p>	
-					<label for="batch_size">size of a mini-batch:</label><br />
+				<p title="size of each mini-batch">	
+					<label for="batch_size">mini-batch size:</label><br />
 					<input type="text" name="batch_size" id="batch_size" value="{{config.batch_size}}" />
 				</p>
 
@@ -90,8 +90,8 @@
 					<input type="text" name="momentum" id="momentum" value="{{config.momentum}}" />
 				</p>
 
-				<p>	
-					<label for="w_decay">weight decay factor:</label><br />
+				<p title="weight decay factor">	
+					<label for="w_decay">weight decay:</label><br />
 					<input type="text" name="w_decay" id="w_decay" value="{{config.w_decay}}" />
 				</p>
 			</fieldset>

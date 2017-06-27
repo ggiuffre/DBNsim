@@ -117,8 +117,12 @@ class RBM:
     def weightsHistogram(self):
         """Return a histogram of the distribution of
         the weights in the RBM."""
-        hist, bin_edges = np.histogram(self.W, bins = 20)
+        weights = self.W
+        if type(weights) == gpu.garray:
+            weights = weights.as_numpy_array()
+        hist, bin_edges = np.histogram(weights, bins = 20)
         hist = hist.tolist()
+
         response = []
         for i in range(len(hist)):
             response.append([(bin_edges[i] + bin_edges[i+1]) / 2, hist[i]])

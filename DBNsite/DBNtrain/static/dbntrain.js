@@ -1,33 +1,41 @@
 /**
  * The current training epoch number.
+ * Specifically, this is the current training
+ * epoch number of the currently learning RBM
+ * (see `curr_rbm`) inside the current job on
+ * the server (see `job_id`).
  * @type {Number}
  */
 let curr_epoch;
 
 /**
- * The currently training RBM number index.
+ * The index of the currently learning RBM.
  * @type {Number}
  */
 let curr_rbm;
 
 /**
  * A unique identifier for the training job on the server.
+ * Each training job is relative to a DBN.
  * @type {String}
  */
 let job_id;
 
 /**
- * The DBN graph.
+ * A graph representing the DBN architecture.
+ * It is automatically updated when the user changes
+ * the architecture of the DBN (see `updateGraph`).
  * @type {Cytoscape}
  */
 let networkGraph;
 
 /**
- * The chart for plotting the reconstruction
- * error over time, while training the net.
+ * A chart for plotting the reconstruction error
+ * over time, while a DBN is training on the server.
+ * See `setupChart()`.
  * @type {Highcharts.Chart}
  */
-let chart;
+let errorChart;
 
 /**
  * Whether the parameters for a new job
@@ -36,13 +44,21 @@ let chart;
  */
 let newJobSent = false;
 
+/**
+ * ...
+ * @type {String}
+ */
+const edgesColor = '#8AB'; // kind of blue
+const trainingEdgesColor = '#D89'; // red
+
 
 
 
 
 /**
- * Updates the architecture form after the `tab` key is
- * pressed but _before_ its default behaviour is applied.
+ * After having rendered the page, update the
+ * architecture form after the `tab` key is pressed
+ * but _before_ its default behaviour is applied.
  */
 $(function() {
 	$('#net_form').keydown(function(e) {
@@ -51,18 +67,18 @@ $(function() {
 });
 
 /**
- * After having rendered the page, binds the submission of the
+ * After having rendered the page, bind the submission of the
  * hyper-parameters form to the call of `setupTrainForm(true)`.
  */
 $(function() {
 	$('#train_form').submit(function(e) {
-		setupTrainForm(true);
 		e.preventDefault(); // do not submit the form
+		setupTrainForm(true);
 	});
 });
 
 /**
- * Sets up the chart settings.
+ * Sets up the chart for the error plot (`errorChart`).
  * To be called _after_ the page has loaded!
  */
 function setupChart() {
@@ -71,19 +87,28 @@ function setupChart() {
 	if (epochs != 'inf')
 		minRange = +epochs + 1;
 
-	chart = Highcharts.chart({
+	errorChart = Highcharts.chart({
 		chart: {
 			renderTo: 'train_plot',
 			defaultSeriesType: 'spline',
 			animation: {
-				duration: 200
+				duration: 220
 			}
 		},
 		title: {
-			text: 'Reconstruction error over time'
+			text: 'Reconstruction error over time',
+			style: {
+				'fontSize': '1.1em'
+			}
 		},
 		credits: {
 			enabled: false
+		},
+		legend: {
+			align: 'right',
+			verticalAlign: 'top',
+			y: 50,
+			floating: true
 		},
 		xAxis: {
 			min: 1,
@@ -123,10 +148,10 @@ function setupTrainForm(autoContinue) {
 		updateSeries();
 
 		const num_layers = +$('#num_hid_layers').val() + 1;
-		chart.xAxis[0].setExtremes(1, 10);
+		errorChart.xAxis[0].setExtremes(1, 10);
 		for (let i = 1; i < num_layers; i++)
-			networkGraph.$('.rbm' + i).style('line-color', '#ACD');
-		networkGraph.$('.rbm1').style('line-color', '#D89');
+			networkGraph.$('.rbm' + i).style('line-color', edgesColor);
+		networkGraph.$('.rbm1').style('line-color', trainingEdgesColor);
 
 		const net_form_data = $('#net_form').serialize();
 		const train_form_data = $('#train_form').serialize();
@@ -217,12 +242,12 @@ function updateSeries() {
 	const num_rbms = num_layers - 1;
 
 	// remove all the series:
-	for (let i = chart.series.length - 1; i >= 0; i--)
-		chart.series[i].remove();
+	for (let i = errorChart.series.length - 1; i >= 0; i--)
+		errorChart.series[i].remove();
 
 	// add the necessary series:
 	for (let i = 0; i < num_rbms; i++)
-		chart.addSeries({
+		errorChart.addSeries({
 			name: 'RBM ' + (i + 1),
 			data: []
 		});
@@ -343,9 +368,9 @@ function getGraphFrom(elements) {
 			{
 				selector: 'node',
 				style: {
-					'width': 10,
-					'height': 10,
-					'background-color': '#46A'
+					'width': 1,
+					'height': 1,
+					'background-color': '#FFF'
 				}
 			},
 			{
@@ -362,13 +387,13 @@ function getGraphFrom(elements) {
 				selector: 'edge',
 				style: {
 					'width': 'data(thickness)',
-					'line-color': '#ACD'
+					'line-color': edgesColor
 				}
 			},
 			{
 				selector: 'edge:active',
 				style: {
-					'overlay-color': '#ACD',
+					'overlay-color': edgesColor,
 					'overlay-padding': 0
 				}
 			}
@@ -393,7 +418,6 @@ function dissect(layer) {
 			data: {dataset: dataset, index: -1},
 			dataType: 'json',
 			success: function(response) {
-				//$('#input_image').show();
 				$('#input_arrow').show();
 				const title = 'Random input image from the "' + dataset + '" dataset.';
 				heatmap('input_image', response, title);
@@ -404,10 +428,12 @@ function dissect(layer) {
 			}
 		});
 	} else {
+		// give up if the network isn't already on the server:
 		if (!job_id) return;
+
 		$('#receptive_fields').empty();
 		const neurons = $('#hid_sz_' + layer).val();
-		const rec_fields_displayed = Math.min(neurons, 25);
+		const rec_fields_displayed = Math.min(neurons, 24);
 		for (let i = 0; i < rec_fields_displayed; i++) {
 			const rc_id = 'rec_field_' + i;
 			$('#receptive_fields').append('<div id="' + rc_id + '" class="rec_field"></div>');
@@ -435,7 +461,7 @@ function dissect(layer) {
  * @param {Number} rbm  the RBM position in the DBN
  */
 function plotHistogram(rbm) {
-	// give up if the network isn't already on the server
+	// give up if the network isn't already on the server:
 	if (!job_id) return;
 
 	$.ajax({
@@ -452,7 +478,10 @@ function plotHistogram(rbm) {
 					type: 'column'
 				},
 				title: {
-					text: 'Histogram of the weights in RBM ' + (rbm + 1)
+					text: 'Histogram of the weights in RBM ' + (rbm + 1),
+					style: {
+						'fontSize': '1.1em'
+					}
 				},
 				xAxis: {
 					title: {
@@ -513,7 +542,7 @@ function heatmap(container, data, title) {
 			name: 'Image plot',
 			data: data,
 			borderWidth: 0.5,
-			borderColor: '#FFF'
+			borderColor: '#CCC'
 		}]
 	});
 }
@@ -578,7 +607,7 @@ function retrieveError(autoContinue) {
 
 			if (response.stop) {
 				// signal that the training has ended for the current RBM:
-				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#ACD');
+				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', edgesColor);
 				// mark that we are ready for sending a new job:
 				newJobSent = false;
 			} else {
@@ -588,14 +617,13 @@ function retrieveError(autoContinue) {
 					curr_rbm = response.curr_rbm;
 
 					// announce training has ended for the current RBM:
-					networkGraph.$('.rbm' + curr_rbm).style('line-color', '#ACD');
+					networkGraph.$('.rbm' + curr_rbm).style('line-color', edgesColor);
 					// announce training has started for the next RBM:
-					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', '#D89');
+					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', trainingEdgesColor);
 				}
 
 				curr_epoch++;
-				//let shift = (chart.series[curr_rbm].data.length > 10);
-				chart.series[curr_rbm].addPoint([curr_epoch, point], true);//, shift);
+				errorChart.series[curr_rbm].addPoint([curr_epoch, point], true);
 
 				if (autoContinue)
 					retrieveError(true);
