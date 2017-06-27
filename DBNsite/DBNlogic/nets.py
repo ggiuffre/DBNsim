@@ -1,4 +1,5 @@
 import numpy as np
+import gnumpy as gpu
 import pickle
 import os
 
@@ -54,7 +55,11 @@ class DBN(list):
     def receptiveField(self, layer, neuron):
         """Return the receptive field of a specific
         neuron in a specific hidden layer of the DBN."""
-        field = self[layer - 1].W[neuron]
+        weights = self[layer - 1].W
+        if type(weights) == gpu.garray:
+            weights = weights.as_numpy_array()
+
+        field = weights[neuron]
         if layer > 1:
             for rbm in self[layer - 2 : : -1]:
                 field = np.dot(field, rbm.W)

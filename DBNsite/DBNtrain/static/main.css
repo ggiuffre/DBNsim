@@ -65,7 +65,7 @@ form fieldset {
 	width: 15%;
 }
 
-#save_net, #load_net {
+#save_net img, #load_net img {
 	height: 2em;
 	width: auto;
 	padding: 0 1em;
@@ -228,6 +228,7 @@ form fieldset {
 	.rec_field {
 		margin: 0 0.4px;
 		padding: 0;
+		margin: 0;
 	}
 
 	#weights_histogram {

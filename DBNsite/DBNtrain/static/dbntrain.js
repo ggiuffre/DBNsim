@@ -45,7 +45,7 @@ let newJobSent = false;
  * pressed but _before_ its default behaviour is applied.
  */
 $(function() {
-	$('#net_form').keydown(function (e) {
+	$('#net_form').keydown(function(e) {
 		if (e.which == 8) updateArchitecture();
 	});
 });
@@ -55,7 +55,7 @@ $(function() {
  * hyper-parameters form to the call of `setupTrainForm(true)`.
  */
 $(function() {
-	$('#train_form').submit(function (e) {
+	$('#train_form').submit(function(e) {
 		setupTrainForm(true);
 		e.preventDefault(); // do not submit the form
 	});
@@ -506,13 +506,13 @@ function heatmap(container, data, title) {
 		credits: { enabled: false },
 		exporting: { enabled: false },
 		colorAxis: {
-			minColor: '#66F', // blue
-			maxColor: '#F66'  // red
+			minColor: '#FFF', // white
+			maxColor: '#000'  // black
 		},
 		series: [{
 			name: 'Image plot',
 			data: data,
-			borderWidth: 0.8,
+			borderWidth: 0.5,
 			borderColor: '#FFF'
 		}]
 	});
@@ -607,5 +607,35 @@ function retrieveError(autoContinue) {
 
 
 function loadNet() {
-	// ...
+	let formData = new FormData();
+	let file = $('#inputfile').get(0).files[0];
+	formData.append('file', file);
+
+	$.ajax({
+		type: 'POST',
+		url: 'getArchFromNet/',
+		data: formData,
+		success: function(response) {
+			alert(response);
+		}
+	});
 }
+
+$(function() {
+	$('#filesubmit').submit(function(e) {
+		e.preventDefault(); // do not submit the form
+
+		let formData = new FormData();
+		let file = $('#inputfile').get(0).files[0];
+		formData.append('file', file);
+
+		$.ajax({
+			type: 'POST',
+			url: 'getArchFromNet/',
+			data: { prova: file },
+			success: function(response) {
+				alert(response);
+			}
+		});
+	});
+});

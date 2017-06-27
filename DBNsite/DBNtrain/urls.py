@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^getReceptiveField/$', views.getReceptiveField),
     url(r'^getHistogram/$', views.getHistogram),
     url(r'^saveNet/$', views.saveNet),
+    url(r'^getArchFromNet/$', views.getArchFromNet),
 ]

@@ -110,9 +110,15 @@
 		<!-- the DBN graph -->
 		<div id="DBNgraph"></div>
 
+		<form action="" id="filesubmit" enctype="multipart/form-data" style="display:none;">
+			<p>
+				<input id="inputfile" name="inputfile" type="file" onchange="$('#filesubmit').submit();" />
+				<input type="submit" name="" value="" />
+			</p>
+		</form>
 		<p id="net_actions">
-			<a href="" onclick="loadNet();"><img id="load_net" src="{% static 'upload.png' %}" /></a>
-			<a href="saveNet/?job_id=" type="application/octet-stream" download="network.pkl"><img id="save_net" src="{% static 'download.png' %}" /></a>
+			<a id="load_net" href="javascript:$('#inputfile').click();"><img src="{% static 'upload.png' %}" alt="upload a network" /></a>
+			<a id="save_net" href="saveNet/?job_id=" type="application/octet-stream"><img src="{% static 'download.png' %}" alt="download the network" /></a>
 		</p>
 
 		<!-- a random input example (with rectangular shape) -->

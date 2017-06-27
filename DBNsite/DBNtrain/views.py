@@ -180,7 +180,7 @@ def saveNet(request):
     job = request.GET['job_id']
     net = training_jobs[job]['network']
 
-    response = HttpResponse()
+    response = HttpResponse(content_type = 'application/octet-stream')
     pickle.dump(net, response)
     response['Content-Disposition'] = 'attachment; filename="network.pkl"'
     return response
