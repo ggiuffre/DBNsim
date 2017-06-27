@@ -221,7 +221,7 @@ form fieldset {
 
 	#receptive_fields {
 		top: 0;
-		overflow: scroll;
+		overflow: auto;
 		max-height: 55%;
 	}
 
