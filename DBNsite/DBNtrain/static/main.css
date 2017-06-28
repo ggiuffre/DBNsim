@@ -19,7 +19,6 @@ body {
 
 form legend {
 	font-weight: bold;
-	font-size: 84%;
 }
 
 form fieldset {
@@ -31,8 +30,12 @@ form fieldset {
 	margin: 0.4em auto;
 }
 
-#train_form input {
+#train_form input, .lay_sz input {
 	width: 5em;
+}
+
+#num_hid_layers {
+	max-width: 3em;
 }
 
 #train_plot_loading {
@@ -56,14 +59,6 @@ form fieldset {
 	color: green;
 }
 
-.lay_sz input {
-	max-width: 6em;
-}
-
-#num_hid_layers {
-	max-width: 4em;
-}
-
 #net_actions {
 	position: fixed;
 	top: 0;
@@ -73,7 +68,7 @@ form fieldset {
 	width: 15%;
 }
 
-#save_net img, #load_net img {
+#net_actions img {
 	height: 2em;
 	width: auto;
 	padding: 0 1em;

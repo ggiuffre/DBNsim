@@ -144,8 +144,11 @@ function startTraining(autoContinue) {
 	if (!newJobSent)
 		setupNetwork(autoContinue);
 
-	// color the first RBM in red:
-	networkGraph.$('.rbm1').style('line-color', trainingEdgesColor);
+	// color the training RBM in red:
+	networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', trainingEdgesColor);
+
+	// paint the initial receptive fields of the RBM:
+	dissect(curr_rbm + 1);
 
 	// start the training:
 	retrieveError(autoContinue);
@@ -164,7 +167,7 @@ function setupNetwork(autoContinue) {
 
 	// reset counters and chart series:
 	curr_epoch = 0;
-	curr_rbm = -1;
+	curr_rbm = 0;
 	setupChart();
 	updateSeries();
 
@@ -193,9 +196,6 @@ function setupNetwork(autoContinue) {
 			$('#save_net').attr('href', 'saveNet/?job_id=' + job_id);
 		}
 	});
-
-	// set the currently learning RBM to 0 (the 1st RBM):
-	curr_rbm = 0;
 }
 
 
@@ -612,11 +612,20 @@ function baseLog(x, base) {
  */
 function retrieveError(autoContinue) {
 	$('#train_plot_loading').css('opacity', 1);
+	const trainee_opt = $('#trainee_opt');
+
+	// consistency checks:
+	if (trainee_opt.val() == 'all' && !autoContinue)
+		trainee_opt.val(1);
+	if (trainee_opt.val() != 'all' && autoContinue)
+		trainee_opt.val('all');
 
 	let goto_next_rbm = 'no';
-	const trainee_opt = $('#trainee_opt').val();
-	if (trainee_opt - 1 != curr_rbm && trainee_opt != 'all')
+	if (trainee_opt.val() - 1 != curr_rbm && trainee_opt.val() != 'all') {
 		goto_next_rbm = 'yes';
+		networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', edgesColor);
+		networkGraph.$('.rbm' + (curr_rbm + 2)).style('line-color', trainingEdgesColor);
+	}
 	const parameters = { 'job_id': job_id, 'goto_next_rbm': goto_next_rbm };
 
 	$.ajax({
@@ -637,12 +646,13 @@ function retrieveError(autoContinue) {
 				if (response.curr_rbm != curr_rbm) {
 					curr_epoch = 0;
 					curr_rbm = response.curr_rbm;
-
-					// announce training has ended for the current RBM:
 					networkGraph.$('.rbm' + curr_rbm).style('line-color', edgesColor);
-					// announce training has started for the next RBM:
 					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', trainingEdgesColor);
 				}
+
+				// every 5 epochs, update the receptive fields:
+				if (curr_epoch % 5 == 0)
+					dissect(curr_rbm + 1);
 
 				curr_epoch++;
 				errorChart.series[curr_rbm].addPoint([curr_epoch, point], true);
@@ -670,49 +680,6 @@ function loadNet() {
 		}
 	});
 }
-
-$.fn.serializefiles = function () {
-    var obj = $(this);
-    var formData = new FormData();
-    $.each($(obj).find("input[type='file']"), function (i, tag) {
-        $.each($(tag)[0].files, function (i, file)
-        {
-            formData.append(tag.name, file);
-        });
-    });
-    var params = $(obj).serializeArray();
-    $.each(params, function (i, val) {
-        formData.append(val.name, val.value);
-    });
-    return formData;
-};
-
-jQuery.fn.serializeObject = function () {
-    var arrayData, objectData;
-    arrayData = this.serializeArray();
-    objectData = {};
-
-    $.each(arrayData, function () {
-        var value;
-
-        if (this.value != null) {
-            value = this.value;
-        } else {
-            value = '';
-        }
-
-        if (objectData[this.name] != null) {
-            if (!objectData[this.name].push) {
-                objectData[this.name] = [objectData[this.name]];
-            }
-            objectData[this.name].push(value);
-        } else {
-            objectData[this.name] = value;
-        }
-    });
-
-    return objectData;
-};
 
 $(function() {
 	$('#filesubmit').submit(function(e) {
