@@ -31,7 +31,7 @@ class DataSet:
         if extension == '.csv':
             np.savetxt(filename, self.data, delimiter = ',')
         elif extension == '.pkl':
-            pickle.dump(self.data, filename, protocol = 2)
+            pickle.dump(self.data, open(filename, 'wb'), protocol = 2)
         elif extension == '.mat':
             savemat(filename, {'data': self.data})
 
