@@ -3,7 +3,7 @@
 	<head>
 		<title>DBNsim</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta name="description" content="Train and analyse a Deep Belief Network on a dataset, with Contrastive Divergence learning." />
+		<meta name="description" content="Build, train, and analyse a Deep Belief Network. Choose a dataset, and train the network with the Contrastive Divergence learning algorithm." />
 		<meta name="author" content="Giorgio Giuffrè" />
 		<meta name="keywords" content="DBN, Deep, Belief, Network, neural, RBM" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -63,6 +63,7 @@
 					</li>
 				</ol>
 			</fieldset>
+			<p><button type="button" onclick="setupNetwork(false);">Re-initialize</button></p>
 		</form>
 
 		<!-- the form for the training hyper-parameters -->
@@ -112,7 +113,7 @@
 					<option class="trainee" value="all">all RBMs</option>
 					<option class="trainee" value="1">RBM 1</option>
 				</select><br />
-				for <button type="button" onclick="setupTrainForm(false);">1 epoch</button> or <button type="button" onclick="setupTrainForm(true);">all epochs</button>
+				for <button type="button" onclick="startTraining(false);">1 epoch</button> or <button type="button" onclick="startTraining(true);">all epochs</button>
 				&nbsp;<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
 			</p>
 		</form>

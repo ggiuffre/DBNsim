@@ -68,12 +68,12 @@ $(function() {
 
 /**
  * After having rendered the page, bind the submission of the
- * hyper-parameters form to the call of `setupTrainForm(true)`.
+ * hyper-parameters form to the call of `startTraining(true)`.
  */
 $(function() {
 	$('#train_form').submit(function(e) {
 		e.preventDefault(); // do not submit the form
-		setupTrainForm(true);
+		startTraining(true);
 	});
 });
 
@@ -132,48 +132,70 @@ function setupChart() {
 
 /**
  * If not already done, submits the training hyper-parameters to
- * the server; then, trains the network for one epoch.
+ * the server; then, starts to train the network. If `autoContinue`
+ * is true, the trining will continue automatically; else the user
+ * will have to click on the "1 epoch" button repeatedly for
+ * training the network "manually".
  * @param {Boolean} autoContinue  whether to automate the training
  */
-function setupTrainForm(autoContinue) {
-	if (!newJobSent) {
+function startTraining(autoContinue) {
+	// check if the user wants a new DBN or if he just
+	// wants to train the current one for one epoch:
+	if (!newJobSent)
+		setupNetwork(autoContinue);
 
-		if (!autoContinue)
-			$('#epochs').val('inf');
+	// color the first RBM in red:
+	networkGraph.$('.rbm1').style('line-color', trainingEdgesColor);
 
-		// reset counters and chart series:
-		curr_epoch = 0;
-		curr_rbm = -1;
-		setupChart();
-		updateSeries();
-
-		const num_layers = +$('#num_hid_layers').val() + 1;
-		errorChart.xAxis[0].setExtremes(1, 10);
-		for (let i = 1; i < num_layers; i++)
-			networkGraph.$('.rbm' + i).style('line-color', edgesColor);
-		networkGraph.$('.rbm1').style('line-color', trainingEdgesColor);
-
-		const net_form_data = $('#net_form').serialize();
-		const train_form_data = $('#train_form').serialize();
-		let forms_data = net_form_data + '&' + train_form_data;
-		forms_data += '&last_job_id=' + job_id; // delete the last job from the server
-		forms_data += '&train_manually=' + (autoContinue ? 'no' : 'yes');
-
-		$.ajax({
-			type: 'POST',
-			url: 'train/',
-			data: forms_data,
-			async: false,
-			success: function(response) {
-				job_id = response;
-				newJobSent = true;
-				$('#save_net').attr('href', 'saveNet/?job_id=' + job_id);
-			}
-		});
-		curr_rbm = 0;
-	}
-
+	// start the training:
 	retrieveError(autoContinue);
+}
+
+/**
+ * Creates a new DBN on the server, by submitting the
+ * hyper-parameters chosen by the user.
+ * @param {Boolean} autoContinue  whether to automate the training
+ */
+function setupNetwork(autoContinue) {
+	// check if the user wants to train the
+	// DBN indefinitely step by step:
+	if (!autoContinue)
+		$('#epochs').val('inf');
+
+	// reset counters and chart series:
+	curr_epoch = 0;
+	curr_rbm = -1;
+	setupChart();
+	updateSeries();
+
+	// reset the graph colors:
+	const num_layers = +$('#num_hid_layers').val() + 1;
+	errorChart.xAxis[0].setExtremes(1, 10);
+	for (let i = 1; i < num_layers; i++)
+		networkGraph.$('.rbm' + i).style('line-color', edgesColor);
+
+	// gather the hyper-parameters from the forms:
+	const net_form_data = $('#net_form').serialize();
+	const train_form_data = $('#train_form').serialize();
+	let forms_data = net_form_data + '&' + train_form_data;
+	forms_data += '&last_job_id=' + job_id; // delete the last job from the server
+	forms_data += '&train_manually=' + (autoContinue ? 'no' : 'yes');
+
+	// submit the hyper-parameters:
+	$.ajax({
+		type: 'POST',
+		url: 'train/',
+		data: forms_data,
+		async: false,
+		success: function(response) {
+			job_id = response;
+			newJobSent = true;
+			$('#save_net').attr('href', 'saveNet/?job_id=' + job_id);
+		}
+	});
+
+	// set the currently learning RBM to 0 (the 1st RBM):
+	curr_rbm = 0;
 }
 
 
