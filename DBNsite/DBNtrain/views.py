@@ -194,6 +194,8 @@ def getArchFromNet(request):
     print('>>>', request.POST)
     print('>>>', request.POST['inputfile'])
 
+    pass
+
     response = {}
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')

@@ -32,7 +32,7 @@ let networkGraph;
 /**
  * A chart for plotting the reconstruction error
  * over time, while a DBN is training on the server.
- * See `setupChart()`.
+ * See `setupChart`.
  * @type {Highcharts.Chart}
  */
 let errorChart;
@@ -45,7 +45,10 @@ let errorChart;
 let newJobSent = false;
 
 /**
- * ...
+ * Colors for painting the network connections.
+ * `edgesColor` is the default color for the
+ * connections, while `trainingEdgesColor` is
+ * applied when the connections are learning.
  * @type {String}
  */
 const edgesColor = '#8AB'; // kind of blue
@@ -61,8 +64,8 @@ const trainingEdgesColor = '#D89'; // red
  * but _before_ its default behaviour is applied.
  */
 $(function() {
-	$('#net_form').keydown(function(e) {
-		if (e.which == 8) updateArchitecture();
+	$('#net_form').keydown(function(event) {
+		if (event.which == 8) updateArchitecture();
 	});
 });
 
@@ -71,8 +74,8 @@ $(function() {
  * hyper-parameters form to the call of `startTraining(true)`.
  */
 $(function() {
-	$('#train_form').submit(function(e) {
-		e.preventDefault(); // do not submit the form
+	$('#train_form').submit(function(event) {
+		event.preventDefault(); // do not submit the form
 		startTraining(true);
 	});
 });
@@ -120,7 +123,7 @@ function setupChart() {
 		},
 		yAxis: {
 			min: 0,
-			max: 1, // comment out for saving vertical space
+			max: 1,
 			title: { visible: false, text: null }
 		},
 		series: [{
@@ -442,9 +445,9 @@ function dissect(layer) {
 			success: function(response) {
 				$('#input_arrow').show();
 				const title = 'Random input image from the "' + dataset + '" dataset.';
-				heatmap('input_image', response, title);
+				let x = heatmap('input_image', response, title);
 				$('#input_image_caption').text(title);
-				$('#input_image').on('click', function () {
+				$('#input_image').on('click', function() {
 					dissect(0);
 				});
 			}
@@ -666,39 +669,24 @@ function retrieveError(autoContinue) {
 
 
 
-function loadNet() {
-	let formData = new FormData();
-	let file = $('#inputfile').get(0).files[0];
-	formData.append('file', file);
-
-	$.ajax({
-		type: 'POST',
-		url: 'getArchFromNet/',
-		data: formData,
-		success: function(response) {
-			alert(response);
-		}
-	});
-}
-
-$(function() {
-	$('#filesubmit').submit(function(e) {
-		e.preventDefault(); // do not submit the form
+$(function() { // TODO doesn't work!
+	$('#filesubmit').submit(function(event) {
+		event.preventDefault(); // do not submit the form
 
 		// let file = $('#inputfile').prop('files')[0];
 		// alert(JSON.stringify($('#inputfile')));
 		// let formData = new FormData();
 		// formData.append('file', file);
 
-		$.ajax({
-			type: 'POST',
-			url: 'getArchFromNet/',
-			data: JSON.stringify($("#filesubmit").serializeObject()),
-			processData: true,
-			contentType: 'application/json; charset=utf-8',
-			success: function(response) {
-				alert('ok');
-			}
-		});
+		// $.ajax({
+		// 	type: 'POST',
+		// 	url: 'getArchFromNet/',
+		// 	data: JSON.stringify($("#filesubmit").serializeObject()),
+		// 	processData: true,
+		// 	contentType: 'application/json; charset=utf-8',
+		// 	success: function(response) {
+		// 		alert('ok');
+		// 	}
+		// });
 	});
 });

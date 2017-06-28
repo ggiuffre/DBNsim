@@ -7,14 +7,14 @@ class Configuration:
     """Hyper-parameters configuration for training a neural network."""
 
     def __init__(self,
-        max_epochs = 10,     # - - - -
+        max_epochs = 10,     # -  -  -
         threshold  = 0.05,   #
-        batch_size = 1,      # default
-        learn_rate = 0.1,    # hyper-parameters
-        momentum   = 0.5,    # value
+        batch_size = 1,      #
+        learn_rate = 0.1,    # default
+        momentum   = 0.9,    # values
         w_decay    = 0.0002, #
-        sparsity   = 0.0,    #
-        std_dev    = 0.01    # - - - -
+        sparsity   = 0.2,    #
+        std_dev    = 0.01    # -  -  -
     ):
         """Construct a Configuration object from the
         given training hyper-parameters."""
@@ -41,7 +41,7 @@ def activation(A):
 
 
 def heatmap(array):
-    """Return a Highcharts-formatted heatmap from a Python array."""
+    """Return a Highcharts-formatted heatmap from a Python list."""
     dim = int(sqrt(len(array)))
     for row in range(dim):
         for col in range(dim):
