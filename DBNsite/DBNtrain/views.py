@@ -54,8 +54,7 @@ def train(request):
         num_layers = 1
         # return HttpResponse({'error': 'you haven\'t specified [...]'})
 
-    std_dev = 0.01
-    # std_dev = float(request.POST['std_dev'])
+    std_dev = float(request.POST['std_dev'])
     net = DBN(name = trainset_name)
     vis_size = int(request.POST['vis_sz'])
     for layer in range(1, num_layers):
@@ -69,7 +68,9 @@ def train(request):
         'max_epochs' : int(epochs if (epochs != 'inf') else maxsize),
         'batch_size' : int(request.POST['batch_size']),
         'learn_rate' : float(request.POST['learn_rate']),
-        'momentum'   : float(request.POST['momentum'])
+        'momentum'   : float(request.POST['momentum']),
+        'std_dev'    : std_dev,
+        'sparsity'   : float(request.POST['sparsity'])
     }
 
     random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
@@ -189,7 +190,10 @@ def saveNet(request):
 def getArchFromNet(request):
     """Given a pickle file containing a network, return
     the architecture specifications for that network."""
-    # ...
+    print('>>>', request)
+    print('>>>', request.POST)
+    print('>>>', request.POST['inputfile'])
+
     response = {}
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')

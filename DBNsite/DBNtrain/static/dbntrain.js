@@ -649,20 +649,66 @@ function loadNet() {
 	});
 }
 
+$.fn.serializefiles = function () {
+    var obj = $(this);
+    var formData = new FormData();
+    $.each($(obj).find("input[type='file']"), function (i, tag) {
+        $.each($(tag)[0].files, function (i, file)
+        {
+            formData.append(tag.name, file);
+        });
+    });
+    var params = $(obj).serializeArray();
+    $.each(params, function (i, val) {
+        formData.append(val.name, val.value);
+    });
+    return formData;
+};
+
+jQuery.fn.serializeObject = function () {
+    var arrayData, objectData;
+    arrayData = this.serializeArray();
+    objectData = {};
+
+    $.each(arrayData, function () {
+        var value;
+
+        if (this.value != null) {
+            value = this.value;
+        } else {
+            value = '';
+        }
+
+        if (objectData[this.name] != null) {
+            if (!objectData[this.name].push) {
+                objectData[this.name] = [objectData[this.name]];
+            }
+            objectData[this.name].push(value);
+        } else {
+            objectData[this.name] = value;
+        }
+    });
+
+    return objectData;
+};
+
 $(function() {
 	$('#filesubmit').submit(function(e) {
 		e.preventDefault(); // do not submit the form
 
-		let formData = new FormData();
-		let file = $('#inputfile').get(0).files[0];
-		formData.append('file', file);
+		// let file = $('#inputfile').prop('files')[0];
+		// alert(JSON.stringify($('#inputfile')));
+		// let formData = new FormData();
+		// formData.append('file', file);
 
 		$.ajax({
 			type: 'POST',
 			url: 'getArchFromNet/',
-			data: { prova: file },
+			data: JSON.stringify($("#filesubmit").serializeObject()),
+			processData: true,
+			contentType: 'application/json; charset=utf-8',
 			success: function(response) {
-				alert(response);
+				alert('ok');
 			}
 		});
 	});

@@ -71,28 +71,38 @@
 				<legend>Hyper-parameters</legend>
 
 				<p title="maximum number of training epochs">	
-					<label for="epochs">max. epochs:</label><br />
 					<input type="text" name="epochs" id="epochs" value="{{config.max_epochs}}" />
+					<label for="epochs"> max. epochs</label>
 				</p>
 
 				<p title="size of each mini-batch">	
-					<label for="batch_size">mini-batch size:</label><br />
 					<input type="text" name="batch_size" id="batch_size" value="{{config.batch_size}}" />
+					<label for="batch_size"> mini-batch size</label>
 				</p>
 
 				<p>	
-					<label for="learn_rate">learning rate:</label><br />
 					<input type="text" name="learn_rate" id="learn_rate" value="{{config.learn_rate}}" />
+					<label for="learn_rate"> learning rate</label>
 				</p>
 
 				<p>	
-					<label for="momentum">momentum:</label><br />
 					<input type="text" name="momentum" id="momentum" value="{{config.momentum}}" />
+					<label for="momentum"> momentum</label>
 				</p>
 
 				<p title="weight decay factor">	
-					<label for="w_decay">weight decay:</label><br />
 					<input type="text" name="w_decay" id="w_decay" value="{{config.w_decay}}" />
+					<label for="w_decay"> weight decay</label>
+				</p>
+
+				<p>	
+					<input type="text" name="sparsity" id="sparsity" value="{{config.sparsity}}" />
+					<label for="sparsity"> sparsity</label>
+				</p>
+
+				<p title="standard deviation of the weights distribution">	
+					<input type="text" name="std_dev" id="std_dev" value="{{config.std_dev}}" />
+					<label for="std_dev"> std. deviation</label>
 				</p>
 			</fieldset>
 
@@ -103,17 +113,18 @@
 					<option class="trainee" value="1">RBM 1</option>
 				</select><br />
 				for <button type="button" onclick="setupTrainForm(false);">1 epoch</button> or <button type="button" onclick="setupTrainForm(true);">all epochs</button>
-				<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
+				&nbsp;<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
 			</p>
 		</form>
 
 		<!-- the DBN graph -->
 		<div id="DBNgraph"></div>
 
-		<form action="" id="filesubmit" enctype="multipart/form-data" style="display:none;">
+		<!-- <form action="" id="filesubmit" enctype="multipart/form-data" style="display:none;"> -->
+		<form action="" method="POST" id="filesubmit" style="display:none;">
 			<p>
 				<input id="inputfile" name="inputfile" type="file" onchange="$('#filesubmit').submit();" />
-				<input type="submit" name="" value="" />
+				<input type="submit" name="sendfile" value="sendfile" />
 			</p>
 		</form>
 		<p id="net_actions">
