@@ -28,7 +28,7 @@ SECRET_KEY = 'm7*slgwq#tit7*-f&s$09u39-@5!w+a_^*jlgqsbm$o*+c-g&-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '147.162.145.102', '147.162.145.123'] # localhost + the lab computers, for development
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', '*'] # all computers in the local network
 
 
 # Application definition
