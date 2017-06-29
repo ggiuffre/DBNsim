@@ -46,11 +46,19 @@ def test_fromPickle():
 
 def test_fromMatlab():
     """A DataSet object can be constructed from a Matlab file."""
+    SCIPY_AVAILABLE = True
+    try:
+        import scipy
+    except ImportError:
+        SCIPY_AVAILABLE = False
     a = np.random.rand(8, 5)
     DataSet(a).save('test.mat')
     b = DataSet.fromMatlab('test.mat')
-    assert a.shape == b.shape
-    os.remove('test.mat')
+    if SCIPY_AVAILABLE:
+        assert a.shape == b.shape
+        os.remove('test.mat')
+    else:
+        assert len(b) == 0
 
 def test_fromWhatever():
     """A DataSet object can be constructed from a file."""
