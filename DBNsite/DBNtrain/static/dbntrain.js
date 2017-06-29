@@ -623,8 +623,10 @@ function retrieveError(autoContinue) {
 	const trainee_opt = $('#trainee_opt');
 
 	// consistency checks:
-	if (trainee_opt.val() == 'all' && !autoContinue)
+	if (trainee_opt.val() == 'all' && !autoContinue) {
 		trainee_opt.val(1);
+		$('.trainee')[0].disabled = true;
+	}
 	if (trainee_opt.val() != 'all' && autoContinue)
 		trainee_opt.val('all');
 
