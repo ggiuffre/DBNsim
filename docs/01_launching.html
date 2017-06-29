@@ -26,25 +26,36 @@
 	<div id="content">
 		<h1>Installing DBNsim</h1>
 
+		<h2>Requirements</h2>
+		<p>For running DBNsim on you own server you will need:</p>
+		<ul>
+			<li>Some knowledge of the <strong>command line interface</strong> of your machine works;</li>
+			<li>A <strong>C++</strong> compiler</li>
+			<li>An intepreter for <strong>Python 2.7</strong> (not Python 3);</li>
+			<li>the <strong>pip</strong> package manager for Python 2;</li>
+			<li>optionally (for GPU support) the NVIDIA drivers for CUDA.</li>
+		</ul>
+
 		<h2 id="install">Basic installation</h2>
-		<p>For installing DBNsim (both for CPU and GPU usage) follow the following steps:</p>
+		<p>For installing DBNsim (both for CPU and GPU usage) follow these steps:</p>
 		<pre>
 git clone https://github.com/ggiuffre/DBNsim.git
 cd DBNsim
 pip install --user -r requirements.txt
 		</pre>
+		<p>If you don't have Git installed, you can still go to the <a target="_" href="https://github.com/ggiuffre/DBNsim">GitHub repo</a>, click &quot;Clone or Download&quot;, then &quot;Download ZIP&quot;; now extract the archive, and then <code>cd</code> into the extracted directory.</p>
 
 		<h2>Adding GPU support</h2>
-		<p>If you have a CUDA-enabled GPU, you can install CUDAMat:</p>
+		<p>If you have a CUDA-enabled GPU, you can install CUDAMat. For installing it, first exit the <code>DBNsim</code> directory (this is very important; a simple way to exit the directory is to <code>cd</code> into your home directory), then execute the following commands:</p>
 		<pre>
-cd ~
 git clone https://github.com/cudamat/cudamat.git
 cd cudamat
 pip install --user .
 		</pre>
-		<p>If you get errors, make sure you have CUDA installed. If you don't have it and you're using Ubuntu, then you can install it with:</p>
+		<p>As before, if you don't have Git installed you can download a zipped version of CUDAMat from <a target="_" href="https://github.com/cudamat/cudamat">GitHub</a>.</p>
+		<p>If you get errors while installing with <code>pip</code>, make sure you have the CUDA drivers installed, along with the NVIDIA CUDA compiler (nvcc). If you're using Ubuntu, then you can install them with:</p>
 		<pre>sudo apt-get install nvidia-cuda-toolkit</pre>
-		<p>After you have managed to get CUDA working, remember to test CUDAMat; enter a Python interpreter and type:</p>
+		<p>After you manage to install CUDAMat, remember to test it. For doing this, exit the <code>cudamat</code> directory (this is important), enter a Python interpreter and type:</p>
 		<pre>
 import numpy as np
 import cudamat as cm
