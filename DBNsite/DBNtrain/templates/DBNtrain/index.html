@@ -95,12 +95,12 @@
 					<label for="w_decay"> weight decay</label>
 				</p>
 
-				<p>	
-					<input type="text" name="sparsity" id="sparsity" value="{{config.sparsity}}" />
-					<label for="sparsity"> sparsity</label>
+				<p title="target probability for encouraging sparse hidden activities">	
+					<input type="text" name="spars_target" id="spars_target" value="{{config.spars_target}}" />
+					<label for="spars_target"> sparsity target</label>
 				</p>
 
-				<p title="standard deviation of the weights distribution">	
+				<p title="std. deviation of the initial weights distribution">	
 					<input type="text" name="std_dev" id="std_dev" value="{{config.std_dev}}" />
 					<label for="std_dev"> std. dev. </label>
 					<button type="button" onclick="setupNetwork(false);">init</button>

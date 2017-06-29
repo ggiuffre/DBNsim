@@ -65,12 +65,12 @@ def train(request):
 
     epochs = request.POST['epochs']
     config = {
-        'max_epochs' : int(epochs if (epochs != 'inf') else maxsize),
-        'batch_size' : int(request.POST['batch_size']),
-        'learn_rate' : float(request.POST['learn_rate']),
-        'momentum'   : float(request.POST['momentum']),
-        'std_dev'    : std_dev,
-        'sparsity'   : float(request.POST['sparsity'])
+        'max_epochs'   : int(epochs if (epochs != 'inf') else maxsize),
+        'batch_size'   : int(request.POST['batch_size']),
+        'learn_rate'   : float(request.POST['learn_rate']),
+        'momentum'     : float(request.POST['momentum']),
+        'std_dev'      : std_dev,
+        'spars_target' : float(request.POST['spars_target'])
     }
 
     random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))

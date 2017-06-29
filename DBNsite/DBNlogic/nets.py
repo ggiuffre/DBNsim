@@ -2,6 +2,7 @@ import numpy as np
 import gnumpy as gpu
 import pickle
 import os
+from copy import deepcopy
 
 from .train import CDTrainer
 from .util import Configuration, sigmoid, activation
@@ -47,7 +48,10 @@ class DBN(list):
         """Learn from a particular dataset."""
         np.random.shuffle(trainset)
         for rbm in self:
-            self.curr_trainer = CDTrainer(rbm, config = config)
+            rbm_config = deepcopy(config)
+            if self.index(rbm) < len(self) - 1:
+                rbm_config.spars_target = 0
+            self.curr_trainer = CDTrainer(rbm, config = rbm_config)
             for curr_error in self.curr_trainer.run(trainset):
                 yield {'rbm': self.index(rbm), 'err': curr_error}
             trainset = self.curr_trainer.next_rbm_data

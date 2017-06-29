@@ -7,25 +7,25 @@ class Configuration:
     """Hyper-parameters configuration for training a neural network."""
 
     def __init__(self,
-        max_epochs = 10,     # -  -  -
-        threshold  = 0.05,   #
-        batch_size = 1,      #
-        learn_rate = 0.1,    # default
-        momentum   = 0.9,    # values
-        w_decay    = 0.0002, #
-        sparsity   = 0.2,    #
-        std_dev    = 0.01    # -  -  -
+        max_epochs   = 10,     # -  -  -
+        threshold    = 0.05,   #
+        batch_size   = 1,      #
+        learn_rate   = 0.1,    # default
+        momentum     = 0.9,    # values
+        w_decay      = 0.0002, #
+        spars_target = 0.2,    #
+        std_dev      = 0.01    # -  -  -
     ):
         """Construct a Configuration object from the
         given training hyper-parameters."""
-        self.max_epochs = max_epochs # max n. of training epochs
-        self.threshold  = threshold  # target error threshold
-        self.batch_size = batch_size # size of a mini-batch
-        self.learn_rate = learn_rate # learning rate
-        self.momentum   = momentum   # learning momentum
-        self.w_decay    = w_decay    # weight decay factor
-        self.sparsity   = sparsity   # sparsity index
-        self.std_dev    = std_dev    # std. dev. of the weights distribution
+        self.max_epochs   = max_epochs   # max n. of training epochs
+        self.threshold    = threshold    # target error threshold
+        self.batch_size   = batch_size   # size of a mini-batch
+        self.learn_rate   = learn_rate   # learning rate
+        self.momentum     = momentum     # learning momentum
+        self.w_decay      = w_decay      # weight decay factor
+        self.spars_target = spars_target # target sparsity probability
+        self.std_dev      = std_dev      # std. dev. of the weights distribution
 
 
 

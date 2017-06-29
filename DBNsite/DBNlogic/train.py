@@ -29,12 +29,13 @@ class CDTrainer:
     def run(self, trainset):
         """Learn from a particular dataset."""
 
-        net        = self.net
-        max_epochs = self.config.max_epochs
-        batch_sz   = self.config.batch_size
-        learn_rate = self.config.learn_rate
-        momentum   = self.config.momentum
-        w_decay    = self.config.w_decay
+        net          = self.net
+        max_epochs   = self.config.max_epochs
+        batch_sz     = self.config.batch_size
+        learn_rate   = self.config.learn_rate
+        momentum     = self.config.momentum
+        w_decay      = self.config.w_decay
+        spars_target = self.config.spars_target
 
         gpu.board_id_to_use = 0
         gpu.max_memory_usage = 900 * 1000 * 1000 # almost 1GB
@@ -86,6 +87,13 @@ class CDTrainer:
                 net.b += b_update
                 mean_err = gpu.sqrt(((data - reconstr) ** 2).mean())
                 errors = np.append(errors, mean_err)
+
+                # --> encourage sparse hidden activities:
+                if spars_target > 0 and spars_target < 1:
+                    print 'ok'
+                    q = pos_hid_act.reshape(-1, 1) / batch_sz
+                    if q.mean() > spars_target:
+                        b_update -= learn_rate * (q - spars_target)
 
             # --> reconstruction error update:
             mean_squared_err = errors.mean()
