@@ -32,7 +32,7 @@ let networkGraph;
 /**
  * A chart for plotting the reconstruction error
  * over time, while a DBN is training on the server.
- * See `setupChart`.
+ * See `setupErrorChart`.
  * @type {Highcharts.Chart}
  */
 let errorChart;
@@ -84,7 +84,7 @@ $(function() {
  * Sets up the chart for the error plot (`errorChart`).
  * To be called _after_ the page has loaded!
  */
-function setupChart() {
+function setupErrorChart() {
 	let minRange = undefined;
 	const epochs = $('#epochs').val();
 	if (epochs != 'inf')
@@ -151,6 +151,7 @@ function startTraining(autoContinue) {
 	networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', trainingEdgesColor);
 
 	// paint the initial receptive fields of the RBM:
+	plotHistogram(curr_rbm);
 	dissect(curr_rbm + 1);
 
 	// start the training:
@@ -171,7 +172,7 @@ function setupNetwork(autoContinue) {
 	// reset counters and chart series:
 	curr_epoch = 0;
 	curr_rbm = 0;
-	setupChart();
+	setupErrorChart();
 	updateSeries();
 
 	// reset the graph colors:
@@ -654,8 +655,10 @@ function retrieveError(autoContinue) {
 				}
 
 				// every 5 epochs, update the receptive fields:
-				if (curr_epoch % 5 == 0)
+				if (curr_epoch % 5 == 0) {
+					plotHistogram(curr_rbm);
 					dissect(curr_rbm + 1);
+				}
 
 				curr_epoch++;
 				errorChart.series[curr_rbm].addPoint([curr_epoch, point], true);
