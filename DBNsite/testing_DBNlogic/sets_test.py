@@ -31,8 +31,9 @@ def test_save():
     """A DataSet object can be saved to a CSV, Pickle, or Matlab file."""
     a = DataSet(np.random.rand(8, 5))
     a.save('test.mat')
-    assert exists('test.mat')
-    os.remove('test.mat')
+    if SCIPY_AVAILABLE:
+        assert exists('test.mat')
+        os.remove('test.mat')
 
 def test_fromCSV():
     """A DataSet object can be constructed from a CSV file."""
