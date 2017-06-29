@@ -3,7 +3,12 @@ from __future__ import print_function
 import os
 import numpy as np
 import pickle
-from scipy.io import savemat, loadmat
+
+SCIPY_AVAILABLE = True
+try:
+    from scipy.io import savemat, loadmat
+except ImportError:
+    SCIPY_AVAILABLE = False
 
 
 
@@ -33,7 +38,12 @@ class DataSet:
         elif extension == '.pkl':
             pickle.dump(self.data, open(filename, 'wb'), protocol = 2)
         elif extension == '.mat':
-            savemat(filename, {'data': self.data})
+            if SCIPY_AVAILABLE:
+                savemat(filename, {'data': self.data})
+            else:
+                print("""you don't have the scipy package installed.
+                    Install it with `pip install --user scipy` or, 
+                    if you can't, download a precompiled binary""")
 
     @staticmethod
     def fromCSV(path, delimiter = ','):
@@ -69,8 +79,14 @@ class DataSet:
     def fromMatlab(path):
         """Return a Numpy array of training examples from
         a Matlab file containing a variable called 'data'."""
-        print('loading data from Matlab file...')
-        return loadmat(path)['data']
+        if SCIPY_AVAILABLE:
+            print('loading data from Matlab file...')
+            return loadmat(path)['data']
+        else:
+            print("""you don't have the scipy package installed.
+                Install it with `pip install --user scipy` or, 
+                if you can't, download a precompiled binary""")
+            return np.array([])
 
     @classmethod
     def fromWhatever(cls, name):

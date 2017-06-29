@@ -1,6 +1,5 @@
 numpy
 django
-scipy
 pytest
 pytest-cov
 coverage>=4.0,<4.4
