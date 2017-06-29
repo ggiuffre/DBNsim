@@ -6,7 +6,7 @@ import sys
 myPath = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(myPath, '..'))
 
-from DBNlogic.sets import exists, full, DataSet, MNIST, SmallerMNIST
+from DBNlogic.sets import exists, full, DataSet, MNIST, SmallerMNIST, SCIPY_AVAILABLE
 
 def test_existsTrue():
     """The function `exists` returns True if
@@ -47,11 +47,6 @@ def test_fromPickle():
 
 def test_fromMatlab():
     """A DataSet object can be constructed from a Matlab file."""
-    SCIPY_AVAILABLE = True
-    try:
-        import scipy
-    except ImportError:
-        SCIPY_AVAILABLE = False
     a = np.random.rand(8, 5)
     DataSet(a).save('test.mat')
     b = DataSet.fromMatlab('test.mat')
