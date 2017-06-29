@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
@@ -29,7 +30,7 @@
 		</script>
 
 		<!-- the form for building the network -->
-		<form action="" id="net_form">
+		<form action="train/" method="post" id="net_form">
 			<fieldset>
 				<legend>Dataset info</legend>
 
@@ -66,7 +67,7 @@
 		</form>
 
 		<!-- the form for the training hyper-parameters -->
-		<form action="" id="train_form">
+		<form action="train/" method="post" id="train_form">
 			<fieldset>
 				<legend>Hyper-parameters</legend>
 
@@ -121,8 +122,7 @@
 		<!-- the DBN graph -->
 		<div id="DBNgraph"></div>
 
-		<!-- <form action="" id="filesubmit" enctype="multipart/form-data" style="display:none;"> -->
-		<form action="" method="POST" id="filesubmit" style="display:none;">
+		<form action="getArchFromNet/" method="post" id="filesubmit" style="display:none;">
 			<p>
 				<input id="inputfile" name="inputfile" type="file" onchange="$('#filesubmit').submit();" />
 				<input type="submit" name="sendfile" value="sendfile" />

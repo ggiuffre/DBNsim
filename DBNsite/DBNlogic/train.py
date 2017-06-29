@@ -95,7 +95,6 @@ class CDTrainer:
 
                 # --> encourage sparse hidden activities:
                 if spars_target > 0 and spars_target < 1:
-                    print 'ok'
                     q = pos_hid_act.reshape(-1, 1) / batch_sz
                     if q.mean() > spars_target:
                         b_update -= learn_rate * (q - spars_target)

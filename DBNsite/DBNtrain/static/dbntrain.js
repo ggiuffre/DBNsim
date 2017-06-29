@@ -151,8 +151,10 @@ function startTraining(autoContinue) {
 	networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', trainingEdgesColor);
 
 	// paint the initial receptive fields of the RBM:
-	plotHistogram(curr_rbm);
-	dissect(curr_rbm + 1);
+	if (autoContinue) {
+		plotHistogram(curr_rbm);
+		dissect(curr_rbm + 1);
+	}
 
 	// start the training:
 	retrieveError(autoContinue);
@@ -169,11 +171,13 @@ function setupNetwork(autoContinue) {
 	if (!autoContinue)
 		$('#epochs').val('inf');
 
-	// reset counters and chart series:
+	// reset counters, chart series and training options:
 	curr_epoch = 0;
 	curr_rbm = 0;
 	setupErrorChart();
 	updateSeries();
+	for (let i = 0; i < $('.trainee').length; i++)
+		$('.trainee')[i].disabled = false;
 
 	// reset the graph colors:
 	const num_layers = +$('#num_hid_layers').val() + 1;
@@ -454,7 +458,7 @@ function dissect(layer) {
 			}
 		});
 	} else {
-		// give up if the network isn't already on the server:
+		// do nothing if there's no DBN on the server:
 		if (!job_id) return;
 
 		$('#receptive_fields').empty();
@@ -487,7 +491,7 @@ function dissect(layer) {
  * @param {Number} rbm  the RBM position in the DBN
  */
 function plotHistogram(rbm) {
-	// give up if the network isn't already on the server:
+	// do nothing if there's no DBN on the server:
 	if (!job_id) return;
 
 	$.ajax({
@@ -626,12 +630,14 @@ function retrieveError(autoContinue) {
 
 	let goto_next_rbm = 'no';
 	if (trainee_opt.val() - 1 != curr_rbm && trainee_opt.val() != 'all') {
+		for (let i = 0; i < trainee_opt.val(); i++)
+			$('.trainee')[i].disabled = true;
 		goto_next_rbm = 'yes';
 		networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', edgesColor);
 		networkGraph.$('.rbm' + (curr_rbm + 2)).style('line-color', trainingEdgesColor);
 	}
-	const parameters = { 'job_id': job_id, 'goto_next_rbm': goto_next_rbm };
 
+	const parameters = { 'job_id': job_id, 'goto_next_rbm': goto_next_rbm };
 	$.ajax({
 		type: 'POST',
 		url: 'getError/',
@@ -645,6 +651,10 @@ function retrieveError(autoContinue) {
 				networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', edgesColor);
 				// mark that we are ready for sending a new job:
 				newJobSent = false;
+
+				// re-enable all the options:
+				for (let i = 0; i < $('.trainee').length; i++)
+					$('.trainee')[i].disabled = false;
 			} else {
 				const point = response.error;
 				if (response.curr_rbm != curr_rbm) {
