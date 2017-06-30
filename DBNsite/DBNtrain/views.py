@@ -16,6 +16,10 @@ from DBNlogic.util import Configuration, heatmap
 
 
 
+# password:
+def authorized(password):
+    return password == 'user'
+
 # pending training jobs on the server:
 training_jobs = {}
 
@@ -45,6 +49,9 @@ def index(request):
 def train(request):
     """Set up a network to be trained according to
     the parameters in the HTTP request."""
+    if not authorized(request.POST['pass']):
+        HttpResponse('')
+
     trainset_name = request.POST['dataset']
     trainset = DataSet.fromWhatever(trainset_name)
 
@@ -97,11 +104,14 @@ def train(request):
 def getError(request):
     """Run one training iteration for a particular
     network and return the reconstruction error."""
-    body = json.loads(request.body.decode())
-    job = body['job_id']
+    # body = json.loads(request.body.decode())
+    if not authorized(request.POST['pass']):
+        HttpResponse('')
+
+    job = request.POST['job_id']
     train_gen = training_jobs[job]['generator']
     net = training_jobs[job]['network']
-    if body['goto_next_rbm'] == 'yes' and net.curr_trainer != None:
+    if request.POST['goto_next_rbm'] == 'yes' and net.curr_trainer != None:
         net.curr_trainer.handbrake = True
 
     curr_rbm = None
@@ -127,6 +137,9 @@ def getError(request):
 
 def getInput(request):
     """Return a specific input image of a specific dataset."""
+    if not authorized(request.GET['pass']):
+        HttpResponse('')
+
     dataset_name = request.GET['dataset']
     if dataset_name not in datasets_cache:
         datasets_cache[dataset_name] = DataSet.fromWhatever(dataset_name)

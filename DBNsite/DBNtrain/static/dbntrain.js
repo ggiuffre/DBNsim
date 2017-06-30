@@ -54,9 +54,24 @@ let newJobSent = false;
 const edgesColor = '#8AB'; // kind of blue
 const trainingEdgesColor = '#D89'; // red
 
+/**
+ * A password for attempting to use the server.
+ * @type {String}
+ */
+let password;
 
 
 
+
+
+$(function() {
+	$('form:not(#auth)').css('opacity', '0.4');
+	$('#auth').submit(function(event) {
+		event.preventDefault(); // do not submit the form
+		password = $('#password').val();
+		$('#auth').hide();
+	});
+});
 
 /**
  * After having rendered the page, update the
@@ -191,6 +206,7 @@ function setupNetwork(autoContinue) {
 	let forms_data = net_form_data + '&' + train_form_data;
 	forms_data += '&last_job_id=' + job_id; // delete the last job from the server
 	forms_data += '&train_manually=' + (autoContinue ? 'no' : 'yes');
+	forms_data += '&pass=' + password;
 
 	// submit the hyper-parameters:
 	$.ajax({
@@ -445,7 +461,11 @@ function dissect(layer) {
 		const vis_sz = $('#vis_sz').val();
 		$.ajax({
 			url: 'getInput/',
-			data: {dataset: dataset, index: -1},
+			data: {
+				pass: password,
+				dataset: dataset,
+				index: -1
+			},
 			dataType: 'json',
 			success: function(response) {
 				$('#input_arrow').show();
@@ -470,6 +490,7 @@ function dissect(layer) {
 			$.ajax({
 				url: 'getReceptiveField/',
 				data: {
+					pass: password,
 					job_id: job_id,
 					layer: layer,
 					neuron: Math.floor(i * neurons / rec_fields_displayed)
@@ -497,6 +518,7 @@ function plotHistogram(rbm) {
 	$.ajax({
 		url: 'getHistogram/',
 		data: {
+			pass: password,
 			job_id: job_id,
 			rbm: rbm
 		},
@@ -639,11 +661,14 @@ function retrieveError(autoContinue) {
 		networkGraph.$('.rbm' + (curr_rbm + 2)).style('line-color', trainingEdgesColor);
 	}
 
-	const parameters = { 'job_id': job_id, 'goto_next_rbm': goto_next_rbm };
 	$.ajax({
 		type: 'POST',
 		url: 'getError/',
-		data: JSON.stringify(parameters),
+		data: {
+			pass: password,
+			job_id: job_id,
+			goto_next_rbm: goto_next_rbm
+		},
 		dataType: 'json',
 		success: function(response) {
 			$('#train_plot_loading').css('opacity', 0);
