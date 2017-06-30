@@ -49,6 +49,7 @@ def index(request):
 def train(request):
     """Set up a network to be trained according to
     the parameters in the HTTP request."""
+    print(request.POST['pass'])
     if not authorized(request.POST['pass']):
         return HttpResponse(status = 401)
 
@@ -92,9 +93,9 @@ def train(request):
     if last_job in training_jobs:
         del training_jobs[last_job]
 
-    # delete a random pending job older than one hour:
+    # delete a random pending job older than five hours:
     random_old_job = random.choice(list(training_jobs.keys()))
-    if time() - training_jobs[random_old_job]['birthday'] > 3600:
+    if time() - training_jobs[random_old_job]['birthday'] > 18000:
         print('deleting old job n.', random_old_job)
         del training_jobs[random_old_job] # risky...
 

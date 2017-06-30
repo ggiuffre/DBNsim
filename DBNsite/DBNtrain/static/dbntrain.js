@@ -22,6 +22,19 @@ let curr_rbm;
 let job_id;
 
 /**
+ * Whether the parameters for a new job
+ * have been submitted to the server.
+ * @type {Boolean}
+ */
+let newJobSent = false;
+
+/**
+ * A password for attempting to use the server.
+ * @type {String}
+ */
+let password;
+
+/**
  * A graph representing the DBN architecture.
  * It is automatically updated when the user changes
  * the architecture of the DBN (see `updateGraph`).
@@ -38,13 +51,6 @@ let networkGraph;
 let errorChart;
 
 /**
- * Whether the parameters for a new job
- * have been submitted to the server.
- * @type {Boolean}
- */
-let newJobSent = false;
-
-/**
  * Colors for painting the network connections.
  * `edgesColor` is the default color for the
  * connections, while `trainingEdgesColor` is
@@ -54,43 +60,39 @@ let newJobSent = false;
 const edgesColor = '#8AB'; // kind of blue
 const trainingEdgesColor = '#D89'; // red
 
+
+
+
+
 /**
- * A password for attempting to use the server.
- * @type {String}
+ * After having rendered the page, ask for the
+ * password and do some setup.
  */
-let password;
-
-
-
-
-
 $(function() {
+	// ask for the password, store it,
+	// and then present the main interface.
 	$('body > *').css('opacity', '0.3');
 	$('#auth').css('opacity', '1');
 	$('#auth').submit(function(event) {
 		event.preventDefault(); // do not submit the form
 		password = $('#password').val();
-		$('#auth').remove();
+		$('#auth').remove(); // remove the input
 		$('body > *').css('opacity', '1');
 	});
-});
 
-/**
- * After having rendered the page, update the
- * architecture form after the `tab` key is pressed
- * but _before_ its default behaviour is applied.
- */
-$(function() {
+	// set up forms and error chart:
+	setupErrorChart();
+	updateVisibleSize();
+
+	// bind the `tab` key in `#net_form` to update
+	// the architecture _before_ its default
+	// behaviour is applied:
 	$('#net_form').keydown(function(event) {
 		if (event.which == 8) updateArchitecture();
 	});
-});
 
-/**
- * After having rendered the page, bind the submission of the
- * hyper-parameters form to the call of `startTraining(true)`.
- */
-$(function() {
+	// bind the submission of the hyper-parameters form
+	// to the call of `startTraining(true)`.
 	$('#train_form').submit(function(event) {
 		event.preventDefault(); // do not submit the form
 		startTraining(true);
