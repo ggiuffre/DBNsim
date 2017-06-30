@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Building a network - DBNsim</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="FIUP" />
+	<meta name="keywords" content="DBNsim, user, manual, docs, build, DBN" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+	<link rel="prev" href="01_launching.html" />
+	<link rel="next" href="03_training.html" />
+</head>
+
+<body>
+
+	<div id="header">
+		<h1>
+			<a class="prev" title="next" href="01_launching.html">&lt;</a>
+			<a href="index.html">DBNsim</a>
+			<a class="next" title="next" href="03_training.html">&gt;</a>
+		</h1>
+		<h2>train and analyse Deep Belief Networks</h2>
+	</div>
+
+	<div id="content">
+		<h1>Building a network</h1>
+
+		<h2>What do we need for building a DBN</h2>
+		<p>Creating a DBN means specifying two things:</p>
+		<ul>
+			<li>Its <strong>architecture</strong> &mdash; how many layers of neurons the network will have, and how many neurons each of these layers will have.</li>
+			<li>The weights of its <strong>connections</strong> &mdash; the initial values of the weighted connections between neurons.</li>
+		</ul>
+
+		<h2>Architecture</h2>
+		<p>For defining the architecture, look at the form on the upper-left corner. The &quot;DBN architecture&quot; fieldset allows you to specify the number of (hidden) layers in the DBN, and then to specify how many neurons each layer must have. <em>h1</em>, <em>h2</em> etcetera are the hidden layers, with number 1 being the hidden layer of the first RBM and so on.</p>
+		<p>You will notice that you cannot change directly the number of neurons in the visible layer: instead, when you want to change it, you must operate on the &quot;Dataset info&quot; fieldset (above). This is because the number of visible units can be deduced from the length of each example in the training dataset: if a DBN wants to learn from a dataset where each example is 900 pixels (a 30x30 flattened image), then the visible layer must have 900 units.</p>
+		<p>While you build your DBN, a symbolic representation of its architecture is painted automatically on the upper-right corner of the screen. This graph shows the layers of the DBN, with the lowest one being the visible layer.</p>
+
+		<h2>Connections</h2>
+		<p>Now let's specify the initial values of the connections. We initialize the weights of the DBN to a random value picked from a normal distribution; the mean of this distribution is always zero, but you can choose the standard deviation by editing the &quot;std. dev.&quot; field in the &quot;Hyper-parameters&quot; fieldset.</p>
+		<p>For seeing the result, click on the &quot;init&quot; button at the right of the standard deviation field &mdash; a new DBN will be created on the server. Now click on the connections between two layers: a histogram should appear on the bottom-center part of the screen, representing the distribution of the weights that you have just clicked.</p>
+	</div>
+
+</body>
+</html>
