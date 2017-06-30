@@ -29,12 +29,13 @@
 		<h2>Requirements</h2>
 		<p>For running DBNsim on you own server you will need:</p>
 		<ul>
-			<li>Some knowledge of the <strong>command line interface</strong> of your machine works;</li>
+			<li>Some knowledge of the <strong>command line interface</strong> of your machine;</li>
 			<li>A <strong>C++</strong> compiler</li>
 			<li>An intepreter for <strong>Python 2.7</strong> (not Python 3);</li>
 			<li>the <strong>pip</strong> package manager for Python 2;</li>
 			<li>optionally (for GPU support) the NVIDIA drivers for CUDA.</li>
 		</ul>
+		<p>Please note that you have to use Python 2 (preferably 2.7), not Python 3! This is beacause, unfortunately, DBNsim currently depends on two libraries that are only available for Python 2.</p>
 
 		<h2 id="install">Basic installation</h2>
 		<p>For installing DBNsim (both for CPU and GPU usage) follow these steps:</p>
@@ -74,8 +75,13 @@ print(d.asarray())
 		<h2>Launching DBNsim</h2>
 		<p>Finally, launch DBNsim with:</p>
 		<pre>
-cd &lt;path to DBNsim&gt;
+cd path/to/DBNsim
 python DBNsite/manage.py runserver
+		</pre>
+		<p>... this actually launches DBNsim only <em>locally</em>. Instead, if you want other users to access it, type:</p>
+		<pre>
+cd path/to/DBNsim
+python DBNsite/manage.py runserver your.public.ip.address:8000
 		</pre>
 		<p>You should see something like:</p>
 		<pre>
@@ -88,12 +94,21 @@ loading data from pickle...
 System check identified no issues (0 silenced).
 June 22, 2017 - 16:02:15
 Django version 1.11.2, using settings 'DBNsite.settings'
-Starting development server at http://127.0.0.1:8000/
+Starting development server at http://your.public.ip.address:8000/
 Quit the server with CONTROL-C.
 
 		</pre>
-		<p>This means the server is up and running. Now you can find the user interface at <code>http://127.0.0.1:8000/DBNtrain/</code> (don't forget the trailing &quot;DBNtrain/&quot; in the address).</p>
+		<p>This means the server is up and running. Now you should find the user interface at <code>http://127.0.0.1:8000/DBNtrain/</code> if you're running the app locally. Or, if you're publishing it to a network, you should find it at <code>http://your.public.ip.address:8000/DBNtrain/</code>. Don't forget the trailing &quot;DBNtrain/&quot; in the address, else you will get a 404 error!</p>
 		<p>When you want to shut down the server, return to the command line interface and press CONTROL-C.</p>
+
+		<h2>Changing the default configuration</h2>
+		<p>As the server administrator, you have more power than normal users. It is possible to configure DBNsim under the following aspects:</p>
+		<ul>
+			<li>you can set a password that the users have to know for using the app;</li>
+			<li>you can edit the available training datasets, removing them and/or adding new ones;</li>
+			<li>you can change the default values of the hyper-parameters (e.g. you can set a default value of 0.1 for the learning rate, if the user doesn't change it on the form).</li>
+		</ul>
+		<p>For more about this, please read <a href="TODO">here</a>.</p>
 	</div>
 
 </body>

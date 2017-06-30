@@ -1,9 +1,12 @@
+// ------------------
+// ------  VARIABLES:
+// ------------------
+
 /**
  * The current training epoch number.
- * Specifically, this is the current training
- * epoch number of the currently learning RBM
- * (see `curr_rbm`) inside the current job on
- * the server (see `job_id`).
+ * Specifically, this is the current training epoch
+ * number of the currently learning RBM (see `curr_rbm`)
+ * inside the current job on the server (see `job_id`).
  * @type {Number}
  */
 let curr_epoch;
@@ -64,6 +67,10 @@ const trainingEdgesColor = '#D89'; // red
 
 
 
+// ------------------
+// ------  FUNCTIONS:
+// ------------------
+
 /**
  * After having rendered the page, ask for the
  * password and do some setup.
@@ -76,7 +83,7 @@ $(function() {
 	$('#auth').submit(function(event) {
 		event.preventDefault(); // do not submit the form
 		password = $('#password').val();
-		$('#auth').remove(); // remove the input
+		$('#auth').remove(); // remove the password form
 		$('body > *').css('opacity', '1');
 	});
 
