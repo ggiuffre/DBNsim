@@ -714,6 +714,7 @@ function retrieveError(autoContinue) {
 $(function() { // TODO doesn't work!
 	$('#filesubmit').submit(function(event) {
 		event.preventDefault(); // do not submit the form
+		alert('ok');
 
 		// let file = $('#inputfile').prop('files')[0];
 		// alert(JSON.stringify($('#inputfile')));
