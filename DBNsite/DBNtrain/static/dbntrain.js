@@ -65,11 +65,13 @@ let password;
 
 
 $(function() {
-	$('form:not(#auth)').css('opacity', '0.4');
+	$('body > *').css('opacity', '0.3');
+	$('#auth').css('opacity', '1');
 	$('#auth').submit(function(event) {
 		event.preventDefault(); // do not submit the form
 		password = $('#password').val();
-		$('#auth').hide();
+		$('#auth').remove();
+		$('body > *').css('opacity', '1');
 	});
 });
 
