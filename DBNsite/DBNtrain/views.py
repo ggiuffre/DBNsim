@@ -16,7 +16,7 @@ from DBNlogic.util import Configuration, heatmap
 
 
 
-# password:
+# password checking:
 def authorized(password):
     return password == 'user'
 
@@ -50,7 +50,7 @@ def train(request):
     """Set up a network to be trained according to
     the parameters in the HTTP request."""
     if not authorized(request.POST['pass']):
-        HttpResponse('')
+        return HttpResponse(status = 401)
 
     trainset_name = request.POST['dataset']
     trainset = DataSet.fromWhatever(trainset_name)
@@ -106,7 +106,7 @@ def getError(request):
     network and return the reconstruction error."""
     # body = json.loads(request.body.decode())
     if not authorized(request.POST['pass']):
-        HttpResponse('')
+        return HttpResponse(status = 401)
 
     job = request.POST['job_id']
     train_gen = training_jobs[job]['generator']
@@ -138,7 +138,7 @@ def getError(request):
 def getInput(request):
     """Return a specific input image of a specific dataset."""
     if not authorized(request.GET['pass']):
-        HttpResponse('')
+        return HttpResponse(status = 401)
 
     dataset_name = request.GET['dataset']
     if dataset_name not in datasets_cache:

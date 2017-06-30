@@ -711,25 +711,23 @@ function retrieveError(autoContinue) {
 
 
 
-$(function() { // TODO doesn't work!
+/*$(function() { // TODO doesn't work!
 	$('#filesubmit').submit(function(event) {
 		event.preventDefault(); // do not submit the form
-		alert('ok');
 
-		// let file = $('#inputfile').prop('files')[0];
-		// alert(JSON.stringify($('#inputfile')));
-		// let formData = new FormData();
-		// formData.append('file', file);
+		let formData = new FormData(this);
+		let file = $('#inputfile').prop('files')[0];
+		formData.append('file', file);
 
-		// $.ajax({
-		// 	type: 'POST',
-		// 	url: 'getArchFromNet/',
-		// 	data: JSON.stringify($("#filesubmit").serializeObject()),
-		// 	processData: true,
-		// 	contentType: 'application/json; charset=utf-8',
-		// 	success: function(response) {
-		// 		alert('ok');
-		// 	}
-		// });
+		$.ajax({
+			type: 'POST',
+			url: 'getArchFromNet/',
+			data: formData,
+			// processData: true,
+			contentType: 'application/json; charset=utf-8',
+			success: function(response) {
+				alert('ok');
+			}
+		});
 	});
-});
+});*/
