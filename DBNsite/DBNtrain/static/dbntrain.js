@@ -168,6 +168,11 @@ function setupErrorChart() {
  * @param {Boolean} autoContinue  whether to automate the training
  */
 function startTraining(autoContinue) {
+	// check if the user wants to train the
+	// DBN indefinitely step by step:
+	if (!autoContinue)
+		$('#epochs').val('inf');
+
 	// check if the user wants a new DBN or if he just
 	// wants to train the current one for one epoch:
 	if (!newJobSent)
@@ -192,11 +197,6 @@ function startTraining(autoContinue) {
  * @param {Boolean} autoContinue  whether to automate the training
  */
 function setupNetwork(autoContinue) {
-	// check if the user wants to train the
-	// DBN indefinitely step by step:
-	if (!autoContinue)
-		$('#epochs').val('inf');
-
 	// reset counters, chart series and training options:
 	curr_epoch = 0;
 	curr_rbm = 0;
@@ -481,7 +481,7 @@ function dissect(layer) {
 			success: function(response) {
 				$('#input_arrow').show();
 				const title = 'Random input image from the "' + dataset + '" dataset.';
-				let x = heatmap('input_image', response, title);
+				heatmap('input_image', response, title);
 				$('#input_image_caption').text(title);
 				$('#input_image').on('click', function() {
 					dissect(0);
