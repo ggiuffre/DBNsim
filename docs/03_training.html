@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Training a network - DBNsim</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="FIUP" />
+	<meta name="keywords" content="DBNsim, user, manual, docs, train, DBN" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+	<link rel="prev" href="02_building.html" />
+	<link rel="next" href="04_analysing" />
+</head>
+
+<body>
+
+	<div id="header">
+		<h1>
+			<a class="prev" title="next" href="02_building.html">&lt;</a>
+			<a href="index.html">DBNsim</a>
+			<a class="next" title="next" href="04_analysing">&gt;</a>
+		</h1>
+		<h2>train and analyse Deep Belief Networks</h2>
+	</div>
+
+	<div id="content">
+		<h1>Training a network</h1>
+
+		<h2>Setting the hyper-parameters</h2>
+		<p>When you have defined the architecture and the weights of a DBN, you are ready to train it. You can train it manually stepping one epoch at a time, or automatically if you just want a fully trained network. In both cases, the first thing to do is to set the training <strong>hyper-parameters</strong>.</p>
+		<p>Hyper-parameters are those numbers and coefficients with which you can &quot;customize&quot; the training algorithm. They are called <em>hyper</em> for distinguishing them from the weights of the DBN, that are sometimes called &quot;parameters&quot;. For instance, Contrastive Divergence depends on the following hyper-parameters:</p>
+		<ul>
+			<li><strong>Maximum number of epochs</strong>. One epoch is the time in which a network sees all the examples in a training set; the number of epochs is the number of opportunities for observing each example.</li>
+			<li><strong>Size of a mini-batch</strong>. The training set can be divided in little subsets, known as mini-batches; the DBN will update its weights only after having seen <em>all</em> the examples in a mini-batch; this allows for a faster and more precise learning. The size of a mini-batch <strong>must</strong> divide the number of total examples. Note that a mini-batch size of 1 is equivalent to online training; in contrast, setting the size to the exact number of examples is equivalent to batch training, or &quot;one shot&quot; training.</li>
+			<li><strong>Learning rate</strong>. The learning rate is a coefficient in the range [0, 1] that models the plasticity of the network, i.e. how easy it is to update the weights of the DBN.</li>
+			<li><strong>Momentum</strong>. If a DBN learning from a dataset was a ball rolling down a mountain to reach the valley (the minimum) the momentum would simulate gravity, i.e. the acceleration that speeds the ball proportionally to the steepness of the descent. The momentum ranges from 0 to 1.</li>
+			<li><strong>Weight decay factor</strong>. The weight decay factor (in the range [0, 1]) makes the increase of big weights more difficult than the increase of little weights. This avoids increasing the weights indefinitely.</li>
+			<li><strong>Sparsity target</strong>. The sparsity target (from 0 to 1) is how sparse we would like the network to be; a network is more sparse when it has fewer active units &mdash; when the hidden representations are more localistic.</li>
+			<li><strong>Standard deviation of the weights distribution</strong>. We have already seen this hyper-parameter while building a DBN; this is more related to the DBN than to the training algorithm, but it's nonetheless a hyper-parameter setting the standard deviation of the probability distribution within which the weights are initialized.</li>
+		</ul>
+		<p>At the right of the &quot;std. dev.&quot; field you will find a &quot;init&quot; button. It is <strong>not</strong> necessary to initialize the weights before training the network, because they will be initialized automatically anyway. This button is meant for analysing the network before the training.</p>
+
+		<h2>Launching the training</h2>
+		<p>When you have chosen the hyper-parameters (or if you want to accept the default ones), you can start training the DBN with one of the two buttons after the &quot;Hyper-parameters&quot; fieldset:</p>
+		<ul>
+			<li>&quot;<strong>1 epoch</strong>&quot; trains the network for just one epoch: use this button if you want to train the DBN in a step-by-step fashion.</li>
+			<li>&quot;<strong>all epochs</strong>&quot; trains the network for the number of epochs that you have specified in the &quot;max. epochs&quot; field.</li>
+		</ul>
+		<p>While training the network, you will see that a chart is updated plotting the reconstruction error against the number of epochs.</p>
+	</div>
+
+</body>
+</html>

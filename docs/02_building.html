@@ -37,11 +37,11 @@
 		<h2>Architecture</h2>
 		<p>For defining the architecture, look at the form on the upper-left corner. The &quot;DBN architecture&quot; fieldset allows you to specify the number of (hidden) layers in the DBN, and then to specify how many neurons each layer must have. <em>h1</em>, <em>h2</em> etcetera are the hidden layers, with number 1 being the hidden layer of the first RBM and so on.</p>
 		<p>You will notice that you cannot change directly the number of neurons in the visible layer: instead, when you want to change it, you must operate on the &quot;Dataset info&quot; fieldset (above). This is because the number of visible units can be deduced from the length of each example in the training dataset: if a DBN wants to learn from a dataset where each example is 900 pixels (a 30x30 flattened image), then the visible layer must have 900 units.</p>
-		<p>While you build your DBN, a symbolic representation of its architecture is painted automatically on the upper-right corner of the screen. This graph shows the layers of the DBN, with the lowest one being the visible layer.</p>
+		<p>While you build your DBN, a symbolic representation of its architecture is painted automatically on the upper-right corner of the screen. This is a graph showing the layers of the DBN, with the lowest one being the visible layer.</p>
 
 		<h2>Connections</h2>
 		<p>Now let's specify the initial values of the connections. We initialize the weights of the DBN to a random value picked from a normal distribution; the mean of this distribution is always zero, but you can choose the standard deviation by editing the &quot;std. dev.&quot; field in the &quot;Hyper-parameters&quot; fieldset.</p>
-		<p>For seeing the result, click on the &quot;init&quot; button at the right of the standard deviation field &mdash; a new DBN will be created on the server. Now click on the connections between two layers: a histogram should appear on the bottom-center part of the screen, representing the distribution of the weights that you have just clicked.</p>
+		<p>For seeing the result, click on the &quot;init&quot; button at the right of the standard deviation field &mdash; a new DBN will be created on the server. Now try to click on the connections between two layers: a histogram should appear on the bottom-center part of the screen, representing the distribution of the weights that you have just clicked. For example, if you click between on the connections between the visible layer and the first hidden layer, you will get a histogram of the weights of the first RBM.</p>
 	</div>
 
 </body>

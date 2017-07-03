@@ -95,7 +95,8 @@ $(function() {
 	// the architecture _before_ its default
 	// behaviour is applied:
 	$('#net_form').keydown(function(event) {
-		if (event.which == 8) updateArchitecture();
+		if (event.which == 8)
+			updateArchitecture();
 	});
 
 	// bind the submission of the hyper-parameters form
