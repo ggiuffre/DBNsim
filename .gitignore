@@ -6,7 +6,7 @@
 *.sublime-workspace
 
 # ...
-MNIST.*
+Digits.*
 
 # Astah
 *.asta.lock
