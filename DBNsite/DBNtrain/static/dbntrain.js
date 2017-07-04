@@ -223,7 +223,8 @@ function setupNetwork(autoContinue) {
 
 	// reset the graph colors:
 	const num_layers = +$('#num_hid_layers').val() + 1;
-	errorChart.xAxis[0].setExtremes(1, 10);
+	const num_epochs = $('#epochs').val() == 'inf' ? 10 : $('#epochs').val();
+	errorChart.xAxis[0].setExtremes(1, num_epochs);
 	for (let i = 1; i < num_layers; i++)
 		networkGraph.$('.rbm' + i).style('line-color', edgesColor);
 

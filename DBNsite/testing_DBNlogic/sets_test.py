@@ -37,13 +37,13 @@ def test_save():
 
 def test_fromCSV():
     """A DataSet object can be constructed from a CSV file."""
-    dataset = DataSet.fromCSV(full('left_8.csv'))
-    assert dataset.shape == (14, 8)
+    dataset = DataSet.fromCSV(full('top_left.csv'))
+    assert dataset.shape == (10, 16)
 
 def test_fromPickle():
     """A DataSet object can be constructed from a Pickle file."""
-    dataset = DataSet.fromPickle(full('left_8.pkl'))
-    assert dataset.shape == (14, 8)
+    dataset = DataSet.fromPickle(full('top_left.pkl'))
+    assert dataset.shape == (10, 16)
 
 def test_fromMatlab():
     """A DataSet object can be constructed from a Matlab file."""
@@ -58,8 +58,8 @@ def test_fromMatlab():
 
 def test_fromWhatever():
     """A DataSet object can be constructed from a file."""
-    dataset = DataSet.fromWhatever('left_8')
-    assert dataset.shape == (14, 8)
+    dataset = DataSet.fromWhatever('top_left')
+    assert dataset.shape == (10, 16)
 
 # def test_allSets():
 #     """The available datasets include the MNIST dataset

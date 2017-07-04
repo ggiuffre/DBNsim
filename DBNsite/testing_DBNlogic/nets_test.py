@@ -36,15 +36,15 @@ def test_generationLength():
 
 def test_DBN_learn():
     """A DBN can learn to generate samples from a dataset."""
-    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
-    trainset = DataSet.fromWhatever('left_8')
+    net = DBN([RBM(16, 15), RBM(15, 10)], 'Test')
+    trainset = DataSet.fromWhatever('top_left')
     for train_info in net.learn(trainset):
         pass
 
 def test_DBN_error():
     """The reconstruction error of a DBN is less than 1."""
-    net = DBN([RBM(8, 15), RBM(15, 10)], 'Test')
-    trainset = DataSet.fromWhatever('left_8')
+    net = DBN([RBM(16, 15), RBM(15, 10)], 'Test')
+    trainset = DataSet.fromWhatever('top_left')
     for train_info in net.learn(trainset):
         pass
     mean_err = np.sqrt(((trainset[0] - net.evaluate(trainset[0])) ** 2).mean())
@@ -94,16 +94,16 @@ def test_weightsHistogram():
 
 def test_RBM_learn():
     """A RBM can learn to generate samples from a dataset."""
-    net = RBM(8, 15)
-    trainset = DataSet.fromWhatever('left_8')
+    net = RBM(16, 15)
+    trainset = DataSet.fromWhatever('top_left')
     trainer = CDTrainer(net)
     for err in trainer.run(trainset):
         pass
 
 def test_RBM_error():
     """The reconstruction error of a RBM is less than 1."""
-    net = RBM(8, 15)
-    trainset = DataSet.fromWhatever('left_8')
+    net = RBM(16, 15)
+    trainset = DataSet.fromWhatever('top_left')
     trainer = CDTrainer(net)
     for err in trainer.run(trainset):
         pass
