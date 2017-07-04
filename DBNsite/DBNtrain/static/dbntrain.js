@@ -54,6 +54,13 @@ let networkGraph;
 let errorChart;
 
 /**
+ * The number of DBNs whose reconstruction error is
+ * currently plotted on the error chart (see `errorChart`).
+ * @type {Number}
+ */
+let plottedDBNs = 0;
+
+/**
  * Colors for painting the network connections.
  * `edgesColor` is the default color for the
  * connections, while `trainingEdgesColor` is
@@ -154,10 +161,12 @@ function setupErrorChart() {
 			title: { visible: false, text: null }
 		},
 		series: [{
-			name: 'RBM 1',
+			name: 'placeholder',
 			data: []
 		}]
 	});
+
+	cleanErrorPlot();
 }
 
 /**
@@ -176,8 +185,16 @@ function startTraining(autoContinue) {
 
 	// check if the user wants a new DBN or if he just
 	// wants to train the current one for one epoch:
-	if (!newJobSent)
+	if (!newJobSent) {
 		setupNetwork(autoContinue);
+
+		// add a series to the error chart:
+		plottedDBNs++;
+		errorChart.addSeries({
+			name: 'RBM ' + plottedDBNs + '.' + (curr_rbm + 1),
+			data: []
+		});
+	}
 
 	// color the training RBM in red:
 	networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', trainingEdgesColor);
@@ -198,11 +215,9 @@ function startTraining(autoContinue) {
  * @param {Boolean} autoContinue  whether to automate the training
  */
 function setupNetwork(autoContinue) {
-	// reset counters, chart series and training options:
+	// reset counters and training options:
 	curr_epoch = 0;
 	curr_rbm = 0;
-	setupErrorChart();
-	updateSeries();
 	for (let i = 0; i < $('.trainee').length; i++)
 		$('.trainee')[i].disabled = false;
 
@@ -292,23 +307,12 @@ function updateArchitecture() {
 }
 
 /**
- * Updates the time series for the error plot, matching
- * the number of RBMs defined in the architecture form.
+ * Cleans the error plot.
  */
-function updateSeries() {
-	const num_layers = +$('#num_hid_layers').val() + 1;
-	const num_rbms = num_layers - 1;
-
-	// remove all the series:
+function cleanErrorPlot() {
+	plottedDBNs = 0;
 	for (let i = errorChart.series.length - 1; i >= 0; i--)
 		errorChart.series[i].remove();
-
-	// add the necessary series:
-	for (let i = 0; i < num_rbms; i++)
-		errorChart.addSeries({
-			name: 'RBM ' + (i + 1),
-			data: []
-		});
 }
 
 /**
@@ -701,6 +705,12 @@ function retrieveError(autoContinue) {
 					curr_rbm = response.curr_rbm;
 					networkGraph.$('.rbm' + curr_rbm).style('line-color', edgesColor);
 					networkGraph.$('.rbm' + (curr_rbm + 1)).style('line-color', trainingEdgesColor);
+
+					// add a series to the error chart:
+					errorChart.addSeries({
+						name: 'RBM ' + plottedDBNs + '.' + (curr_rbm + 1),
+						data: []
+					});
 				}
 
 				// every 5 epochs, update the receptive fields:
@@ -710,7 +720,8 @@ function retrieveError(autoContinue) {
 				}
 
 				curr_epoch++;
-				errorChart.series[curr_rbm].addPoint([curr_epoch, point], true);
+				errorChart.series[errorChart.series.length - 1].addPoint([curr_epoch, point], true);
+				//errorChart.series[curr_rbm].addPoint([curr_epoch, point], true);
 
 				if (autoContinue)
 					retrieveError(true);
@@ -718,26 +729,3 @@ function retrieveError(autoContinue) {
 		}
 	});
 }
-
-
-
-/*$(function() { // TODO doesn't work!
-	$('#filesubmit').submit(function(event) {
-		event.preventDefault(); // do not submit the form
-
-		let formData = new FormData(this);
-		let file = $('#inputfile').prop('files')[0];
-		formData.append('file', file);
-
-		$.ajax({
-			type: 'POST',
-			url: 'getArchFromNet/',
-			data: formData,
-			// processData: true,
-			contentType: 'application/json; charset=utf-8',
-			success: function(response) {
-				alert('ok');
-			}
-		});
-	});
-});*/

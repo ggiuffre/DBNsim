@@ -179,6 +179,12 @@ form fieldset {
 		float: left;
 		clear: left;
 	}
+
+	#clean_plot {
+		position: fixed;
+		bottom: 42%;
+		left: 1em;
+	}
 }
 
 

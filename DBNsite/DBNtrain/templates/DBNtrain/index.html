@@ -48,7 +48,7 @@
 
 				<p>
 					<label for="num_hid_layers">number of hidden layers: </label>
-					<input type="text" value="1" name="num_hid_layers" id="num_hid_layers" onchange="updateArchitecture(); updateSeries(); updateGraph();" />
+					<input type="text" value="1" name="num_hid_layers" id="num_hid_layers" onchange="updateArchitecture(); updateGraph();" />
 				</p>
 
 				<p>n. of units per layer:</p>
@@ -103,7 +103,7 @@
 				<p title="std. deviation of the initial weights distribution">	
 					<input type="text" name="std_dev" id="std_dev" value="{{config.std_dev}}" />
 					<label for="std_dev"> std. dev. </label>
-					<button type="button" onclick="setupNetwork(false);">init</button>
+					<button type="button" onclick="setupNetwork(false); newJobSent = false;">init</button>
 				</p>
 			</fieldset>
 
@@ -139,6 +139,7 @@
 
 		<!-- the training error plot -->
 		<div id="train_plot"></div>
+		<button id="clean_plot" onclick="cleanErrorPlot();">Clean plot</button>
 
 		<!-- some receptive fields of one layer -->
 		<div id="receptive_fields"></div>
