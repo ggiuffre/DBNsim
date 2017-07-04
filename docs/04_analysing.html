@@ -10,15 +10,16 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<link rel="stylesheet" type="text/css" href="main.css" />
 	<link rel="prev" href="03_training.html" />
+	<link rel="next" href="05_admin.html" />
 </head>
 
 <body>
 
 	<div id="header">
 		<h1>
-			<a class="prev" title="next" href="03_training.html">&lt;</a>
+			<a class="prev" title="prev" href="03_training.html">&lt;</a>
 			<a href="index.html">DBNsim</a>
-			<span class="prev">&gt;</span>
+			<a class="next" title="next" href="05_admin.html">&lt;</a>
 		</h1>
 		<h2>train and analyse Deep Belief Networks</h2>
 	</div>
@@ -42,10 +43,10 @@
 		<p>Note that, for consistency, the neurons picked by DBNsim are the same <strong>every time you click on the same DBN</strong>. This allows you to see the changes in one receptive field while the network is learning; for this purpose, the receptive fields are updated automatically during the training, every five epochs.</p>
 
 		<h2>Viewing a histogram of the weights in a RBM</h2>
-		<p>For analysing the weights of a RBM in your DBN, you can view a histogram of the weights by clicking between two layers on the graph in the upper-right corner.</p>
+		<p>To analyse the weights of a RBM in your DBN, you can view a histogram of the weights by clicking between two layers on the graph in the upper-right corner. Clicking between layer <var>n</var> and layer <var>n+1</var> will display a histogram of the weights in the <var>n+1</var>th RBM.</p>
 
 		<h2>Viewing a training example</h2>
-		<p></p>
+		<p>Finally, you can visualize a random training example by clicking on the visible layer of the graph in the upper-right corner. Every time you click on the visible layer, a random training example will be picked from the current dataset and displayed under the visible layer.</p>
 	</div>
 
 </body>

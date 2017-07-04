@@ -47,7 +47,7 @@ pip install --user -r requirements.txt
 		<p>If you don't have Git installed, you can still go to the <a target="_" href="https://github.com/ggiuffre/DBNsim">GitHub repo</a>, click &quot;Clone or Download&quot;, then &quot;Download ZIP&quot;; now extract the archive, and then <code>cd</code> into the extracted directory.</p>
 
 		<h2>Adding GPU support</h2>
-		<p>If you have a CUDA-enabled GPU, you can install CUDAMat. For installing it, first exit the <code>DBNsim</code> directory (this is very important; a simple way to exit the directory is to <code>cd</code> into your home directory), then execute the following commands:</p>
+		<p>If you have a CUDA-enabled GPU, you can install CUDAMat. To install it, first exit the <code>DBNsim</code> directory (this is very important) &mdash; a simple way to exit the directory is to <code>cd</code> into your home directory; then execute the following commands:</p>
 		<pre>
 git clone https://github.com/cudamat/cudamat.git
 cd cudamat
@@ -56,7 +56,7 @@ pip install --user .
 		<p>As before, if you don't have Git installed you can download a zipped version of CUDAMat from <a target="_" href="https://github.com/cudamat/cudamat">GitHub</a>.</p>
 		<p>If you get errors while installing with <code>pip</code>, make sure you have the CUDA drivers installed, along with the NVIDIA CUDA compiler (nvcc). If you're using Ubuntu, then you can install them with:</p>
 		<pre>sudo apt-get install nvidia-cuda-toolkit</pre>
-		<p>After you manage to install CUDAMat, remember to test it. For doing this, exit the <code>cudamat</code> directory (this is important), enter a Python interpreter and type:</p>
+		<p>After you manage to install CUDAMat, remember to test it. To do this, exit the <code>cudamat</code> directory (this is very important), enter a Python interpreter and type:</p>
 		<pre>
 import numpy as np
 import cudamat as cm
@@ -104,12 +104,12 @@ Quit the server with CONTROL-C.
 		<h2>Changing the default configuration</h2>
 		<p>As the server administrator, you have more power than normal users. It is possible to configure DBNsim under the following aspects:</p>
 		<ul>
-			<li>you can set a password that the users have to know for using the app;</li>
+			<li>you can set a password that the users have to know in order to use the app;</li>
 			<li>you can edit the available training datasets, removing them and/or adding new ones;</li>
 			<li>you can change the default values of the hyper-parameters (e.g. you can set a default value of 0.1 for the learning rate, if the user doesn't change it on the form);</li>
 			<li>you can change some graphical parameters in the user interface.</li>
 		</ul>
-		<p>For more about this, please read <a href="TODO">here</a>.</p>
+		<p>For more about this, please read <a href="05_admin.html">here</a>.</p>
 	</div>
 
 </body>
