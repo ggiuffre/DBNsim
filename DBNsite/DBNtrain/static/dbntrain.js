@@ -721,7 +721,6 @@ function retrieveError(autoContinue) {
 
 				curr_epoch++;
 				errorChart.series[errorChart.series.length - 1].addPoint([curr_epoch, point], true);
-				//errorChart.series[curr_rbm].addPoint([curr_epoch, point], true);
 
 				if (autoContinue)
 					retrieveError(true);
