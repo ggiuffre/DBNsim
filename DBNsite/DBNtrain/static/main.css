@@ -66,22 +66,19 @@ form fieldset {
 	margin: 0;
 	padding: 0.2em 10%;
 	width: 15%;
+	text-align: center;
 }
 
 #net_actions img {
 	height: 2em;
 	width: auto;
-	padding: 0 1em;
+	padding: 0 0.6em;
 	margin: 0;
 	opacity: 0.5;
 }
 
-#save_net:hover, #load_net:hover {
+#net_actions img:hover {
 	opacity: 1;
-}
-
-#save_net {
-	float: right;
 }
 
 
