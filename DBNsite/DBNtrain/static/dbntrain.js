@@ -70,6 +70,13 @@ let plottedDBNs = 0;
 const edgesColor = '#8AB'; // kind of blue
 const trainingEdgesColor = '#D89'; // red
 
+/**
+ * The number of epochs between two automatica updates
+ * of the receptive fields and weights histogram.
+ * @type {Number}
+ */
+const chartsUpdateRate = 5;
+
 
 
 
@@ -714,8 +721,8 @@ function retrieveError(autoContinue) {
 					});
 				}
 
-				// every 5 epochs, update the receptive fields:
-				if (curr_epoch % 5 == 0) {
+				// every `chartsUpdateRate` epochs, update the receptive fields:
+				if (curr_epoch % chartsUpdateRate == 0) {
 					plotHistogram(curr_rbm);
 					dissect(curr_rbm + 1);
 				}

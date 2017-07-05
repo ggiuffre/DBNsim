@@ -17,8 +17,9 @@ from DBNlogic.util import Configuration, heatmap
 
 
 # password checking:
+PASSWORD = 'user'
 def authorized(password):
-    return password == 'user'
+    return password == PASSWORD
 
 # pending training jobs on the server:
 training_jobs = {}

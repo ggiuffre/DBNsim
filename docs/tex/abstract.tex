@@ -1,0 +1,24 @@
+\section{Abstract}
+
+DBNsim is a web application for training and analysing \textbf{Deep Belief Networks} (``DBNs'', for short). A Deep Belief Network (\url{http://www.scholarpedia.org/article/Deep_belief_networks}) is a particular type of artificial neural network; it is a stack of Restricted Boltzmann Machines (``RBMs'', for short) that can be trained with an algorithm known as \textbf{contrastive divergence}. RBMs learn to reconstruct a given input and, if properly analysed, they can reveal latent features in the distribution of the input.
+
+DBNsim offers a simple interface for defining the architecture of a DBN, train it on a remote web server (optionally equipped with a GPU), analyse it, and then download the DBN in various formats for performing further analyses.
+
+
+\subsection{How to run it on your machine}
+
+As said, DBNsim is a web app. That means you can run it on one computer and access it on another. According to your needs, there are several ways in which you can use DBNsim:
+\begin{enumerate}
+	\item If you want to use it locally (i.e. as if it was a normal desktop application on your PC), you just have to launch the app from the command line with Python; then, you will be able to access the user interface on your browser at the local address \texttt{http://127.0.0.1:8000/DBNtrain/}.
+	\item You may want your students to use it in a classroom. For this, you just have to launch the app from the command line and ask your audience to connect their devices to the University network; they will find the user interface at \texttt{http://your.public.ip.address:8000/DBNtrain/}.
+	\item Finally, if you don't have a local intranet like above, you can still publish DBNsim on a remote web server: it will then be available from any computer connected to the internet.
+\end{enumerate}
+
+In all three cases, you can follow the step-by-step guide in the next section.
+
+Launching DBNsim from a computer equipped with a CUDA-enabled GPU\footnote{See \url{https://en.wikipedia.org/wiki/CUDA}} lets you train a DBN directly on the GPU; DBNsim should automatically detect whether or not your computer has a GPU. The main advantage of using it is speed: you will be able to train much larger networks in fewer time.
+
+
+\subsection{How to contribute}
+
+If you would like to improve this project and/or report a bug, please feel free to e-mail Giorgio Giuffrè at \texttt{[first\_name]giuffre23@gmail.com}, replacing \texttt{[first\_name]} with my first name. The source code is freely available on GitHub at \url{https://github.com/ggiuffre/DBNsim}.

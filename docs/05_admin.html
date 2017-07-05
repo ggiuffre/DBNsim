@@ -35,15 +35,34 @@
 			<li>you can change the number of epochs between each automatic update of the receptive fields and histogram;</li>
 			<li>you can change the colors of the graph edges (two different colors: one for training and the other for resting).</li>
 		</ul>
+		<p>Keep reading for more details.</p>
 
 		<h2>Datasets</h2>
-		<p>Work in progress...</p>
+		<p>Adding a new dataset is as easy as dragging a file in a special directory in DBNsim. From inside the <code>DBNsim/</code> root, this directory is <code>./DBNsite/DBNlogic/data/</code>.</p>
+		<p>Here you can put a dataset in one or more of these 3 formats:</p>
+		<ul>
+			<li><strong>CSV</strong>: a CSV file (with extension <code>.csv</code>) where each example is a comma-separated row, and each row is separated from the following by a newline.</li>
+			<li><strong>Pickle</strong>: a Python &quot;pickle&quot; file (with extension <code>.pkl</code> and encoded with <strong>version 2</strong> of the Pickle protocol) that is the serialization of a Numpy 2D array (matrix) containing each example as a row of the matrix.</li>
+			<li><strong>MATLAB</strong>: a MATLAB file (with extension <code>.mat</code>) containing a matrix variable called &quot;data&quot;, where each row is a training example.</li>
+		</ul>
+		<p>Note that the training sets are (currently) meant for <em>unsupervised</em> learning, so they cannot contain labels &mdash; unless you want the labels to be interpreted as features. Note that an exception to this behaviour is the MATLAB file, where you can put as many variables as you like as long as there is one matrix named &quot;data&quot;; that is, you <em>can</em> actually have the labels in the MATLAB file, but you have to store them in a different variable.</p>
+		<p>Of course, removing a dataset can be performed by just deleting the corresponding file(s) whose name(s) match the name of the dataset. For example, if you want to remove the Numerosity dataset, make sure to remove <code>Numerosity.csv</code>, <code>Numerosity.pkl</code> and <code>Numerosity.mat</code>.</p>
+		<p>DBNsim searches for new datasets only at startup: if you want to add a dataset, you must restart the server. The order in which DBNsim searches the <code>data/</code> directory for an instance of each dataset is:</p>
+		<ol>
+			<li>Pickle file;</li>
+			<li>CSV file;</li>
+			<li>MATLAB file.</li>
+		</ol>
+		<p>This is beacause the Pickle file is much faster to load (for the Python interpreter) than the other two. However, the downside is that its size can be much bigger.</p>
 
 		<h2>Password and hyper-parameters</h2>
-		<p>...</p>
+		<p>By editing some Python files, you can change the password and the default values of the hyper-parameters.</p>
+		<p>In order to change the password, open <code>./DBNsite/DBNtrain/views.py</code> and change the value of the variable <code>PASSWORD</code> to a string of your choice. The default is &quot;user&quot;.</p>
+		<p>For the hyper-parameters, open <code>./DBNsite/DBNlogic/util.py</code> and search for the constructor of the <code>Configuration</code> class. There you will find the default values for the constructor arguments. These values are the default values of the hyper-parameters that the user sees when he load the main page of the app: feel free to change them. Read the comments in the body of the constructor, if you want to know the meaning of each hyper-parameter.</p>
 
 		<h2>graphical parameters</h2>
-		<p>...</p>
+		<p>If you want the receptive fields and the weights histogram to be updated every <var>n</var> epochs, open <code>./DBNsite/DBNtrain/static/dbntrain.js</code> and look for the variable <code>chartsUpdateRate</code>. Set it to a positive value that will be the number of epochs that DBNsim will wait before automatically updating the receptive fields and the histogram during training.</p>
+		<p>Finally, the edges in the upper-right graph change color according to what they are &quot;doing&quot;: if an RBM is learning, its weights will be colored in red; else, they will be blue. If you want to change these colors, open <code>./DBNsite/DBNtrain/static/dbntrain.js</code> and change the values of the variables <code>edgesColor</code> and <code>trainingEdgesColor</code>.</p>
 	</div>
 
 </body>

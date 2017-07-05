@@ -1,0 +1,432 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\setcounter{section}{-1}
+\title{DBNsim}
+\author{Giorgio Giuffrè}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+
+\section{Abstract}
+
+DBNsim is a web application for training and analysing \textbf{Deep Belief Networks} (``DBNs'', for short). A Deep Belief Network (\url{http://www.scholarpedia.org/article/Deep_belief_networks}) is a particular type of artificial neural network; it is a stack of Restricted Boltzmann Machines (``RBMs'', for short) that can be trained with an algorithm known as \textbf{contrastive divergence}. RBMs learn to reconstruct a given input and, if properly analysed, they can reveal latent features in the distribution of the input.
+
+DBNsim offers a simple interface for defining the architecture of a DBN, train it on a remote web server (optionally equipped with a GPU), analyse it, and then download the DBN in various formats for performing further analyses.
+
+
+\subsection{How to run it on your machine}
+
+As said, DBNsim is a web app. That means you can run it on one computer and access it on another. According to your needs, there are several ways in which you can use DBNsim:
+\begin{enumerate}
+	\item If you want to use it locally (i.e. as if it was a normal desktop application on your PC), you just have to launch the app from the command line with Python; then, you will be able to access the user interface on your browser at the local address \texttt{http://127.0.0.1:8000/DBNtrain/}.
+	\item You may want your students to use it in a classroom. For this, you just have to launch the app from the command line and ask your audience to connect their devices to the University network; they will find the user interface at \texttt{http://your.public.ip.address:8000/DBNtrain/}.
+	\item Finally, if you don't have a local intranet like above, you can still publish DBNsim on a remote web server: it will then be available from any computer connected to the internet.
+\end{enumerate}
+
+In all three cases, you can follow the step-by-step guide in the next section.
+
+Launching DBNsim from a computer equipped with a CUDA-enabled GPU\footnote{See \url{https://en.wikipedia.org/wiki/CUDA}} lets you train a DBN directly on the GPU; DBNsim should automatically detect whether or not your computer has a GPU. The main advantage of using it is speed: you will be able to train much larger networks in fewer time.
+
+
+\subsection{How to contribute}
+
+If you would like to improve this project and/or report a bug, please feel free to e-mail Giorgio Giuffrè at \texttt{[first\_name]giuffre23@gmail.com}, replacing \texttt{[first\_name]} with my first name. The source code is freely available on GitHub at \url{https://github.com/ggiuffre/DBNsim}.
+
+
+
+		
+	\section{Installing DBNsim}
+
+
+		
+	\subsection{Requirements}
+
+		
+For running DBNsim on you own server you will need:
+		
+	\begin{itemize}
+		
+			
+	\item Some knowledge of the \textbf{command line interface} of your machine;
+			
+	\item A \textbf{C++} compiler
+			
+	\item An intepreter for \textbf{Python 2.7} (not Python 3);
+			
+	\item the \textbf{pip} package manager for Python 2;
+			
+	\item optionally (for GPU support) the NVIDIA drivers for CUDA.
+		
+	\end{itemize}
+
+		
+Please note that you have to use Python 2 (preferably 2.7), not Python 3! This is beacause, unfortunately, DBNsim currently depends on two libraries that are only available for Python 2.
+
+		
+	\subsection{Basic installation}
+
+		
+For installing DBNsim (both for CPU and GPU usage) follow these steps:
+		\begin{verbatim}
+
+git clone https://github.com/ggiuffre/DBNsim.git
+cd DBNsim
+pip install --user -r requirements.txt
+		
+\end{verbatim}
+
+		
+If you don't have Git installed, you can still go to the \href{https://github.com/ggiuffre/DBNsim}{GitHub repo}, click "Clone or Download", then "Download ZIP"; now extract the archive, and then \texttt{cd} into the extracted directory.
+
+		
+	\subsection{Adding GPU support}
+
+		
+If you have a CUDA-enabled GPU, you can install CUDAMat. To install it, first exit the \texttt{DBNsim} directory (this is very important) --- a simple way to exit the directory is to \texttt{cd} into your home directory; then execute the following commands:
+		\begin{verbatim}
+
+git clone https://github.com/cudamat/cudamat.git
+cd cudamat
+pip install --user .
+		
+\end{verbatim}
+
+		
+As before, if you don't have Git installed you can download a zipped version of CUDAMat from \href{https://github.com/cudamat/cudamat}{GitHub}.
+		
+If you get errors while installing with \texttt{pip}, make sure you have the CUDA drivers installed, along with the NVIDIA CUDA compiler (nvcc). If you're using Ubuntu, then you can install them with:
+		\begin{verbatim}
+sudo apt-get install nvidia-cuda-toolkit
+\end{verbatim}
+
+		
+After you manage to install CUDAMat, remember to test it. To do this, exit the \texttt{cudamat} directory (this is very important), enter a Python interpreter and type:
+		\begin{verbatim}
+
+import numpy as np
+import cudamat as cm
+
+cm.cublas_init()
+
+a = cm.CUDAMatrix(np.random.rand(32, 256))
+b = cm.CUDAMatrix(np.random.rand(256, 32))
+
+c = cm.dot(a, b)
+d = c.sum(axis = 0)
+
+print(d.asarray())
+		
+\end{verbatim}
+
+
+		
+	\subsection{Launching DBNsim}
+
+		
+Finally, launch DBNsim with:
+		\begin{verbatim}
+
+cd path/to/DBNsim
+python DBNsite/manage.py runserver
+		
+\end{verbatim}
+
+		
+... this actually launches DBNsim only \emph{locally}. Instead, if you want other users to access it, type:
+		\begin{verbatim}
+
+cd path/to/DBNsim
+python DBNsite/manage.py runserver your.public.ip.address:8000
+		
+\end{verbatim}
+
+		
+You should see something like:
+		\begin{verbatim}
+
+Performing system checks...
+
+loading data from pickle...
+loading data from pickle...
+loading data from pickle...
+loading data from pickle...
+System check identified no issues (0 silenced).
+June 22, 2017 - 16:02:15
+Django version 1.11.2, using settings 'DBNsite.settings'
+Starting development server at http://your.public.ip.address:8000/
+Quit the server with CONTROL-C.
+
+		
+\end{verbatim}
+
+		
+This means the server is up and running. Now you should find the user interface at \texttt{http://127.0.0.1:8000/DBNtrain/} if you're running the app locally. Or, if you're publishing it to a network, you should find it at \texttt{http://your.public.ip.address:8000/DBNtrain/}. Don't forget the trailing "DBNtrain/" in the address, else you will get a 404 error!
+		
+When you want to shut down the server, return to the command line interface and press CONTROL-C.
+
+		
+	\subsection{Changing the default configuration}
+
+		
+As the server administrator, you have more power than normal users. It is possible to configure DBNsim under the following aspects:
+		
+	\begin{itemize}
+		
+			
+	\item you can edit the available training datasets, removing them and/or adding new ones;
+			
+	\item you can set a password that the users have to know in order to use the app;
+			
+	\item you can alter the default values of the hyper-parameters (e.g. you can set a default value of 0.1 for the learning rate, if the user doesn't change it on the form);
+			
+	\item you can change some graphical parameters in the user interface.
+		
+	\end{itemize}
+
+		
+For more about this, please read \href{05_admin.html}{here}.
+	
+
+
+		
+	\section{Building a network}
+
+
+		
+	\subsection{What do we need for building a DBN}
+
+		
+Creating a DBN means specifying two things:
+		
+	\begin{itemize}
+		
+			
+	\item Its \textbf{architecture} --- how many layers of neurons the network will have, and how many neurons each of these layers will have.
+			
+	\item The weights of its \textbf{connections} --- the initial values of the weighted connections between neurons.
+		
+	\end{itemize}
+
+
+		
+	\subsection{Architecture}
+
+		
+For defining the architecture, look at the form on the upper-left corner. The "DBN architecture" fieldset allows you to specify the number of (hidden) layers in the DBN, and then to specify how many neurons each layer must have. \emph{h1}, \emph{h2} etcetera are the hidden layers, with number 1 being the hidden layer of the first RBM and so on.
+		
+You will notice that you cannot change directly the number of neurons in the visible layer: instead, when you want to change it, you must operate on the "Dataset info" fieldset (above). This is because the number of visible units can be deduced from the length of each example in the training dataset: if a DBN wants to learn from a dataset where each example is 900 pixels (a 30x30 flattened image), then the visible layer must have 900 units.
+		
+While you build your DBN, a symbolic representation of its architecture is painted automatically on the upper-right corner of the screen. This is a graph showing the layers of the DBN, with the lowest one being the visible layer.
+
+		
+	\subsection{Connections}
+
+		
+Now let's specify the initial values of the connections. We initialize the weights of the DBN to a random value picked from a normal distribution; the mean of this distribution is always zero, but you can choose the standard deviation by editing the "std. dev." field in the "Hyper-parameters" fieldset.
+		
+For seeing the result, click on the "init" button at the right of the standard deviation field --- a new DBN will be created on the server. Now try to click on the connections between two layers: a histogram should appear on the bottom-center part of the screen, representing the distribution of the weights that you have just clicked. For example, if you click on the connections between the visible layer and the first hidden layer, you will get a histogram of the weights of the first RBM.
+	
+
+
+		
+	\section{Training a network}
+
+
+		
+	\subsection{Setting the hyper-parameters}
+
+		
+When you have defined the architecture and the weights of a DBN, you are ready to train it. You can train it manually stepping one epoch at a time, or automatically if you just want a fully trained network. In both cases, the first thing to do is to set the training \textbf{hyper-parameters}.
+		
+Hyper-parameters are those numbers and coefficients with which you can "customize" the training algorithm. They are called \emph{hyper} to distinguish them from the weights of the DBN, that are sometimes called "parameters". For instance, Contrastive Divergence depends on the following hyper-parameters:
+		
+	\begin{itemize}
+		
+			
+	\item \textbf{Maximum number of epochs}. One epoch is the time in which a network sees all the examples in a training set; the number of epochs is the number of opportunities that a DBN has of observing each example.
+			
+	\item \textbf{Size of a mini-batch}. The training set can be divided in little subsets, known as mini-batches; the DBN will update its weights only after having seen \emph{all} the examples in a mini-batch; this allows for a faster and more precise learning. The size of a mini-batch \textbf{must} divide the number of total examples. Note that a mini-batch size of 1 is equivalent to online training; in contrast, setting the size to the exact number of examples is equivalent to batch training, or "one shot" training.
+			
+	\item \textbf{Learning rate}. The learning rate is a coefficient in the range [0, 1] that models the plasticity of the network, i.e. how easy it is to update the weights of the DBN.
+			
+	\item \textbf{Momentum}. If a DBN learning from a dataset was a ball rolling down a mountain to reach the valley (the minimum) the momentum would simulate gravity, i.e. the acceleration that speeds the ball proportionally to the steepness of the descent. The momentum ranges from 0 to 1.
+			
+	\item \textbf{Weight decay factor}. The weight decay factor (in the range [0, 1]) makes the increase of big weights more difficult than the increase of little weights. This avoids increasing the weights indefinitely.
+			
+	\item \textbf{Sparsity target}. The sparsity target (in the range (0, 1]) is how sparse we would like the network to be; a network is more sparse when it has fewer active units --- when the hidden representations are more localistic.
+			
+	\item \textbf{Standard deviation of the weights distribution}. We have already seen this hyper-parameter while building a DBN; this is more related to the DBN than to the training algorithm, but it's nonetheless a hyper-parameter setting the standard deviation of the probability distribution within which the weights are initialized.
+		
+	\end{itemize}
+
+		
+At the right of the "std. dev." field you will find a "init" button. It is \textbf{not} necessary to initialize the weights before training the network, because they will be initialized automatically anyway. This button is meant to analyse the network before the training.
+
+		
+	\subsection{Launching the training}
+
+		
+When you have chosen the hyper-parameters (or if you want to accept the default ones), you can start training the DBN with one of the two buttons after the "Hyper-parameters" fieldset:
+		
+	\begin{itemize}
+		
+			
+	\item "\textbf{1 epoch}" trains the network for just one epoch: use this button if you want to train the DBN in a step-by-step fashion.
+			
+	\item "\textbf{all epochs}" trains the network for the number of epochs that you have specified in the "max. epochs" field.
+		
+	\end{itemize}
+
+		
+While training the network, you will see that a chart is updated plotting the reconstruction error against the number of epochs.
+	
+
+
+		
+	\section{Analysing a network}
+
+
+		
+	\subsection{Analysing the DBN architecture}
+
+		
+You can analyse a DBN in several ways. The simplest and the first thing to do when you set up a DBN to learn a dataset is analysing its architecture. The architecture of a network is the way in which its neurons are connected; in a DBN, the architecture is defined by:
+		
+	\begin{itemize}
+		
+			
+	\item the \textbf{number of hidden layers}, that is equal to the number of RBMs forming the DBN;
+			
+	\item the \textbf{number of units in each layer}.
+		
+	\end{itemize}
+
+		
+For a straightforward representation of the architecture, you can look at the graph in the upper-right corner.
+
+		
+	\subsection{Plotting the reconstruction error}
+
+		
+In the bottom-left corner, you can see a plot reporting the reconstruction error for each RBM and for each training epoch. For each DBN that you train, the plot will add one line for each RBM in the DBN. This is meant to compare the reconstruction error of two different RBMs inside one DBN and the plots of two different DBNs; if the chart gets too crowded, you can clean it with the "clean plot" button near the chart.
+
+		
+	\subsection{Analysing the receptive fields}
+
+		
+You can view the receptive fields of some (not all) of the neurons in one hidden layer. For this, just choose a layer of the graph in the top-right corner and click it: DBNsim will pick some neurons from the layer (max. 24 neurons) and display their receptive fields.
+		
+Note that, for consistency, the neurons picked by DBNsim are the same \textbf{every time you click on the same DBN}. This allows you to see the changes in one receptive field while the network is learning; for this purpose, the receptive fields are updated automatically during the training, every five epochs.
+
+		
+	\subsection{Viewing a histogram of the weights in a RBM}
+
+		
+To analyse the weights of a RBM in your DBN, you can view a histogram of the weights by clicking between two layers on the graph in the upper-right corner. Clicking between layer $n$ and layer $n+1$ will display a histogram of the weights in the $n+1$th RBM.
+		
+As for the receptive fields, the histogram is updated automatically during the training, every five epochs.
+
+		
+	\subsection{Viewing a training example}
+
+		
+Finally, you can visualize a random training example by clicking on the visible layer of the graph in the upper-right corner. Every time you click on the visible layer, a random training example will be picked from the current dataset and displayed under the visible layer.
+	
+
+
+		
+	\section{Changing the default configuration}
+
+
+		
+	\subsection{What you can do as an admin}
+
+		
+DBNsim has two different kinds of user: normal users of the web interface and \emph{administrators} with access to the configuration of the server. If you are an admin, here's how you can customize your instance of DBNsim for your users:
+		
+	\begin{itemize}
+		
+			
+	\item you can edit the available \textbf{training datasets}, removing them and/or adding new ones;
+			
+	\item you can set a \textbf{password} that the users have to know in order to use the app;
+			
+	\item you can alter the default values of the \textbf{hyper-parameters} (e.g. you can set a default value of 0.1 for the learning rate, if the user doesn't change it on the form);
+			
+	\item you can change the number of epochs between each automatic update of the receptive fields and histogram;
+			
+	\item you can change the colors of the graph edges (two different colors: one for training and the other for resting).
+		
+	\end{itemize}
+
+		
+Keep reading for more details.
+
+		
+	\subsection{Datasets}
+
+		
+Adding a new dataset is as easy as dragging a file in a special directory in DBNsim. From inside the \texttt{DBNsim/} root, this directory is \texttt{./DBNsite/DBNlogic/data/}.
+		
+Here you can put a dataset in one or more of these 3 formats:
+		
+	\begin{itemize}
+		
+			
+	\item \textbf{CSV}: a CSV file (with extension \texttt{.csv}) where each example is a comma-separated row, and each row is separated from the following by a newline.
+			
+	\item \textbf{Pickle}: a Python "pickle" file (with extension \texttt{.pkl} and encoded with \textbf{version 2} of the Pickle protocol) that is the serialization of a Numpy 2D array (matrix) containing each example as a row of the matrix.
+			
+	\item \textbf{MATLAB}: a MATLAB file (with extension \texttt{.mat}) containing a matrix variable called "data", where each row is a training example.
+		
+	\end{itemize}
+
+		
+Note that the training sets are (currently) meant for \emph{unsupervised} learning, so they cannot contain labels --- unless you want the labels to be interpreted as features. Note that an exception to this behaviour is the MATLAB file, where you can put as many variables as you like as long as there is one matrix named "data"; that is, you \emph{can} actually have the labels in the MATLAB file, but you have to store them in a different variable.
+		
+Of course, removing a dataset can be performed by just deleting the corresponding file(s) whose name(s) match the name of the dataset. For example, if you want to remove the Numerosity dataset, make sure to remove \texttt{Numerosity.csv}, \texttt{Numerosity.pkl} and \texttt{Numerosity.mat}.
+		
+DBNsim searches for new datasets only at startup: if you want to add a dataset, you must restart the server. The order in which DBNsim searches the \texttt{data/} directory for an instance of each dataset is:
+		
+	\begin{enumerate}
+		
+			
+	\item Pickle file;
+			
+	\item CSV file;
+			
+	\item MATLAB file.
+		
+	\end{enumerate}
+
+		
+This is beacause the Pickle file is much faster to load (for the Python interpreter) than the other two. However, the downside is that its size can be much bigger.
+
+		
+	\subsection{Password and hyper-parameters}
+
+		
+By editing some Python files, you can change the password and the default values of the hyper-parameters.
+		
+In order to change the password, open \texttt{./DBNsite/DBNtrain/views.py} and change the value of the variable \texttt{PASSWORD} to a string of your choice. The default is "user".
+		
+For the hyper-parameters, open \texttt{./DBNsite/DBNlogic/util.py} and search for the constructor of the \texttt{Configuration} class. There you will find the default values for the constructor arguments. These values are the default values of the hyper-parameters that the user sees when he load the main page of the app: feel free to change them. Read the comments in the body of the constructor, if you want to know the meaning of each hyper-parameter.
+
+		
+	\subsection{graphical parameters}
+
+		
+If you want the receptive fields and the weights histogram to be updated every $n$ epochs, open \texttt{./DBNsite/DBNtrain/static/dbntrain.js} and look for the variable \texttt{chartsUpdateRate}. Set it to a positive value that will be the number of epochs that DBNsim will wait before automatically updating the receptive fields and the histogram during training.
+		
+Finally, the edges in the upper-right graph change color according to what they are "doing": if an RBM is learning, its weights will be colored in red; else, they will be blue. If you want to change these colors, open \texttt{./DBNsite/DBNtrain/static/dbntrain.js} and change the values of the variables \texttt{edgesColor} and \texttt{trainingEdgesColor}.
+	
+\end{document}
