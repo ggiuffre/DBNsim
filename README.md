@@ -9,5 +9,5 @@ Deep Belief Networks (DBNs) are a particular _architecture_ of neural nets: they
 
 If you want to know how to get, install and use the app please read the documentation, available in two formats:
 
-* online in HTML ([here](https://ggiuffre.github.io/DBNsim/))
-* offline in PDF (dowload [here](https://ggiuffre.github.io/DBNsim/tex/DBNsim.pdf))
+* HTML ([here](https://ggiuffre.github.io/DBNsim/))
+* PDF (dowload [here](https://ggiuffre.github.io/DBNsim/tex/DBNsim.pdf))
