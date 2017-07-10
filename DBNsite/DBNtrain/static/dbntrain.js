@@ -179,7 +179,7 @@ function setupErrorChart() {
 /**
  * If not already done, submits the training hyper-parameters to
  * the server; then, starts to train the network. If `autoContinue`
- * is true, the trining will continue automatically; else the user
+ * is true, the training will continue automatically; else the user
  * will have to click on the "1 epoch" button repeatedly for
  * training the network "manually".
  * @param {Boolean} autoContinue  whether to automate the training
