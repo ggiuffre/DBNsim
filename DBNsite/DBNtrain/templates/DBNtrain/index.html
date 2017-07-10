@@ -123,12 +123,12 @@
 
 		<form action="getArchFromNet/" method="post" id="filesubmit" style="display:none;">
 			<p>
-				<input id="inputfile" name="inputfile" type="file" onchange="$('#filesubmit').submit();" />
+				<input id="netfile" name="netfile" type="file" onchange="$('#filesubmit').submit();" />
 				<input type="submit" name="sendfile" value="sendfile" />
 			</p>
 		</form>
 		<p id="net_actions">
-			<a id="load_net" href="javascript:$('#inputfile').click();"><img src="{% static 'upload.png' %}" alt="upload a network" /></a>
+			<a id="load_net" href="javascript:$('#netfile').click();"><img src="{% static 'upload.png' %}" alt="upload a network" /></a>
 			<a id="save_net" href="saveNet/?job_id=" type="application/octet-stream"><img src="{% static 'download.png' %}" alt="download the network" /></a>
 			<a id="docs" href="https://ggiuffre.github.io/DBNsim/" target="_"><img src="{% static 'docs.ico' %}" alt="read the docs" /></a>
 		</p>

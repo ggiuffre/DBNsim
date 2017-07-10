@@ -207,7 +207,7 @@ def getArchFromNet(request):
     the architecture specifications for that network."""
     print('>>>', request)
     print('>>>', request.POST)
-    print('>>>', request.POST['inputfile'])
+    print('>>>', request.POST['netfile'])
 
     pass
 
