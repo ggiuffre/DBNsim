@@ -153,7 +153,6 @@ def getInput(request):
 
     image = dataset[index].tolist()
     response = heatmap(image)
-
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
 
@@ -170,9 +169,28 @@ def getReceptiveField(request):
 
     rec_field = net.receptiveField(layer, neuron).tolist()
     response = heatmap(rec_field)
-
     json_response = json.dumps(response)
     return HttpResponse(json_response, content_type = 'application/json')
+
+def analyseReceptiveField(request):
+    """Return a HTML page with just the receptive field
+    of a specific neuron in a specific layer of a DBN."""
+    if 'job_id' not in request.GET:
+        return HttpResponse('')
+
+    job = request.GET['job_id']
+    net = training_jobs[job]['network']
+    layer = int(request.GET['layer'])
+    neuron = int(request.GET['neuron'])
+
+    rec_field = net.receptiveField(layer, neuron).tolist()
+    response = heatmap(rec_field)
+    json_response = json.dumps(response)
+
+    context = {
+        'data': json_response
+    }
+    return render(request, 'DBNtrain/receptive_field.html', context)
 
 def getHistogram(request):
     """Return a histogram of the distribution of the weights

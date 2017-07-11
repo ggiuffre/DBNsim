@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^getError/$', views.getError),
     url(r'^getInput/$', views.getInput),
     url(r'^getReceptiveField/$', views.getReceptiveField),
+    url(r'^analyseReceptiveField/$', views.analyseReceptiveField),
     url(r'^getHistogram/$', views.getHistogram),
     url(r'^saveNet/$', views.saveNet),
     url(r'^getArchFromNet/$', views.getArchFromNet),

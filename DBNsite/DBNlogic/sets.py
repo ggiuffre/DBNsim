@@ -81,7 +81,7 @@ class DataSet:
         a Matlab file containing a variable called 'data'."""
         if SCIPY_AVAILABLE:
             print('loading data from Matlab file...')
-            return loadmat(path)['data']
+            return loadmat(path, variable_names = ['data'])['data']
         else:
             print("""you don't have the scipy package installed.
                 Install it with `pip install --user scipy` or, 

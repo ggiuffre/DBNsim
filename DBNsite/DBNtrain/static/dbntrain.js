@@ -543,15 +543,21 @@ function dissect(layer) {
 		const rec_fields_displayed = Math.min(neurons, 24);
 		for (let i = 0; i < rec_fields_displayed; i++) {
 			const rc_id = 'rec_field_' + i;
+			const queryData = {
+				pass: password,
+				job_id: job_id,
+				layer: layer,
+				neuron: Math.floor(i * neurons / rec_fields_displayed)
+			};
 			$('#receptive_fields').append('<div id="' + rc_id + '" class="rec_field"></div>');
+			$('#' + rc_id).on('click', function() {
+				const query = $.param(queryData);
+				let win = window.open('analyseReceptiveField/?' + query, '_blank');
+				win.focus();
+			});
 			$.ajax({
 				url: 'getReceptiveField/',
-				data: {
-					pass: password,
-					job_id: job_id,
-					layer: layer,
-					neuron: Math.floor(i * neurons / rec_fields_displayed)
-				},
+				data: queryData,
 				async: false,
 				dataType: 'json',
 				success: function(response) {
@@ -650,7 +656,7 @@ function heatmap(container, data, title) {
 		series: [{
 			name: 'Image plot',
 			data: data,
-			borderWidth: 0.5,
+			borderWidth: 0.5, // data.length < 800 ? 0.5 : 0.1,
 			borderColor: '#CCC'
 		}]
 	});
