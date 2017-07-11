@@ -125,6 +125,10 @@ form fieldset {
 	display: none;
 }
 
+#filesubmit {
+	display: none;
+}
+
 
 
 @media screen and (min-width: 460px) {

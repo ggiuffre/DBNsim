@@ -35,7 +35,7 @@
 
 				<p>
 					<label for="dataset">training set:</label><br />
-					<select name="dataset" id="dataset" onchange="updateVisibleSize();">
+					<select name="dataset" id="dataset">
 						{% for s in datasets %}
 							<option value="{{s}}">{{s}}</option>
 						{% endfor %}
@@ -48,18 +48,18 @@
 
 				<p>
 					<label for="num_hid_layers">number of hidden layers: </label>
-					<input type="text" value="1" name="num_hid_layers" id="num_hid_layers" onchange="updateArchitecture(); updateGraph();" />
+					<input type="text" value="1" name="num_hid_layers" id="num_hid_layers" />
 				</p>
 
 				<p>n. of units per layer:</p>
 				<ol id="layers_sz">
 					<li class="lay_sz vis_layer">
 						<label for="vis_sz">vis.</label>
-						<input type="text" name="vis_sz" id="vis_sz" onchange="updateGraph();" readonly="readonly" />
+						<input type="text" name="vis_sz" id="vis_sz" readonly="readonly" />
 					</li>
 					<li class="lay_sz">
 						<label for="hid_sz_1">h1&nbsp;</label>
-						<input type="text" name="hid_sz_1" id="hid_sz_1" onchange="updateGraph();" />
+						<input type="text" name="hid_sz_1" id="hid_sz_1" />
 					</li>
 				</ol>
 			</fieldset>
@@ -103,7 +103,7 @@
 				<p title="std. deviation of the initial weights distribution">	
 					<input type="text" name="std_dev" id="std_dev" value="{{config.std_dev}}" />
 					<label for="std_dev"> std. dev. </label>
-					<button type="button" onclick="setupNetwork(false); newJobSent = false;">init</button>
+					<button id="init" type="button">init</button>
 				</p>
 			</fieldset>
 
@@ -113,7 +113,7 @@
 					<option class="trainee" value="all">all RBMs</option>
 					<option class="trainee" value="1">RBM 1</option>
 				</select><br />
-				for <button type="button" onclick="startTraining(false);">1 epoch</button> or <button type="button" onclick="startTraining(true);">all epochs</button>
+				for <button id="one_epoch" type="button">1 epoch</button> or <button id="all_epochs"  type="button">all epochs</button>
 				&nbsp;<img id="train_plot_loading" src="{% static 'loading.gif' %}" alt="Loading symbol" />
 			</p>
 		</form>
@@ -121,9 +121,9 @@
 		<!-- the DBN graph -->
 		<div id="DBNgraph"></div>
 
-		<form action="getArchFromNet/" method="post" id="filesubmit" style="display:none;">
+		<form action="getArchFromNet/" method="post" id="filesubmit">
 			<p>
-				<input id="netfile" name="netfile" type="file" onchange="$('#filesubmit').submit();" />
+				<input id="netfile" name="netfile" type="file" />
 				<input type="submit" name="sendfile" value="sendfile" />
 			</p>
 		</form>
@@ -140,7 +140,7 @@
 
 		<!-- the training error plot -->
 		<div id="train_plot"></div>
-		<p id="clean_plot"><button onclick="cleanErrorPlot();">Clean plot</button></p>
+		<p id="clean_plot"><button>Clean plot</button></p>
 
 		<!-- some receptive fields of one layer -->
 		<div id="receptive_fields"></div>

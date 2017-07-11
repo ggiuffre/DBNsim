@@ -125,7 +125,7 @@ def getError(request):
         curr_rbm = train_info['rbm']
         next_err = round(train_info['err'], 3)
     except StopIteration:
-        net.save()
+        # net.save()
         del training_jobs[job]['generator']
         stop = True
 

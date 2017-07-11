@@ -81,15 +81,37 @@ const chartsUpdateRate = 5;
 
 
 
-// ------------------
-// ------  FUNCTIONS:
-// ------------------
+// ----------------
+// ------  STARTUP:
+// ----------------
 
 /**
  * After having rendered the page, ask for the
  * password and do some setup.
  */
 $(function() {
+	// bind 'change' events in the forms to their handlers:
+	$('#dataset').on('change', updateVisibleSize);
+	$('#num_hid_layers').on('change', function() {
+		updateArchitecture();
+		updateGraph();
+	});
+	$('.lay_sz').on('change', updateGraph);
+	$('#init').on('click', function() {
+		setupNetwork(false);
+		newJobSent = false;
+	});
+	$('#one_epoch').on('click', function() {
+		startTraining(false);
+	});
+	$('#all_epochs').on('click', function() {
+		startTraining(true);
+	});
+	$('#netfile').on('change', function() {
+		$('#filesubmit').submit();
+	});
+	$('#clean_plot button').on('click', cleanErrorPlot);
+
 	// ask for the password, store it,
 	// and then present the main interface.
 	$('body > *').css('opacity', '0.3');
@@ -120,6 +142,14 @@ $(function() {
 		startTraining(true);
 	});
 });
+
+
+
+
+
+// ------------------
+// ------  FUNCTIONS:
+// ------------------
 
 /**
  * Sets up the chart for the error plot (`errorChart`).
@@ -302,7 +332,7 @@ function updateArchitecture() {
 		$('#layers_sz').append(
 			'<li class="lay_sz">' +
 			'<label for="hid_sz_' + i + '">h' + i + '&nbsp;&nbsp;</label>' +
-			'<input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" onchange="updateGraph();" />' +
+			'<input type="text" name="hid_sz_' + i + '" id="hid_sz_' + i + '" />' +
 			'</li>');
 		$('#trainee_opt').append('<option class="trainee" value="' + i + '">RBM ' + i + '</option>');
 	}
@@ -312,6 +342,9 @@ function updateArchitecture() {
 		$('.lay_sz').last().remove();
 		$('.trainee').last().remove();
 	}
+
+	// update the browser's behaviour:
+	$('.lay_sz').on('change', updateGraph);
 }
 
 /**

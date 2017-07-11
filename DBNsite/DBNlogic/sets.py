@@ -56,7 +56,7 @@ class DataSet:
         `delimiter`-separated values.
         """
         print('loading data from CSV...')
-        return np.genfromtxt(path, delimiter = delimiter)
+        return np.loadtxt(path, dtype = np.float32, delimiter = delimiter)
 
     @staticmethod
     def fromPickle(path):
