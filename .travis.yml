@@ -3,6 +3,10 @@ python: "2.7"
 install:
   - pip install --upgrade pip
   - pip install -r requirements.txt
+  - pip install pytest
+  - pip install pytest-cov
+  - pip install coverage>=4.0,<4.4
+  - pip install codeclimate-test-reporter
 script:
   - py.test --cov=DBNsite/DBNlogic
   - CODECLIMATE_REPO_TOKEN=368b98cb3ee40b7b3c9ad38aab86d6ea29b0ad368ca90e7a8c3a66802dcc078b codeclimate-test-reporter

@@ -1,6 +1,4 @@
 numpy
-django
-pytest
-pytest-cov
-coverage>=4.0,<4.4
-codeclimate-test-reporter
+Django
+gunicorn
+dj-static
