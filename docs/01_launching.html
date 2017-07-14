@@ -32,12 +32,12 @@
 		<p>For running DBNsim on you own server you will need:</p>
 		<ul>
 			<li>Some knowledge of the <strong>command line interface</strong> of your machine;</li>
-			<li>A <strong>C++</strong> compiler</li>
 			<li>An intepreter for <strong>Python 2.7</strong> (not Python 3);</li>
-			<li>the <strong>pip</strong> package manager for Python 2;</li>
+			<li>the <strong>pip</strong> package manager for Python 2, which should be shipped with a standard Python installation;</li>
 			<li>optionally (for GPU support) the NVIDIA drivers for CUDA.</li>
 		</ul>
 		<p>Please note that you have to use Python 2 (preferably 2.7), not Python 3! This is beacause, unfortunately, DBNsim currently depends on two libraries that are only available for Python 2.</p>
+		<p>If you have installed Python under Windows but your command line says it doesn't recognize the commands <code>pip</code> and <code>python</code>, then you just have to <a href="https://www.google.com/search?q=windows+add+python+path+-pythonpath" target="_">add Python to your path</a>. This is generally done by going to <em>System Properties / Advanced / Environment Variables</em>.</p>
 
 		<h2 id="install">Basic installation</h2>
 		<p>For installing DBNsim (both for CPU and GPU usage) follow these steps:</p>
@@ -101,7 +101,8 @@ Starting development server at http://your.public.ip.address:8000/
 Quit the server with CONTROL-C.
 
 		</pre>
-		<p>This means the server is up and running. Now you should find the user interface at <code>http://127.0.0.1:8000</code> if you're running the app locally. Or, if you're publishing it to a network, you should find it at <code>http://your.public.ip.address:8000</code>. 8000 is an example but you can tun DBNsim on any port you have access to.</p>
+		<p>This means the server is up and running. Now you should find the user interface at <code>http://127.0.0.1:8000</code> if you're running the app locally. Or, if you're publishing it to a network, you should find it at <code>http://your.public.ip.address:8000</code>. 8000 is just an example &mdash; you can run DBNsim on any port you have access to.</p>
+		<p>Once you're on the page, you will be asked for a <strong>password</strong>. If the server administrator didn't change the default configuration, the password is <em>user</em>.</p>
 		<p>When you want to shut down the server, return to the command line interface and press CONTROL-C.</p>
 
 		<h2>Changing the default configuration</h2>
@@ -109,10 +110,10 @@ Quit the server with CONTROL-C.
 		<ul>
 			<li>you can edit the available training datasets, removing them and/or adding new ones;</li>
 			<li>you can set a password that the users have to know in order to use the app;</li>
-			<li>you can alter the default values of the hyper-parameters (e.g. you can set a default value of 0.1 for the learning rate, if the user doesn't change it on the form);</li>
+			<li>you can alter the default values of the hyper-parameters (e.g. you can set a default value of 0.5 for the learning rate, if the user doesn't change it on the form);</li>
 			<li>you can change some graphical parameters in the user interface.</li>
 		</ul>
-		<p>For more about this, please read <a href="05_admin.html">here</a>.</p>
+		<p>For more about how to change the configuration, please read <a href="05_admin.html">here</a>.</p>
 	</div>
 
 </body>
