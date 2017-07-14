@@ -13,8 +13,9 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DBNsite.settings")
 
-application = get_wsgi_application()
+# Originally was...
+# application = get_wsgi_application()
 
-# Added for easy Heroku support:
+# ... then added this for easy Heroku support:
 from dj_static import Cling
 application = Cling(get_wsgi_application())

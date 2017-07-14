@@ -27,8 +27,8 @@ DBNsim offers a simple interface for defining the architecture of a DBN, train i
 
 As said, DBNsim is a web app. That means you can run it on one computer and access it on another. According to your needs, there are several ways in which you can use DBNsim:
 \begin{enumerate}
-	\item If you want to use it locally (i.e. as if it was a normal desktop application on your PC), you just have to launch the app from the command line with Python; then, you will be able to access the user interface on your browser at the local address \texttt{http://127.0.0.1:8000/DBNtrain/}.
-	\item You may want your students to use it in a classroom. For this, you just have to launch the app from the command line and ask your audience to connect their devices to the University network; they will find the user interface at \texttt{http://your.public.ip.address:8000/DBNtrain/}.
+	\item If you want to use it locally (i.e. as if it was a normal desktop application on your PC), you just have to launch the app from the command line with Python; then, you will be able to access the user interface on your browser at the local address \texttt{http://127.0.0.1:8000}.
+	\item You may want your students to use it in a classroom. For this, you just have to launch the app from the command line and ask your audience to connect their devices to the University network; they will find the user interface at \texttt{http://your.public.ip.address:8000}.
 	\item Finally, if you don't have a local intranet like above, you can still publish DBNsim on a remote web server: it will then be available from any computer connected to the internet.
 \end{enumerate}
 
@@ -84,6 +84,8 @@ pip install --user -r requirements.txt
 		
 \end{verbatim}
 
+		
+In addition, it is recommended to install \emph{scipy}, with the command \texttt{pip install --user scipy}. Windows user may find it difficult but this is currently an optional dependency; the only thing is that without it you won't be able to handle MATLAB files as an administrator (see \href{05_admin.html}{here}).
 		
 If you don't have Git installed, you can still go to the \href{https://github.com/ggiuffre/DBNsim}{GitHub repo}, click "Clone or Download", then "Download ZIP"; now extract the archive, and then \texttt{cd} into the extracted directory.
 
@@ -169,7 +171,7 @@ Quit the server with CONTROL-C.
 \end{verbatim}
 
 		
-This means the server is up and running. Now you should find the user interface at \texttt{http://127.0.0.1:8000/DBNtrain/} if you're running the app locally. Or, if you're publishing it to a network, you should find it at \texttt{http://your.public.ip.address:8000/DBNtrain/}. Don't forget the trailing "DBNtrain/" in the address, else you will get a 404 error!
+This means the server is up and running. Now you should find the user interface at \texttt{http://127.0.0.1:8000} if you're running the app locally. Or, if you're publishing it to a network, you should find it at \texttt{http://your.public.ip.address:8000}. 8000 is an example but you can tun DBNsim on any port you have access to.
 		
 When you want to shut down the server, return to the command line interface and press CONTROL-C.
 
@@ -390,6 +392,8 @@ Here you can put a dataset in one or more of these 3 formats:
 		
 	\end{itemize}
 
+		
+N.B. if DBNsim doesn't recognize your MATLAB files, try to install \emph{scipy}. This is because \emph{scipy} is currently an optional dependency, for compatibility with Windows. Under UNIX, you can install it with \texttt{pip install --user scipy}.
 		
 Note that the training sets are (currently) meant for \emph{unsupervised} learning, so they cannot contain labels --- unless you want the labels to be interpreted as features. Note that an exception to this behaviour is the MATLAB file, where you can put as many variables as you like as long as there is one matrix named "data"; that is, you \emph{can} actually have the labels in the MATLAB file, but you have to store them in a different variable.
 		

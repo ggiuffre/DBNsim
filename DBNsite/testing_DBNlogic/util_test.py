@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.join(myPath, '..'))
 
 from DBNlogic.util import sigmoid, activation, heatmap
 
+
+
 def test_sigmoidDefinition():
     """The `sigmoid` function applied to `x` returns 1 / (1 + e^-x)."""
     for i in range(-1000,1001):

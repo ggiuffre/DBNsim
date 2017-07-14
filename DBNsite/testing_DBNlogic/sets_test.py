@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.join(myPath, '..'))
 
 from DBNlogic.sets import exists, full, DataSet, MNIST, SmallerMNIST, SCIPY_AVAILABLE
 
+
+
 def test_existsTrue():
     """The function `exists` returns True if
     given the path of an existing file."""
@@ -60,16 +62,3 @@ def test_fromWhatever():
     """A DataSet object can be constructed from a file."""
     dataset = DataSet.fromWhatever('top_left')
     assert dataset.shape == (10, 16)
-
-# def test_allSets():
-#     """The available datasets include the MNIST dataset
-#     and a downsampling the MNIST dataset."""
-#     datasets = DataSet.allSets()
-#     assert 'MNIST' in datasets
-#     assert 'small_MNIST' in datasets
-
-# def test_SmallerMNIST():
-#     """A downsampling of the MNIST dataset
-#     can be constructed from a file."""
-#     mnist = SmallerMNIST()
-#     assert mnist.data.shape == (60000, 49)

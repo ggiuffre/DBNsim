@@ -467,6 +467,7 @@ function getGraphFrom(elements) {
 		container: $('#DBNgraph'),
 		elements: elements,
 		userZoomingEnabled: false,
+		autounselectify: true,
 		style: [
 			{
 				selector: 'node',
