@@ -3,6 +3,8 @@ from __future__ import print_function
 import os
 import numpy as np
 import pickle
+import gzip as gz
+import urllib2 as url
 
 SCIPY_AVAILABLE = True
 try:
@@ -110,35 +112,74 @@ class DataSet:
 
 
 
-class MNIST(DataSet):
-    """The MNIST dataset."""
+def get14x14MNIST():
+    """Construct a 14x14 downsampling of the MNIST dataset."""
+    mnist = DataSet.fromWhatever('MNIST')
+    data = mnist.data.reshape(60000, 28, 28)
+    data = data[:, ::2, ::2]
+    data = data.reshape(60000, 14 * 14)
+    return data
 
-    def __init__(self):
-        """Construct the MNIST dataset."""
-        pkl_file = full('MNIST.pkl')
-        csv_file = full('MNIST.csv')
-        if (exists(pkl_file)):
-            self.data = DataSet.fromPickle(pkl_file)
-        else:
-            self.data = DataSet.fromCSV(csv_file)[:, 1:] / 255.0
-            with open(pkl_file, 'wb') as f:
-                pickle.dump(self.data, f, protocol = 2)
+def get7x7MNIST():
+    """Construct a 7x7 downsampling of the MNIST dataset."""
+    mnist = DataSet.fromWhatever('MNIST')
+    data = mnist.data.reshape(60000, 28, 28)
+    data = data[:, ::4, ::4]
+    data = data.reshape(60000, 7 * 7)
+    return data
 
+def convertMNIST(dataFile, labelsFile = None, outputFile = 'MNIST.csv'):
+    """
+    Convert the MNIST dataset from the original
+    'ubyte' format to a CSV file.
 
+    For example, convertMNIST('train-images-idx3-ubyte',
+    'train-labels-idx1-ubyte', 'MNIST.csv') converts
+    'train-images-idx3-ubyte' (with labels in
+    'train-labels-idx1-ubyte') to 'MNIST.csv'.
 
-class SmallerMNIST(MNIST):
-    """A 7x7 downsampling of the MNIST dataset."""
+    Or, if you don't want the labels in the CSV file, use
+    convertMNIST('train-images-idx3-ubyte', None, 'MNIST.csv').
+    """
+    f = open(dataFile, 'rb')
+    l = None
+    if labelsFile != None:
+        l = open(labelsFile, 'rb')
+    o = open(outputFile, 'w')
 
-    def __init__(self):
-        """Construct a 7x7 downsampling of the MNIST dataset."""
-        pkl_file = full('small_MNIST.pkl')
-        if (exists(pkl_file)):
-            self.data = DataSet.fromPickle(pkl_file)
-        else:
-            mnist = MNIST()
-            self.data = mnist.data.reshape(60000, 28, 28)
-            print('downsampling data...')
-            self.data = self.data[:, ::4, ::4]
-            self.data = self.data.reshape(60000, 49)
-            with open(pkl_file, 'wb') as f:
-                pickle.dump(self.data, f, protocol = 2)
+    f.read(16)
+    if labelsFile != None:
+        l.read(8)
+    images = []
+
+    for i in range(60000):
+        img = []
+        if l != None:
+            img = [ord(l.read(1))]
+        for j in range(28 * 28):
+            img.append(ord(f.read(1)))
+        images.append(img)
+
+    for img in images:
+        o.write(','.join(str(pix) for pix in img) + '\n')
+
+    f.close()
+    if labelsFile != None:
+        l.close()
+    o.close()
+
+def downloadMNIST(outputFile = full('MNIST.csv')):
+    """Get the MNIST dataset from Yann LeCunn's
+    web site and store it as a CSV file."""
+    resource = url.urlopen('http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz').read()
+    archive = gz.open('MNIST_ubyte.gz', 'wb')
+    archive.write(resource)
+    with gz.open('MNIST_ubyte.gz', 'rb') as archive:
+        file = open('MNIST_ubyte', 'wb')
+        file.write(archive.read())
+        file.close()
+    #os.remove('MNIST_ubyte.gz')
+    convertMNIST('MNIST_ubyte', None, outputFile)
+    os.remove('MNIST_ubyte')
+    data = DataSet.fromCSV(outputFile) / 255.0
+    DataSet(data).save(outputFile[:-3] + 'pkl')
