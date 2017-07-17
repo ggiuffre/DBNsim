@@ -1,0 +1,4 @@
+[run]
+omit =
+    DBNsite/DBNlogic/gnumpy.py
+    DBNsite/DBNlogic/npmat.py
