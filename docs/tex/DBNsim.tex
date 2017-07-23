@@ -58,11 +58,9 @@ For running DBNsim on you own server you will need:
 			
 	\item Some knowledge of the \textbf{command line interface} of your machine;
 			
-	\item A \textbf{C++} compiler
-			
 	\item An intepreter for \textbf{Python 2.7} (not Python 3);
 			
-	\item the \textbf{pip} package manager for Python 2;
+	\item the \textbf{pip} package manager for Python 2, which should be shipped with a standard Python installation;
 			
 	\item optionally (for GPU support) the NVIDIA drivers for CUDA.
 		
@@ -70,6 +68,8 @@ For running DBNsim on you own server you will need:
 
 		
 Please note that you have to use Python 2 (preferably 2.7), not Python 3! This is beacause, unfortunately, DBNsim currently depends on two libraries that are only available for Python 2.
+		
+If you have installed Python under Windows but your command line says it doesn't recognize the commands \texttt{pip} and \texttt{python}, then you just have to \href{https://www.google.com/search?q=windows+add+python+path+-pythonpath}{add Python to your path}. This is generally done by going to \emph{System Properties / Advanced / Environment Variables}.
 
 		
 	\subsection{Basic installation}
@@ -85,7 +85,7 @@ pip install --user -r requirements.txt
 \end{verbatim}
 
 		
-In addition, it is recommended to install \emph{scipy}, with the command \texttt{pip install --user scipy}. Windows user may find it difficult but this is currently an optional dependency; the only thing is that without it you won't be able to handle MATLAB files as an administrator (see \href{05_admin.html}{here}).
+In addition, it is recommended to install \emph{scipy}, with the command \texttt{pip install --user scipy}. Windows user may find it difficult but this is currently an optional dependency; the only thing is that without it you won't be able to handle MATLAB files as an administrator (see \href{05\_admin.html}{here}).
 		
 If you don't have Git installed, you can still go to the \href{https://github.com/ggiuffre/DBNsim}{GitHub repo}, click "Clone or Download", then "Download ZIP"; now extract the archive, and then \texttt{cd} into the extracted directory.
 
@@ -117,7 +117,7 @@ After you manage to install CUDAMat, remember to test it. To do this, exit the \
 import numpy as np
 import cudamat as cm
 
-cm.cublas_init()
+cm.cublas\_init()
 
 a = cm.CUDAMatrix(np.random.rand(32, 256))
 b = cm.CUDAMatrix(np.random.rand(256, 32))
@@ -171,7 +171,9 @@ Quit the server with CONTROL-C.
 \end{verbatim}
 
 		
-This means the server is up and running. Now you should find the user interface at \texttt{http://127.0.0.1:8000} if you're running the app locally. Or, if you're publishing it to a network, you should find it at \texttt{http://your.public.ip.address:8000}. 8000 is an example but you can tun DBNsim on any port you have access to.
+This means the server is up and running. Now you should find the user interface at \texttt{http://127.0.0.1:8000} if you're running the app locally. Or, if you're publishing it to a network, you should find it at \texttt{http://your.public.ip.address:8000}. 8000 is just an example --- you can run DBNsim on any port you have access to.
+		
+Once you're on the page, you will be asked for a \textbf{password}. If the server administrator didn't change the default configuration, the password is \emph{user}.
 		
 When you want to shut down the server, return to the command line interface and press CONTROL-C.
 
@@ -188,14 +190,14 @@ As the server administrator, you have more power than normal users. It is possib
 			
 	\item you can set a password that the users have to know in order to use the app;
 			
-	\item you can alter the default values of the hyper-parameters (e.g. you can set a default value of 0.1 for the learning rate, if the user doesn't change it on the form);
+	\item you can alter the default values of the hyper-parameters (e.g. you can set a default value of 0.5 for the learning rate, if the user doesn't change it on the form);
 			
 	\item you can change some graphical parameters in the user interface.
 		
 	\end{itemize}
 
 		
-For more about this, please read \href{05_admin.html}{here}.
+For more about how to change the configuration, please read \href{05\_admin.html}{here}.
 	
 
 
@@ -325,7 +327,9 @@ In the bottom-left corner, you can see a plot reporting the reconstruction error
 	\subsection{Analysing the receptive fields}
 
 		
-You can view the receptive fields of some (not all) of the neurons in one hidden layer. For this, just choose a layer of the graph in the top-right corner and click it: DBNsim will pick some neurons from the layer (max. 24 neurons) and display their receptive fields.
+You can view the receptive fields of some of the neurons in one hidden layer. For this, just choose a layer of the graph in the top-right corner and click it: DBNsim will pick some neurons from the layer (max. 24 neurons) and display their receptive fields.
+		
+If you want to see a larger version of a receptive field, simply click on it. A new tab will open, and from there you'll even be able to download the receptive field as an image.
 		
 Note that, for consistency, the neurons picked by DBNsim are the same \textbf{every time you click on the same DBN}. This allows you to see the changes in one receptive field while the network is learning; for this purpose, the receptive fields are updated automatically during the training, every five epochs.
 
@@ -432,5 +436,91 @@ For the hyper-parameters, open \texttt{./DBNsite/DBNlogic/util.py} and search fo
 If you want the receptive fields and the weights histogram to be updated every $n$ epochs, open \texttt{./DBNsite/DBNtrain/static/dbntrain.js} and look for the variable \texttt{chartsUpdateRate}. Set it to a positive value that will be the number of epochs that DBNsim will wait before automatically updating the receptive fields and the histogram during training.
 		
 Finally, the edges in the upper-right graph change color according to what they are "doing": if an RBM is learning, its weights will be colored in red; else, they will be blue. If you want to change these colors, open \texttt{./DBNsite/DBNtrain/static/dbntrain.js} and change the values of the variables \texttt{edgesColor} and \texttt{trainingEdgesColor}.
+	
+
+
+		
+	\section{Contributing to the source code}
+
+
+		
+	\subsection{Which files do I have to focus on?}
+
+		
+Modifying the source code can seem daunting at first: this repo contains a lot of directories, subdirectories and files. Don't fear: this section will clarify which are the "important" files, i.e. the few files that actually \emph{do} something --- most of the files in here exist just because they're required by Django, or because they are static files needed by the HTML interface.
+		
+So here are the files that actually count:
+		
+	\begin{itemize}
+		
+			
+	\item \texttt{DBNsim/DBNtrain/views.py} is the Python \textbf{interface} between a client and the server; this file, along with \texttt{dbntrain.js}, is the one you will be working on most of the time.
+			
+	\item \texttt{DBNsim/DBNtrain/templates/DBNtrain/index.html} is the Django HTML template that forms the main interface.
+			
+	\item \texttt{DBNsim/DBNtrain/static/dbntrain.js} is the JavaScript source code that brings to life the HTML interface; it contains several JavaScript functions that are event-oriented (but not object-oriented at all).
+			
+	\item \texttt{DBNsim/DBNtrain/static/main.css} is (currently) the only CSS stylesheet that affects the HTML interface.
+			
+	\item \texttt{DBNsim/DBNlogic/nets.py} is the Python module that manages the \textbf{network classes} (currently DBN and RBM).
+			
+	\item \texttt{DBNsim/DBNlogic/sets.py} is the Python module that manages the available training datasets.
+			
+	\item \texttt{DBNsim/DBNlogic/train.py} is the Python module where strategy objects for training the networks reside.
+			
+	\item \texttt{DBNsim/DBNlogic/util.py} is a Python module that stores useful functions needed by the other modules.
+		
+	\end{itemize}
+
+
+		
+	\subsection{Structure of the repository}
+
+		
+To have an idea of the big picture, the repo is structured like this. The \texttt{DBNsim} directory contains the source code, while the \texttt{docs} directory contains all the documentation needed by the \textbf{users}, \textbf{administrators} and \textbf{developers}. (By "users" we mean the end users of the web app, while the administrators are users of the server (those serving DBNsim from a machine) and developers maintain the source code.)
+		
+The \texttt{DBNsim} directory contains two main subdirectories, which are actually Python packages (they have a \texttt{\_\_init\_\_.py} file that marks them as packages). They are:
+		
+	\begin{itemize}
+		
+			
+	\item \texttt{DBNlogic}, the business logic of the application;
+			
+	\item \texttt{DBNtrain}, the application logic that makes DBNsim a web app.
+		
+	\end{itemize}
+
+		
+More specifically, \texttt{DBNlogic} is a Python package that is totally independent from the rest of the application: you can use it as a command line library for handling and training DBNs, if you like. \texttt{DBNtrain} uses \texttt{DBNlogic} for satisfying the clients' requests and is itself a Python package.
+		
+\texttt{DBNtrain} is centered around the \texttt{views} module, where the developer has to define a function for each request (URL) that the server can accept; adding a function to \texttt{views.py} requires adding a line in \texttt{urls.py}, so that Django knows that a particular URL has to be mapped to this new Python function.
+
+		
+	\subsection{Things to do}
+
+		
+If you want some ideas about how to improve DBNsim, here are some:
+		
+	\begin{itemize}
+		
+			
+	\item Configure DBNsim to run on a \textbf{production-stable} WSGI server. The default Django server is not really secure for production.
+			
+	\item Find a more convenient way to manage the jobs run by clients on the server. Currently, DBNsim requires that each client be assigned a random 10-character key, so that the server can update the right training job when the client asks (for example) to perform one training epoch of a job. A much more professional way to do this would be to use \textbf{WebSockets}, for example.
+			
+	\item Tidy the \texttt{JavaScript} source code, maybe distributing it across two or three distinct JS modules.
+			
+	\item Where possible, replace \textbf{jQuery} with vanilla JavaScript, as jQuery was used only to quickly prototype the application but tends to clutter the UI, slowing down the app on older browsers.
+			
+	\item Improve the use of \textbf{Cytoscape.js}, maybe adding some calls to \texttt{cy.batch} instead of manually iterating through a large number of nodes and edges. Currently, the graph drawing efficiency is reasonable but can definitely be improved.
+			
+	\item Add some more consistency checks to the JS code that handles the HTML forms and the buttons. I set Travis CI to systematically test the Python back end, but there are no automatic tests for the front end, so it isn't possible to systematically catch hidden bugs.
+			
+	\item Repair the "upload DBN" button. Currently, it is only possible to download a DBN, not uploading it.
+			
+	\item Remove \textbf{Gnumpy} and try to use another library for GPU computing, as Gnumpy only works for Python 2. After this, upgrading DBNsim to Python 3 should be easy.
+		
+	\end{itemize}
+
 	
 \end{document}
