@@ -82,6 +82,13 @@ def train(request):
         'spars_target' : float(request.POST['spars_target'])
     }
 
+    # sanity check for batch size:
+    if len(trainset) % config['batch_size'] != 0:
+        print('encountered batch size', config['batch_size'], 'for dataset with', len(trainset), 'examples: adjusting batch size to', end = ' ')
+        while len(trainset) % config['batch_size'] != 0:
+            config['batch_size'] -= 1
+        print(config['batch_size'])
+
     random_id = ''.join(random.choice(string.ascii_uppercase + string.digits) for i in range(10))
     training_jobs[random_id] = {
         'birthday': time(),

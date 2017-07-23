@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import numpy as np
 import gnumpy as gpu
 
@@ -30,12 +32,12 @@ class CDTrainer:
         """Learn from a particular dataset."""
 
         net          = self.net
-        max_epochs   = self.config.max_epochs
-        batch_sz     = self.config.batch_size
-        learn_rate   = self.config.learn_rate
-        momentum     = self.config.momentum
-        w_decay      = self.config.w_decay
-        spars_target = self.config.spars_target
+        max_epochs   = int(self.config.max_epochs)
+        batch_sz     = int(self.config.batch_size)
+        learn_rate   = float(self.config.learn_rate)
+        momentum     = float(self.config.momentum)
+        w_decay      = float(self.config.w_decay)
+        spars_target = float(self.config.spars_target)
 
         gpu.board_id_to_use = 0
         gpu.max_memory_usage = 900 * 1000 * 1000 # almost 1GB
@@ -61,7 +63,7 @@ class CDTrainer:
                 try:
                     data = trainset[start : start + batch_sz].transpose()
                 except ValueError:
-                    print 'error with npmat'
+                    print('error with npmat')
                     data = gpu.garray(trainset[start : start + batch_sz].as_numpy_array().transpose())
 
                 # --> positive phase:
