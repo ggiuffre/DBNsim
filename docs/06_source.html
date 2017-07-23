@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>Contributing to the source code - DBNsim</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="FIUP" />
+	<meta name="keywords" content="DBNsim, user, manual, docs, contributing, source, code" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="shortcut icon" type="image/x-icon" href="img/CCNL.ico" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+	<link rel="prev" href="05_admin.html" />
+</head>
+
+<body>
+
+	<div id="header">
+		<a href="http://ccnl.psy.unipd.it" target="_"><img id="logo" src="img/CCNL_1.png" alt="CCNL logo" /></a>
+		<h1>
+			<a class="prev" title="previous" href="05_admin.html">&lt;</a>
+			<a href="index.html" title="Home">DBNsim</a>
+			<span class="next">&gt;</span>
+		</h1>
+		<h2>train and analyse Deep Belief Networks</h2>
+	</div>
+
+	<div id="content">
+		<h1>Contributing to the source code</h1>
+
+		<h2>Which files do I have to focus on?</h2>
+		<p>Modifying the source code can seem daunting at first: this repo contains a lot of directories, subdirectories and files. Don't fear: this section will clarify which are the &quot;important&quot; files, i.e. the few files that actually <em>do</em> something &mdash; most of the files in here exist just because they're required by Django, or because they are static files needed by the HTML interface.</p>
+		<p>So here are the files that actually count:</p>
+		<ul>
+			<li><code>DBNsim/DBNtrain/views.py</code> is the Python <strong>interface</strong> between a client and the server; this file, along with <code>dbntrain.js</code>, is the one you will be working on most of the time.</li>
+			<li><code>DBNsim/DBNtrain/templates/DBNtrain/index.html</code> is the Django HTML template that forms the main interface.</li>
+			<li><code>DBNsim/DBNtrain/static/dbntrain.js</code> is the JavaScript source code that brings to life the HTML interface; it contains several JavaScript functions that are event-oriented (but not object-oriented at all).</li>
+			<li><code>DBNsim/DBNtrain/static/main.css</code> is (currently) the only CSS stylesheet that affects the HTML interface.</li>
+			<li><code>DBNsim/DBNlogic/nets.py</code> is the Python module that manages the <strong>network classes</strong> (currently DBN and RBM).</li>
+			<li><code>DBNsim/DBNlogic/sets.py</code> is the Python module that manages the available training datasets.</li>
+			<li><code>DBNsim/DBNlogic/train.py</code> is the Python module where strategy objects for training the networks reside.</li>
+			<li><code>DBNsim/DBNlogic/util.py</code> is a Python module that stores useful functions needed by the other modules.</li>
+		</ul>
+
+		<h2>Structure of the repository</h2>
+		<p>To have an idea of the big picture, the repo is structured like this. The <code>DBNsim</code> directory contains the source code, while the <code>docs</code> directory contains all the documentation needed by the <strong>users</strong>, <strong>administrators</strong> and <strong>developers</strong>. (By &quot;users&quot; we mean the end users of the web app, while the administrators are users of the server (those serving DBNsim from a machine) and developers maintain the source code.)</p>
+		<p>The <code>DBNsim</code> directory contains two main subdirectories, which are actually Python packages (they have a <code>__init__.py</code> file that marks them as packages). They are:
+		<ul>
+			<li><code>DBNlogic</code>, the business logic of the application;</li>
+			<li><code>DBNtrain</code>, the application logic that makes DBNsim a web app.</li>
+		</ul>
+		<p>More specifically, <code>DBNlogic</code> is a Python package that is totally independent from the rest of the application: you can use it as a command line library for handling and training DBNs, if you like. <code>DBNtrain</code> uses <code>DBNlogic</code> for satisfying the clients' requests and is itself a Python package.</p>
+		<p><code>DBNtrain</code> is centered around the <code>views</code> module, where the developer has to define a function for each request (URL) that the server can accept; adding a function to <code>views.py</code> requires adding a line in <code>urls.py</code>, so that Django knows that a particular URL has to be mapped to this new Python function.</p>
+
+		<h2>Things to do</h2>
+		<p>If you want some ideas about how to improve DBNsim, here are some:</p>
+		<ul>
+			<li>Configure DBNsim to run on a <strong>production-stable</strong> WSGI server. The default Django server is not really secure for production.</li>
+			<li>Find a more convenient way to manage the jobs run by clients on the server. Currently, DBNsim requires that each client be assigned a random 10-character key, so that the server can update the right training job when the client asks (for example) to perform one training epoch of a job. A much more professional way to do this would be to use <strong>WebSockets</strong>, for example.</li>
+			<li>Tidy the <code>JavaScript</code> source code, maybe distributing it across two or three distinct JS modules.</li>
+			<li>Where possible, replace <strong>jQuery</strong> with vanilla JavaScript, as jQuery was used only to quickly prototype the application but tends to clutter the UI, slowing down the app on older browsers.</li>
+			<li>Improve the use of <strong>Cytoscape.js</strong>, maybe adding some calls to <code>cy.batch</code> instead of manually iterating through a large number of nodes and edges. Currently, the graph drawing efficiency is reasonable but can definitely be improved.</li>
+			<li>Add some more consistency checks to the JS code that handles the HTML forms and the buttons. I set Travis CI to systematically test the Python back end, but there are no automatic tests for the front end, so it isn't possible to systematically catch hidden bugs.</li>
+			<li>Repair the &quot;upload DBN&quot; button. Currently, it is only possible to download a DBN, not uploading it.</li>
+			<li>Remove <strong>Gnumpy</strong> and try to use another library for GPU computing, as Gnumpy only works for Python 2. After this, upgrading DBNsim to Python 3 should be easy.</li>
+		</ul>
+	</div>
+
+</body>
+</html>
