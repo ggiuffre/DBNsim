@@ -67,8 +67,8 @@ let plottedDBNs = 0;
  * applied when the connections are learning.
  * @type {String}
  */
-const edgesColor = '#8AB'; // kind of blue
-const trainingEdgesColor = '#D89'; // red
+const edgesColor = '#8BA';         // green -- not training
+const trainingEdgesColor = '#D89'; // red   -- training
 
 /**
  * The number of epochs between two automatica updates
