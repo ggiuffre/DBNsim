@@ -54,8 +54,9 @@ class CDTrainer:
         # for batch_n in range(int(len(trainset) / batch_sz)):
         #     start = batch_n * batch_sz
         #     batches.append(gpu.garray(trainset[start : start + batch_sz].transpose().tolist()))
-        if type(trainset) != gpu.garray:
-            trainset = gpu.garray(trainset)
+
+        # if type(trainset) != gpu.garray:
+        #     trainset = gpu.garray(trainset)
         self.next_rbm_data = np.zeros((trainset.shape[0], net.W.shape[0]))
 
         epoch = 1
@@ -66,14 +67,10 @@ class CDTrainer:
                 start = batch_n * batch_sz
                 data = None
                 try:
-                    data = trainset[start : start + batch_sz].transpose()
+                    data = gpu.garray(trainset[start : start + batch_sz].transpose())
                 except ValueError:
                     print('error with npmat')
-                    tmp_data = trainset[start : start + batch_sz]
-                    tmp_data_NP = tmp_data.as_numpy_array()
-                    tmp_data_list = tmp_data_NP.tolist()
-                    tmp_data_T = np.transpose(tmp_data).tolist()
-                    data = gpu.garray(tmp_data_T)
+                    data = gpu.garray(np.transpose(trainset[start : start + batch_sz].as_numpy_array().tolist()).tolist())
 
                 # --> positive phase:
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
