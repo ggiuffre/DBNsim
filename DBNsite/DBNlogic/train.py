@@ -50,21 +50,26 @@ class CDTrainer:
         a_update = gpu.zeros(net.a.shape)
         b_update = gpu.zeros(net.b.shape)
 
-        if type(trainset) != gpu.garray:
-            trainset = gpu.garray(trainset)
+        batches = []
+        for batch_n in range(int(len(trainset) / batch_sz)):
+            start = batch_n * batch_sz
+            batches.append(gpu.garray(trainset[start : start + batch_sz].T))
+        # if type(trainset) != gpu.garray:
+        #     trainset = gpu.garray(trainset)
         self.next_rbm_data = gpu.zeros((trainset.shape[0], net.W.shape[0]))
 
         epoch = 1
         while (epoch <= max_epochs) and (not self.handbrake):
             errors = np.array([])
-            for batch_n in range(int(len(trainset) / batch_sz)):
-                start = batch_n * batch_sz
-                data = None
-                try:
-                    data = trainset[start : start + batch_sz].transpose()
-                except ValueError:
-                    print('error with npmat')
-                    data = gpu.garray(trainset[start : start + batch_sz].as_numpy_array().transpose())
+            # for batch_n in range(int(len(trainset) / batch_sz)):
+            for data in batches:
+                # start = batch_n * batch_sz
+                # data = None
+                # try:
+                #     data = trainset[start : start + batch_sz].transpose()
+                # except ValueError:
+                #     print('error with npmat')
+                #     data = gpu.garray(trainset[start : start + batch_sz].as_numpy_array().transpose())
 
                 # --> positive phase:
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
