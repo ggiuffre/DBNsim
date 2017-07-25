@@ -53,7 +53,7 @@ class CDTrainer:
         batches = []
         for batch_n in range(int(len(trainset) / batch_sz)):
             start = batch_n * batch_sz
-            batches.append(gpu.garray(trainset[start : start + batch_sz].T))
+            batches.append(gpu.garray(trainset[start : start + batch_sz].transpose().tolist()))
         # if type(trainset) != gpu.garray:
         #     trainset = gpu.garray(trainset)
         self.next_rbm_data = np.zeros((trainset.shape[0], net.W.shape[0]))
