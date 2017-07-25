@@ -56,20 +56,20 @@ class CDTrainer:
             batches.append(gpu.garray(trainset[start : start + batch_sz].T))
         # if type(trainset) != gpu.garray:
         #     trainset = gpu.garray(trainset)
-        self.next_rbm_data = gpu.zeros((trainset.shape[0], net.W.shape[0]))
+        self.next_rbm_data = np.zeros((trainset.shape[0], net.W.shape[0]))
 
         epoch = 1
         while (epoch <= max_epochs) and (not self.handbrake):
             errors = np.array([])
-            # for batch_n in range(int(len(trainset) / batch_sz)):
             for data in batches:
-                # start = batch_n * batch_sz
-                # data = None
-                # try:
-                #     data = trainset[start : start + batch_sz].transpose()
-                # except ValueError:
-                #     print('error with npmat')
-                #     data = gpu.garray(trainset[start : start + batch_sz].as_numpy_array().transpose())
+            # for batch_n in range(int(len(trainset) / batch_sz)):
+            #     start = batch_n * batch_sz
+            #     data = None
+            #     try:
+            #         data = trainset[start : start + batch_sz].transpose()
+            #     except ValueError:
+            #         print('error with npmat')
+            #         data = gpu.garray(trainset[start : start + batch_sz].as_numpy_array().transpose())
 
                 # --> positive phase:
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
@@ -80,7 +80,7 @@ class CDTrainer:
 
                 # --> build the training set for the next RBM:
                 if epoch == max_epochs:
-                    self.next_rbm_data[start : start + batch_sz] = pos_hid_probs.T
+                    self.next_rbm_data[start : start + batch_sz] = pos_hid_probs.as_numpy_array().T
 
                 # --> negative phase:
                 vis_probs = (gpu.dot(net.W.T, hid_states) + net.a.tile(batch_sz)).logistic()
