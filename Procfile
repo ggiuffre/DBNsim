@@ -1,1 +1,1 @@
-web: cd DBNsite && gunicorn -b 0.0.0.0:$PORT -w 3 DBNsite.wsgi:application
+web: python DBNsite/manage.py runserver dbn-analyser.herokuapp.com/
