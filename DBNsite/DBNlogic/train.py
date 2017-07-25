@@ -69,7 +69,8 @@ class CDTrainer:
                     data = trainset[start : start + batch_sz].transpose()
                 except ValueError:
                     print('error with npmat')
-                    data = gpu.garray(np.transpose(trainset[start : start + batch_sz].as_numpy_array().tolist()).tolist())
+                    tmp_data = np.transpose(trainset[start : start + batch_sz].as_numpy_array().tolist()).tolist()
+                    data = gpu.garray(tmp_data)
 
                 # --> positive phase:
                 pos_hid_probs = (gpu.dot(net.W, data) + net.b.tile(batch_sz)).logistic()
