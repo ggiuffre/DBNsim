@@ -1,1 +1,1 @@
-web: python DBNsite/manage.py runserver dbn-analyser.herokuapp.com/
+web: python DBNsite/manage.py runserver 0.0.0.0:$PORT
