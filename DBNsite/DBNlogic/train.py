@@ -70,7 +70,8 @@ class CDTrainer:
                 except ValueError:
                     print('error with npmat')
                     tmp_data = trainset[start : start + batch_sz]
-                    tmp_data_list = tmp_data.as_numpy_array().tolist()
+                    tmp_data_NP = tmp_data.as_numpy_array()
+                    tmp_data_list = tmp_data_NP.tolist()
                     tmp_data_T = np.transpose(tmp_data).tolist()
                     data = gpu.garray(tmp_data_T)
 
