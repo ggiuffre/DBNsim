@@ -74,7 +74,7 @@ class DataSet:
         with open(path, 'rb') as f:
             data = pickle.load(f)
             if type(data) != np.ndarray:
-                data = np.array(data, dtype = np.float32)
+                data = np.array(data)
         return data
 
     @staticmethod
@@ -83,7 +83,7 @@ class DataSet:
         a Matlab file containing a variable called 'data'."""
         if SCIPY_AVAILABLE:
             print('loading data from Matlab file...')
-            return loadmat(path, variable_names = ['data'])['data'].astype(np.float32)
+            return loadmat(path, variable_names = ['data'])['data']
         else:
             print("""you don't have the scipy package installed.
                 Install it with `pip install --user scipy` or, 
