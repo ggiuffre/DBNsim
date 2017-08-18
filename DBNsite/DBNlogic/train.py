@@ -62,7 +62,7 @@ class CDTrainer:
                     data = gpu.garray(trainset[start : start + batch_sz].transpose())
                 except ValueError:
                     print('error with npmat')
-                    batch = trainset[start : start + batch_sz].astype(np.float32)
+                    batch = trainset[start : start + batch_sz]
                     data = gpu.garray([batch[:, i] for i in range(batch.shape[1])])
 
                 # --> positive phase:
